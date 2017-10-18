@@ -138,12 +138,15 @@ export default {
 	position: relative;
 	padding-bottom: .5rem;
 	.bottom{
-		ul{
-			width: 100%;
-			background: #FFFFFF;
-			position: fixed;
-			bottom: 0;
-			box-shadow: inset 0 1px 1px -1px #D8D8D8;
+		position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 0.5rem;
+    background: #FFFFFF;
+    ul{
+      width: 100%;
+      background: #FFFFFF;
+      box-shadow: inset 0 1px 1px -1px #D8D8D8;
 			li{
 				float: left;
 				width: 33%;

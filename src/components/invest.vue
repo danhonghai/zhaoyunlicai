@@ -1,7 +1,22 @@
 <template>
   <div class="invest">
-    <h1>{{ msg }}</h1>
-    <h2>欢迎来到赵云理财的时代平平平靖</h2>
+  	<div class="top">
+  		<ul>
+  			<li v-bind:class="{active:classify==0}" @click="tab(0)">定期</li>
+  			<li v-bind:class="{active:classify==1}" @click="tab(1)">散标</li>
+  		</ul>
+  	</div>
+    <div class="content">
+    	<div class="regular">
+    		<ul>
+    			<li>
+    				<div class="item-title">
+    					<h3>信用贷款计划</h3><span>进行中</span>
+    				</div>
+    			</li>
+    		</ul>
+    	</div>
+    </div>
   	<div class="bottom">
 	  	<ul>
 	    	<li @click='dianji(1)'>
@@ -26,7 +41,8 @@ export default {
   name: 'invest',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      classify: 0
     }
   },
   methods: {
@@ -40,6 +56,9 @@ export default {
   		}else if(this.isLight == 3){
   			this.$router.push({path: '/three'})
   		}
+  	},
+  	tab(index){
+  		this.classify = index;
   	}
   }
 }
@@ -47,17 +66,81 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='scss' scoped>
+h3{
+	margin: 0;
+	padding: 0;
+	font-weight: 100;
+}
 .invest{
 	width: 100%;
 	height: 100%;
 	position: relative;
-	.bottom{
+	.top{
+		width: 100%;
+		height: .45rem;
+		background: url(../assets/title@2x.png) no-repeat;
+		background-size: 100% 100%;
 		ul{
-			width: 100%;
-			background: #FFFFFF;
-			position: fixed;
-			bottom: 0;
-			box-shadow: inset 0 1px 1px -1px #D8D8D8;
+			li{
+				font-size: .19rem;
+				color: #FEEACA;
+				line-height: .4rem;
+				float: left;
+			}
+			li:nth-child(1){
+				margin: 0 13.5% 0 33%;
+			}
+			.active{
+				color: #FFFFFF;
+				border-bottom: .02rem solid #FFFFFF;
+			}
+		}
+	}
+	.content{
+		.regular{
+			ul{
+				text-align: left;
+				li{
+					width: 100%;
+					background: #FFFFFF;
+					padding: 0 7%;
+					overflow: hidden;
+					.item-title{
+						h3{
+							display: block;
+							height: .46rem;
+							font-size: .15rem;
+							line-height: .46rem;
+							float: left;
+						}
+						span{
+							display: block;
+							float: left;
+							padding: 0 .1rem;
+							background: #FC9800;
+							font-size: .13rem;
+							line-height: .2rem;
+							color: #FFFFFF;
+							border-radius: .2rem;
+							margin-left: .28rem;
+							margin-top: .11rem;
+						}
+					}
+					
+				}
+			}
+		}
+	}
+	.bottom{
+		position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 0.5rem;
+    background: #FFFFFF;
+    ul{
+      width: 100%;
+      background: #FFFFFF;
+      box-shadow: inset 0 1px 1px -1px #D8D8D8;
 			li{
 				float: left;
 				width: 33%;
@@ -83,5 +166,6 @@ export default {
 			}
 		}
 	}
+	
 }
 </style>
