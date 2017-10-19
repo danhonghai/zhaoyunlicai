@@ -7,15 +7,119 @@
   		</ul>
   	</div>
     <div class="content">
-    	<div class="regular">
+    	<div class="regular" v-show="classify==0">
     		<ul>
-    			<li>
+    			<li class="saling" @click="regular()">
     				<div class="item-title">
     					<h3>信用贷款计划</h3><span>进行中</span>
     				</div>
+    				<div class="goodsInfo">
+    					<dl style="width: 36%;">
+	    					<dt class="cssd0566bb63175d2 shibor">10.0<span>%</span></dt>
+	    					<dd>预计年化利率</dd>
+	    				</dl>
+	    				<dl>
+	    					<dt class="cssd0566bb63175d2">10<span>天</span></dt>
+	    					<dd>投资期限</dd>
+	    				</dl>
+	    				<dl>
+	    					<dt class="cssd0566bb63175d2">120<span>万</span></dt>
+	    					<dd>剩余金额</dd>
+	    				</dl>
+    				</div>
+    				<div class="progress"></div>
+    				<b class="cssd0566bb63175d2">33%</b>
+    			</li>
+    			<li class="willsale">
+    				<div class="item-title">
+    					<h3>信用贷款计划</h3><span>进行中</span>
+    				</div>
+    				<div class="goodsInfo">
+    					<dl style="width: 36%;">
+	    					<dt class="cssd0566bb63175d2 shibor">10.0<span>%</span></dt>
+	    					<dd>预计年化利率</dd>
+	    				</dl>
+	    				<dl>
+	    					<dt class="cssd0566bb63175d2">10<span>天</span></dt>
+	    					<dd>投资期限</dd>
+	    				</dl>
+	    				<dl>
+	    					<dt class="cssd0566bb63175d2">120<span>万</span></dt>
+	    					<dd>剩余金额</dd>
+	    				</dl>
+    				</div>
+    				<div class="progress"></div>
+    				<b class="cssd0566bb63175d2">0%</b>
+    			</li>
+    			<li class="saled">
+    				<div class="item-title">
+    					<h3>信用贷款计划</h3><span>已抢完</span>
+    				</div>
+    				<div class="goodsInfo">
+    					<dl style="width: 36%;">
+	    					<dt class="cssd0566bb63175d2 shibor">10.0<span>%</span></dt>
+	    					<dd>预计年化利率</dd>
+	    				</dl>
+	    				<dl>
+	    					<dt class="cssd0566bb63175d2">10<span>天</span></dt>
+	    					<dd>投资期限</dd>
+	    				</dl>
+	    				<dl>
+	    					<dt class="cssd0566bb63175d2">120<span>万</span></dt>
+	    					<dd>剩余金额</dd>
+	    				</dl>
+    				</div>
+    				<div class="progress"></div>
+    				<b class="cssd0566bb63175d2">100%</b>
     			</li>
     		</ul>
     	</div>
+			<div class="unregular" v-show="classify==1">
+				<ul>
+    			<li class="saling">
+    				<div class="item-title">
+    					<h3>散标20102期</h3>
+    				</div>
+    				<div class="goodsInfo">
+    					<dl style="width: 36%;">
+	    					<dt class="cssd0566bb63175d2 shibor">10.0<span>%</span></dt>
+	    					<dd>预计年化利率</dd>
+	    				</dl>
+	    				<dl>
+	    					<dt class="cssd0566bb63175d2">10<span>天</span></dt>
+	    					<dd>投资期限</dd>
+	    				</dl>
+	    				<dl>
+	    					<dt class="cssd0566bb63175d2">120<span>万</span></dt>
+	    					<dd>剩余金额</dd>
+	    				</dl>
+    				</div>
+    				<div class="progress"></div>
+    				<b class="cssd0566bb63175d2">33%</b>
+    			</li>
+    			<li class="saled">
+    				<div class="item-title">
+    					<h3>散标20102期</h3>
+    				</div>
+    				<div class="goodsInfo">
+    					<dl style="width: 36%;">
+	    					<dt class="cssd0566bb63175d2 shibor">10.0<span>%</span></dt>
+	    					<dd>预计年化利率</dd>
+	    				</dl>
+	    				<dl>
+	    					<dt class="cssd0566bb63175d2">10<span>天</span></dt>
+	    					<dd>投资期限</dd>
+	    				</dl>
+	    				<dl>
+	    					<dt class="cssd0566bb63175d2">120<span>万</span></dt>
+	    					<dd>剩余金额</dd>
+	    				</dl>
+    				</div>
+    				<div class="progress"></div>
+    				<b class="cssd0566bb63175d2">已满标</b>
+    			</li>
+    		</ul>
+			</div>
     </div>
   	<div class="bottom">
 	  	<ul>
@@ -59,6 +163,9 @@ export default {
   	},
   	tab(index){
   		this.classify = index;
+  	},
+  	regular(){
+  		this.$router.push({path: '/regular'})
   	}
   }
 }
@@ -69,13 +176,16 @@ export default {
 h3{
 	margin: 0;
 	padding: 0;
-	font-weight: 100;
+	font-weight: normal;
 }
 .invest{
 	width: 100%;
 	height: 100%;
 	position: relative;
 	.top{
+		position: fixed;
+		top: 0;
+		z-index: 2;
 		width: 100%;
 		height: .45rem;
 		background: url(../assets/title@2x.png) no-repeat;
@@ -97,15 +207,21 @@ h3{
 		}
 	}
 	.content{
-		.regular{
+		margin-top: .45rem;
+		.regular,
+		.unregular{
 			ul{
 				text-align: left;
 				li{
 					width: 100%;
 					background: #FFFFFF;
-					padding: 0 7%;
 					overflow: hidden;
+					position: relative;
+					margin-bottom: .1rem;
 					.item-title{
+						width: 100%;
+						height: .46rem;
+						padding: 0 7%;
 						h3{
 							display: block;
 							height: .46rem;
@@ -117,7 +233,6 @@ h3{
 							display: block;
 							float: left;
 							padding: 0 .1rem;
-							background: #FC9800;
 							font-size: .13rem;
 							line-height: .2rem;
 							color: #FFFFFF;
@@ -126,7 +241,131 @@ h3{
 							margin-top: .11rem;
 						}
 					}
-					
+					.goodsInfo{
+						padding: 0 7%;
+						dl{
+							width: 32%;
+							float: left;
+							margin-bottom: .15rem;
+							dt{
+								height: .4rem;
+								font-size: .2rem;
+								line-height: .55rem;
+								span{
+									font-size: .13rem;
+									line-height: .13rem;
+								}
+							}
+							dd{
+								padding-top: .08rem;
+								font-size: .13rem;
+								line-height: .13rem;
+								color: #999999;
+							}
+							.shibor{
+								font-size: .4rem;
+								line-height: .4rem;
+								span{
+									font-size: .15rem;
+									line-height: .15rem;
+								}
+							}
+						}
+					}
+					.progress{
+						position: absolute;
+						bottom: 0;
+						width: 33%;
+						height: .02rem;
+					}
+					b{
+						font-size: .12rem;
+						line-height: .12rem;
+						position: absolute;
+						bottom: .1rem;
+						right: .15rem;
+					}
+				}
+				.willsale{
+					.item-title{
+						h3{
+							color: #333333;
+						}
+						span{
+							background: #FF6666;
+						}
+					}
+					.goodsInfo{
+						dl{
+							dt{
+								color: #D7D7D7;
+							}
+							.shibor{
+								color: #FC9800;
+							}
+						}
+					}
+					.progress{
+						width: 100%;
+						background: #D7D7D7;
+					}
+					b{
+						color: #D7D7D7;
+					}
+				}
+				.saling{
+					.item-title{
+						h3{
+							color: #333333;
+						}
+						span{
+							background: #FC9800;
+						}
+					}
+					.goodsInfo{
+						dl{
+							dt{
+								color: #666666;
+							}
+							.shibor{
+								color: #FC9800;
+							}
+						}
+					}
+					.progress{
+						background: #FC9800;
+					}
+					b{
+						color: #FFC266;
+					}
+				}
+				.saled{
+					.item-title{
+						h3{
+							color: #D7D7D7;
+						}
+						span{
+							background: #D7D7D7;
+						}
+					}
+					.goodsInfo{
+						dl{
+							dt{
+								color: #D7D7D7;
+							}
+							.shibor{
+								color: #D7D7D7;
+							}
+						}
+					}
+					.progress{
+						width: 100%;
+						background: #D7D7D7;
+					}
+					b{
+						color: #D7D7D7;
+						font-weight: normal;
+					}
 				}
 			}
 		}
@@ -137,10 +376,10 @@ h3{
     width: 100%;
     height: 0.5rem;
     background: #FFFFFF;
+    box-shadow: inset 0 1px 1px -1px #D8D8D8;
     ul{
       width: 100%;
       background: #FFFFFF;
-      box-shadow: inset 0 1px 1px -1px #D8D8D8;
 			li{
 				float: left;
 				width: 33%;
