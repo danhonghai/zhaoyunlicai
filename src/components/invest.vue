@@ -54,7 +54,7 @@ export default {
   		}else if(this.isLight == 2){
   			this.$router.push({path: '/invest'})
   		}else if(this.isLight == 3){
-  			this.$router.push({path: '/three'})
+  			this.$router.push({path: '/personal'})
   		}
   	},
   	tab(index){

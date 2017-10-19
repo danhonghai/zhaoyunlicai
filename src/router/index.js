@@ -2,7 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import homepage from '@/components/homepage'
 import invest from '@/components/invest'
-import three from '@/components/three'
+import personal from '@/components/personal'
+import setTransactionPassword from '@/components/setTransactionPassword'
+import certification from '@/components/certification'
+
+
 
 Vue.use(Router)
 
@@ -19,9 +23,19 @@ export default new Router({
       component: invest
     },
     {
-      path: '/three',
-      name: 'three',
-      component: three
+      path: '/personal',
+      name: 'personal',
+      component: personal
+    },
+    {
+      path: '/setTransactionPassword',
+      name: 'setTransactionPassword',
+      component: setTransactionPassword
+    },
+    {
+      path: '/certification',
+      name: 'certification',
+      component: certification
     }
   ]
 })
