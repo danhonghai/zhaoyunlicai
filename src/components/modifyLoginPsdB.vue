@@ -1,18 +1,14 @@
 <template>
-  <div class="setTransactionPassword">
+  <div class="modifyLoginPsdB">
     <div class='header'>
 			<img src="../assets/Path 145@2x.png" alt="" @click='goBack' />
-    		<p>设置交易密码</p>
+    		<p>修改登录密码</p>
 		</div>
-		<div class='setPassword'>
-			<span>交易密码</span>
-			<input type="password" placeholder="设置交易密码" />
+		<div class='newLoginPsd'>
+			<span>新密码</span>
+			<input type="text" placeholder="输入密码" />
 		</div>
-		<div class='tip'>密码由6位数字组成</div>
-		<div class='btn'>
-			<button>确定</button>
-			<button>跳过，我不需要设置交易密码</button>
-		</div>
+		<button>确定</button>
 		<div class='tips' v-if='tipsstatus' v-text='tips'></div>
 		<div class='haunchong' v-if='huanchongStatus'>
 			<img src="../assets/loading.gif" alt="" />
@@ -22,7 +18,7 @@
 
 <script>
 export default {
-  name: 'setTransactionPassword',
+  name: 'modifyLoginPsdB',
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
@@ -44,7 +40,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='scss' scoped>
-.setTransactionPassword{
+.modifyLoginPsdB{
 	width: 100%;
 	height: 100%;
 	position: relative;
@@ -68,62 +64,43 @@ export default {
 			margin-bottom: 0;
 		}
 	}
-	.setPassword{
+	.newLoginPsd{
 		width: 100%;
-		height: 0.5rem;
-		margin-top: 0.6rem;
+		height: 0.45rem;
+		margin-top: 0.5rem;
 		background: #fff;
+		padding-left: 0.26rem;
 		span{
 			float: left;
-			font-size: 0.17rem;
+			display: block;
+			font-size: 0.14rem;
+			line-height: 0.45rem;
 			color: #333;
-			line-height: 0.5rem;
-			margin-left: 0.3rem;
 		}
 		input{
-			float: right;
-			width: 2.4rem;
-			height: 0.5rem;
-			font-size: 0.17rem;
-			line-height: 0.5rem;
-			padding: 0;
-			text-align: right;
-			padding-right: 0.28rem;
-			margin-bottom: 0;
+			float: left;
+			width: 2.5rem;
+			height: 0.45rem;
+			font-size: 0.14rem;
+			line-height: 0.45rem;
+			color: #333;
+			margin-left: 0.2rem;
 			border: none;
 		}
 	}
-	.tip{
-		font-size: 0.13rem;
-		line-height: 0.39rem;
-		color: #999;
-		text-align: left;
-		padding-left: 0.28rem;
+	button{
+		width: 3.23rem;
+		height:0.45rem;
+		background: #FFC266;
+		font-size: 0.18rem;
+		line-height: 0.45rem;
+		color: #fff;
+		border-radius: 0.03rem;
+		border: none;
+		padding: 0;
 	}
-	.btn{
-		width: 100%;
-		height: 1rem;
-		button{
-			width: 3.22rem;
-			height: 0.43rem;
-			border-radius: 0.03rem;
-			line-height: 0.43rem;
-			padding: 0;
-		}
-		button:nth-child(1){
-			color: #fff;
-			background: #FFC266;
-			font-size: 0.18rem;
-			border: 1px solid #FFC266;
-		}
-		button:nth-child(2){
-			color: #4A77A6;
-			background: #fff;
-			font-size: 0.12rem;
-			border: 1px solid #D7D7D7;
-			margin-top:0.15rem;
-		}
-	}
+	
+	
 	.tips{
 		position: absolute;
 		left: 0.8rem;

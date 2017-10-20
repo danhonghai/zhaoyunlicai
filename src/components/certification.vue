@@ -21,9 +21,9 @@
 		<div class='bankCard'>
 			<h3>银行卡信息</h3>
 			<div class='identifyInfo'>
-				<div class='bankcardName'>
+				<div class='bankcardName' id='showUserPicker'>
 					<span>选择开户行</span>
-					<p>请选择开户行</p>
+					<p id='userResult'></p>
 				</div>
 				<div class='bankcardNum'>
 					<span>银行卡号</span>
@@ -59,6 +59,52 @@ export default {
   	goBack(){
   		this.$router.go(-1)
   	}
+  },
+  mounted() {
+  	setTimeout(function(){
+  		
+  		(function($, doc) {
+					$.init();
+					$.ready(function() {
+						/**
+						 * 获取对象属性的值
+						 * 主要用于过滤三级联动中，可能出现的最低级的数据不存在的情况，实际开发中需要注意这一点；
+						 * @param {Object} obj 对象
+						 * @param {String} param 属性名
+						 */
+						var _getParam = function(obj, param) {
+							return obj[param] || '';
+						};
+						var userPicker = new $.PopPicker();
+						userPicker.setData([{
+							value: 'zhongguoyinhang',
+							text: '中国银行'
+						}, {
+							value: 'zhaoshangyinhang',
+							text: '招商银行'
+						}, {
+							value: 'gongshangyinhang',
+							text: '中国工商银行'
+						}, {
+							value: 'nonghang',
+							text: '中国农业银行'
+						}, {
+							value: 'xingyeyihang',
+							text: '兴业银行'
+						}]);
+						var showUserPickerButton = doc.getElementById('showUserPicker');
+						var userResult = doc.getElementById('userResult');
+						showUserPickerButton.addEventListener('tap', function(event) {
+							userPicker.show(function(items) {
+								userResult.innerText = items[0].text;
+								//返回 false 可以阻止选择框的关闭
+								//return false;
+							});
+						}, false);
+					});
+				})(mui, document);
+				
+  	},100);
   }
 }
 </script>
@@ -107,12 +153,13 @@ export default {
 			color: #999;
 			line-height: 0.43rem;
 			text-align: left;
-			padding-left: 0.4rem;
+			padding-left: 0.3rem;
 			margin: 0;
 		}
 		.identifyInfo{
 			width: 100%;
 			padding-left: 0.13rem;
+			background: #F0F0F0;
 		}
 		.idcardName,.idcardNum,.bankcardName,.bankcardNum{
 			height: 0.43rem;
@@ -122,7 +169,7 @@ export default {
 				font-size: 0.17rem;
 				color: #333;
 				line-height: 0.43rem;
-				margin-left: 0.26rem;
+				margin-left: 0.18rem;
 			}
 			input,p{
 				float: right;
@@ -138,10 +185,14 @@ export default {
 				background: #F0F0F0;
 			}
 		}
+		.idcardNum,.bankcardNum{
+			border: none;
+		}
 		.bankcardName{
 			p{
-				background: url('../assets/Path 145 Copy 2@2x.png') no-repeat 2.15rem;
+				background: url('../assets/Path 145 Copy 2@2x.png') no-repeat 2rem;
 				background-size: 0.09rem;
+				padding-right: 0.45rem;
 			}
 		}
 	}

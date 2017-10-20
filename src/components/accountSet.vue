@@ -1,0 +1,201 @@
+<template>
+  <div class="accountSet">
+    <div class='header'>
+			<img src="../assets/Path 145@2x.png" alt="" @click='goBack' />
+    		<p>账户设置</p>
+		</div>
+		<ul class='accountDetails'>
+			<li>
+				<div class='title'>实名认证</div>
+				<div class='details'>
+					<span>航博士</span>
+					<span>3412241991*****5252</span>
+				</div>
+			</li>
+			<li>
+				<div class='title'>手机绑定</div>
+				<div class='details'>
+					<span>135***5252</span>
+				</div>
+			</li>
+			<li>
+				<div class='title'>银行卡</div>
+				<div class='details'>
+					<span>招商银行</span>
+					<span>3412241991*****5252</span>
+				</div>
+			</li>
+		</ul>
+		<ul class='modify'>
+			<li>
+				<span>修改登录密码</span>
+				<img src="../assets/Path 145 Copy 2@2x.png" alt="" />
+			</li>
+			<li>
+				<span>修改交易密码</span>
+				<img src="../assets/Path 145 Copy 2@2x.png" alt="" />
+			</li>
+		</ul>
+		<button>退出登录</button>
+		<div class='tips' v-if='tipsstatus' v-text='tips'></div>
+		<div class='haunchong' v-if='huanchongStatus'>
+			<img src="../assets/loading.gif" alt="" />
+		</div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'accountSet',
+  data () {
+    return {
+      msg: 'Welcome to Your Vue.js App',
+      tipsstatus: false,
+      tips: '提示框',
+      huanchongStatus: false
+    }
+  },
+  methods: {
+  	dianji(index){
+  	
+  	},
+  	goBack(){
+  		this.$router.go(-1)
+  	}
+  }
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang='scss' scoped>
+.accountSet{
+	width: 100%;
+	height: 100%;
+	position: relative;
+	.header{
+		position: fixed;
+		top: 0;
+		width: 100%;
+		height: 0.5rem;
+		background: #F9F9F9;
+		img{
+			float: left;
+			width: 0.1rem;
+			height: 0.16rem;
+			margin: 0.15rem 1.3rem 0 0.2rem;
+		}
+		p{
+			float: left;
+			font-size: 0.19rem;
+			line-height: 0.5rem;
+			color: #333;
+			margin-bottom: 0;
+		}
+	}
+	.accountDetails{
+		width: 100%;
+		height: 1.35rem;
+		background: #fff;
+		padding-left: 0.26rem;
+		margin-top: 0.5rem;
+		li{
+			border-bottom: 1px solid #E0E0E0;
+			padding-right: 0.27rem;
+			height: 0.45rem;
+			.title{
+				float: left;
+				font-size: 0.14rem;
+				line-height: 0.45rem;
+				color: #333;
+			}
+			.details{
+				float: right;
+				text-align: right;
+				margin-top: 0.06rem;
+				span{
+					display: block;
+					font-size: 0.12rem;
+					line-height: 0.17rem;
+					color: #999;
+				}
+			}
+		}
+		li:last-child{
+			border: none;
+		}
+		li:nth-child(2){
+			span{
+				line-height: 0.35rem;
+			}
+		}
+	}
+	.modify{
+		width: 100%;
+		height: 0.91rem;
+		background: #fff;
+		padding-left: 0.26rem;
+		margin-top: 0.1rem;
+		li{
+			border-bottom: 1px solid #E0E0E0;
+			padding-right: 0.27rem;
+			height: 0.45rem;
+			span{
+				float: left;
+				display: block;
+				font-size: 0.14rem;
+				line-height: 0.45rem;
+				color: #666;
+			}
+			img{
+				float: right;
+				width: 0.08rem;
+				margin-top: 0.15rem;
+			}
+		}
+		li:last-child{
+			border: none;
+		}
+	}
+	button{
+		width: 100%;
+		height: 0.45rem;
+		background: #fff;
+		font-size: 0.16rem;
+		line-height: 0.45rem;
+		color: #FF6666;
+		margin-top: 0.1rem;
+		border: none;
+		padding: 0;
+	}
+	.tips{
+		position: absolute;
+		left: 0.8rem;
+		top: 0.5rem;
+		width: 2rem;
+		font-size: 0.15rem;
+		color: #fff;
+		line-height: 0.3rem;
+		background: rgba(55,55,55,.8);
+		padding-left: 0.07rem;
+		padding-right: 0.07rem;
+		z-index: 100;
+	}
+	.haunchong{
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		left: 0;
+		top: 0;
+		background: rgba(55,55,55,.3);
+		z-index: 20;
+		img{
+			position: absolute;
+			left: 1.5rem;
+			top: 2rem;
+			width: 0.8rem;
+			height: 0.8rem;
+			border-radius: 0.06rem;
+		}
+	}
+}
+</style>
