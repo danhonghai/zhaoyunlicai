@@ -61,6 +61,7 @@
    				</div>
    			</div>
    			<div class="buy">立即购买</div>
+   			<div class="newUser"><img src="../assets/xin@2x.png"/></div>
    		</div>
    		<ul>
    			<li>
@@ -143,10 +144,10 @@ export default {
     width: 100%;
     height: 0.5rem;
     background: #FFFFFF;
+    box-shadow: inset 0 1px 1px -1px #D8D8D8;
     ul{
       width: 100%;
       background: #FFFFFF;
-      box-shadow: inset 0 1px 1px -1px #D8D8D8;
 			li{
 				float: left;
 				width: 33%;
@@ -176,6 +177,7 @@ export default {
 		width: 100%;
 		height: 1rem;
 		font-size: .12rem;
+		line-height: .12rem;
 		color: #666;
 		background: #FFFFFF;
 		ul{
@@ -199,12 +201,14 @@ export default {
 		margin-top: .1rem;
 		width: 100%;
 		background: #FFFFFF;
+		overflow: hidden;
 		.novice{
 			width: 86%;
 			height: 1.78rem;
 			margin: .11rem auto 0;
 			box-shadow: 0 12px 17px 0 rgba(255,194,102,0.15);
 			border-radius: 4px;
+			position: relative;
 			.goodsInfo{
 				width: 100%;
 				height: 1.32rem;
@@ -219,6 +223,7 @@ export default {
 						line-height: .4rem;
 						span{
 							font-size: .2rem;
+							line-height: .2rem;
 						}
 					}
 					dd{
@@ -255,6 +260,7 @@ export default {
 				.money{
 					p{
 						font-size: .11rem;
+						line-height: .11rem;
 						color: #999;
 						width: 50%;
 						float: left;
@@ -277,7 +283,15 @@ export default {
 				height: .45rem;
 				font-size: .17rem;
 				color: #FC9800;
-				line-height: .35rem;
+				line-height: .45rem;
+			}
+			.newUser{
+				position: absolute;
+				top: -.17rem;
+				right: -.06rem;
+				img{
+					width: .75rem;
+				}
 			}
 		}
 		ul{
@@ -295,6 +309,7 @@ export default {
 				background: #FFFFFF;
 				p{
 					font-size: .15rem;
+					line-height: .15rem;
 					color: #999;
 					margin-top: .1rem;
 					margin-bottom: .1rem;
@@ -304,6 +319,7 @@ export default {
 					float: left;
 					dt{
 						font-size: .13rem;
+						line-height: .13rem;
 						color: #333;
 					}
 					dd{
@@ -315,9 +331,11 @@ export default {
 					}
 					.shibor{
 						font-size: .25rem;
+						line-height: .25rem;
 						color: #FC9800;
 						span{
 							font-size: .13rem;
+							line-height: .13rem;
 						}
 					}
 				}
