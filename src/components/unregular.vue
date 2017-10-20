@@ -1,18 +1,18 @@
 <template>
-	<div class="regular" v-title v-bind:data-title="title">
+	<div class="unregular" v-title v-bind:data-title="title">
 	    <div class='header'>
 			<img src="../assets/Path 145@2x.png" alt="" @click='goBack' />
-    		<p>新人标1929期</p>
+    		<p>散标第29次借款</p>
 		</div>
 		<div class="content">
 			<div class="goodInfo">
 				<dl>
 					<dt class="cssd0566bb63175d2">10.0<span> %</span> </dt>
-					<dd>预计年化利率</dd>
+					<dd>利率</dd>
 				</dl>
 				<dl>
 					<dt class="cssd0566bb63175d2">30<span> 天</span> </dt>
-					<dd>理财期限</dd>
+					<dd>投资期限<span>到期还本付息</span></dd>
 				</dl>
 				<div class="progress">
    					<span></span>
@@ -21,33 +21,44 @@
    				<p>剩余可投<span>20.00万</span></p>
    				<b>70%</b>
 			</div>
-			<div class="duration">
-				<ul class="time-sort">
-					<li>投资日期</li>
-					<li>起息日期</li>
-					<li>回款日期</li>
+			<div class="borrowerInfo">
+				<h3>借款人信息</h3>
+				<ul>
+					<li>
+						<img src="../assets/success_ok@2x.png"/>身份证认证
+					</li>
+					<li>
+						<img src="../assets/success_ok@2x.png"/>手机认证
+					</li>
+					<li>
+						<span>姓名:</span>罗纳尔迪尼奥
+					</li>
+					<li>
+						<span>年龄:</span>36岁
+					</li>
+					<li>
+						<span>职业:</span>足球员
+					</li>
+					<li>
+						<span>性别:</span>男
+					</li>
 				</ul>
-				<div class="line">
-					<img src="../assets/Oval 2@2x.png"/>
-					<img src="../assets/Oval 2@2x.png"/>
-					<img src="../assets/Oval 2@2x.png"/>
-					<p></p>
-				</div>
-				<ul class="time-detail">
-					<li>2017-09-30</li>
-					<li>2017-09-30</li>
-					<li>2017-09-30</li>
+				<h3>信用记录</h3>
+				<ul>
+					<li>
+						<span>芝麻信用:</span>459分
+					</li>
+					<li>
+						<span>逾期次数:</span>5次
+					</li>
+					<li>
+						<span>借款次数:</span>10次
+					</li>
 				</ul>
-				<div class="line-05"></div>
-				<div class="way">
-					收益方式
-					<span>到期还本付息</span>
-				</div>
 			</div>
 			<div class="list">
-				<div class="tab" v-bind:class="{active:classify==0}" @click="tab(0)">已投资列表</div>
-				<div class="tab" v-bind:class="{active:classify==1}" @click="tab(1)">项目介绍</div>
-				<ul class="ranklist" v-show="classify==0">
+				<h3>已投资列表</h3>
+				<ul class="ranklist">
 					<li>
 						<div class="rank"><img src="../assets/1奖牌@2x.png"/></div>
 						<dl>
@@ -94,37 +105,30 @@
 		</div>
 		<div class="buy">
 			<p>1万元收益约<span>100元</span></p>
-			<button @click="buy">自动投标</button>
+			<button>自动投标</button>
 		</div>
 	</div>
 </template>
 
 <script>
 export default {
-  name: 'regular',
+  name: 'unregular',
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
-      classify: 0,
-      title: '新人标1929期'
+      title: '散标第29次借款'
     }
   },
   methods: {
   	goBack(){
-  		this.$router.go(-1);
-  	},
-  	tab(index){
-  		this.classify = index;
-  	},
-  	buy(){
-  		this.$router.push({path: '/buy'});
+  		this.$router.go(-1)
   	}
   }
 }
 </script>
 
 <style lang='scss' scoped>
-.regular{
+.unregular{
 	width: 100%;
 	height: 100%;
 	position: relative;
@@ -158,7 +162,6 @@ export default {
 			background: #FFFFFF;
 			overflow: hidden;
 			position: relative;
-			margin-bottom: .15rem;
 			dl{
 				width: 50%;
 				float: left;
@@ -177,6 +180,10 @@ export default {
 					font-size: .13rem;
 					line-height: .13rem;
 					color: #999999;
+					span{
+						font-size: .11rem;
+						float: right;
+					}
 				}
 			}
 			.progress{
@@ -218,94 +225,48 @@ export default {
 				float: left;
 			}
 		}
-		.duration{
+		.borrowerInfo{
 			width: 100%;
 			background: #FFFFFF;
 			overflow: hidden;
-			padding-top: .15rem;
-			margin-bottom: .1rem;
-			.time-sort{
+			h3{
 				width: 100%;
+				height: .43rem;
+				background: #F6F6F6;
 				padding: 0 7%;
-				margin-bottom: .1rem;
-				overflow: hidden;
-				li{
-					width: 33%;
-					float: left;
-					font-size: .13rem;
-					line-height: .13rem;
-					color: #999999;
-				}
-				li:nth-child(1){
-					text-align: left;
-					padding-left: .04rem;
-				}
-				li:nth-child(3){
-					text-align: right;
-					padding-right: .04rem;
-				}
-			}
-			.line{
-				position: relative;
-				margin-bottom: .05rem;
-				img{
-					width: .08rem;
-					position: absolute;
-					margin: -.04rem .04rem 0 0;
-				}
-				img:nth-child(1){
-					left: 14%;
-				}
-				img:nth-child(2){
-					left: 50%;
-				}
-				img:nth-child(3){
-					right: 14%;
-					margin-right: -.04rem;
-				}
-				p{
-					width: 72%;
-					height: .01rem;
-					margin-left: 14%;
-					background: #FC9800;
-				}
-			}
-			.time-detail{
-				width: 100%;
-				padding: 0 7%;
-				margin-bottom: .15rem;
-				overflow: hidden;
-				li{
-					width: 33%;
-					float: left;
-					font-size: .13rem;
-					line-height: .13rem;
-					color: #333;
-				}
-				li:nth-child(1){
-					text-align: left;
-				}
-				li:nth-child(3){
-					text-align: right;
-				}
-			}
-			.line-05{
-				width: 93%;
-				margin-left: 7%;
-				height: 1px;
-				box-shadow: inset 0 1px 1px -1px #E0E0E0;
-			}
-			.way{
-				width: 100%;
-				height: .45rem;
-				padding: 0 7%;
-				font-size: .13rem;
-				line-height: .45rem;
+				font-size: .14rem;
 				color: #999999;
+				font-weight: normal;
+				line-height: .43rem;
 				text-align: left;
-				span{
+				margin: 0;
+			}
+			ul{
+				padding: 0 7%;
+				background: #FFFFFF;
+				overflow: hidden;
+				li{
+					font-size: .15rem;
 					color: #333333;
-					float: right;
+					line-height: .45rem;
+					text-align: left;
+					float: left;
+					img{
+						width: .17rem;
+						display: block;
+						margin: .14rem .08rem 0 0;
+						float: left;
+					}
+					span{
+						color: #999999;
+						padding-right: .15rem;
+					}
+				}
+				li:nth-child(odd){
+					width: 60%;
+				}
+				li:nth-child(even){
+					width: 40%;
 				}
 			}
 		}
@@ -313,17 +274,17 @@ export default {
 			width: 100%;
 			overflow: hidden;
 			background: #FFFFFF;
-			.tab{
-				width: 50%;
-				height: .42rem;
-				float: left;
-				font-size: .15rem;
-				line-height: .42rem;
-				color: #666666;
-				border-bottom: .01rem solid #D7D7D7;
-			}
-			.active{
-				border-bottom: .02rem solid #FC9800;
+			h3{
+				width: 100%;
+				height: .43rem;
+				background: #F6F6F6;
+				padding: 0 7%;
+				font-size: .14rem;
+				color: #999999;
+				font-weight: normal;
+				line-height: .43rem;
+				text-align: left;
+				margin: 0;
 			}
 			.ranklist{
 				width: 100%;

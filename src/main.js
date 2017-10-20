@@ -7,6 +7,17 @@ import router from './router'
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
+
+Vue.directive('title', {
+  inserted: function (el, binding) {
+    document.title = el.dataset.title
+  }
+})
+
+Vue.filter('number',function(value,num){//四舍五入保留多位小数
+	return value.toFixed(num);
+})
+
 new Vue({
   el: '#app',
   router,

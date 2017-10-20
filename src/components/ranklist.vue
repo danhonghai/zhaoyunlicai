@@ -1,8 +1,23 @@
 <template>
-	<div class="ranklist">
+	<div class="ranklist" v-title data-title="已投资列表">
 	 	<div class='header'>
 			<img src="../assets/Path 145@2x.png" alt="" @click='goBack' />
     		<p>已投资列表</p>
+		</div>
+		<!--下拉刷新容器-->
+		<div id="refreshContainer" class="mui-content mui-scroll-wrapper">
+		  <div class="mui-scroll">
+		    <!--数据列表-->
+		    <ul class="mui-table-view mui-table-view-chevron">
+		      <li>1</li>
+		      <li>1</li>
+		      <li>1</li>
+		      <li>1</li>
+		      <li>1</li>
+		      <li>1</li>
+		      <li>1</li>
+		    </ul>
+		  </div>
 		</div>
 		<ul class="rankList">
 			<li>

@@ -1,5 +1,5 @@
 <template>
-  <div class="homepage">
+  <div class="homepage" v-title data-title="首页">
   	<div class="mui-slider">
 		  <div class="mui-slider-group mui-slider-loop">
 		    <!--支持循环，需要重复图片节点-->
