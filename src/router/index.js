@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import login from '@/components/login'											//登录
+import register from '@/components/register'								//注册
 import homepage from '@/components/homepage'			//首页
 import invest from '@/components/invest'					//产品列表
 import regular from '@/components/regular'				//定期详情
@@ -17,7 +19,7 @@ import modifyLoginPsdA from '@/components/modifyLoginPsdA'  //修改交易密码
 import modifyPayPsdA from '@/components/modifyPayPsdA'      //修改交易密码A页面
 import modifyPayPsdB from '@/components/modifyPayPsdB'      //修改交易密码B页面
 import cashCommission from '@/components/cashCommission'    //提现
-import cashCommissionResult from '@/components/cashCommissionResult'  //提现结果
+import cashResult from '@/components/cashResult'  					//提现结果
 import investRecord from '@/components/investRecord'
 
 
@@ -27,6 +29,16 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
+   	{
+      path: '/login',
+      name: 'login',
+      component: login
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: register
+    },
     {
       path: '/',
       name: 'homepage',
@@ -113,9 +125,9 @@ export default new Router({
       component: cashCommission
     },
     {
-      path: '/cashCommissionResult',
-      name: 'cashCommissionResult',
-      component: cashCommissionResult
+      path: '/cashResult',
+      name: 'cashResult',
+      component: cashResult
     },
     {
       path: '/investRecord',

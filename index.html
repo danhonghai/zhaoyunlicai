@@ -1,81 +1,87 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="static/mui/mui.css"/>
-    <link href='http://cdn.webfont.youziku.com/webfonts/nomal/95698/35481/59b23cc9f629d81bf02ed5f1.css' rel='stylesheet' type='text/css' />
-    <link href="static/mui/mui.picker.css" rel="stylesheet" />
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="static/mui/mui.css" />
+		<link href='http://cdn.webfont.youziku.com/webfonts/nomal/95698/35481/59b23cc9f629d81bf02ed5f1.css' rel='stylesheet' type='text/css' />
+		<link href="static/mui/mui.picker.css" rel="stylesheet" />
 		<link href="static/mui/mui.poppicker.css" rel="stylesheet" />
-    <title>zhaoyunlicai</title>
-    <script>
-    	
-    	//自适应
+		<title>zhaoyunlicai</title>
+		<script>
+			//自适应
 			function init() {
 				var screenW = document.documentElement.offsetWidth || document.body.offsetWidth;
 				var oHtml = document.getElementsByTagName('html')[0];
-				oHtml.style.fontSize = (100*screenW/375) + 'px';
-				
+				oHtml.style.fontSize = (100 * screenW / 375) + 'px';
+
 			}
 			init();
-			window.addEventListener('orientationchange',init);
-			window.addEventListener('resize',init);
-			
+			window.addEventListener('orientationchange', init);
+			window.addEventListener('resize', init);
+
 			//原生ajax
-			var ajax = function(info){
-				if(window.XMLHttpRequest){
-					var xhr = new XMLHttpRequest();	
-				}else{
+			var ajax = function(info) {
+				if(window.XMLHttpRequest) {
+					var xhr = new XMLHttpRequest();
+				} else {
 					var xhr = new ActiveXObject("Microsoft.XMLHTTP");
 				}
 				var url = info.url;
-				var type = info.type||"GET";
-				var data = info.data||"";
-				
-				if(type=="GET"){
-					xhr.open("GET",url+"?"+data+"&t="+new Date().getTime(),true);
+				var type = info.type || "GET";
+				var data = info.data || "";
+
+				if(type == "GET") {
+					xhr.open("GET", url + "?" + data + "&t=" + new Date().getTime(), true);
 					xhr.send();
-				}else{
-					xhr.open("POST",url,true);
-					xhr.setRequestHeader("Content-Type","application/json; charset=utf-8");
-					xhr.setRequestHeader("dt",(new Date()).getTime());
-					xhr.setRequestHeader("AppSource","h5");
+				} else {
+					xhr.open("POST", url, true);
+					xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+					xhr.setRequestHeader("dt", (new Date()).getTime());
+					xhr.setRequestHeader("AppSource", "h5");
 					xhr.send(data);
 				}
-				
-				xhr.onload = function(){
-					if(info.success){
+
+				xhr.onload = function() {
+					if(info.success) {
 						info.success(JSON.parse(xhr.responseText));
 					}
 				}
 			}
-    </script>
-    <style>
-    	*{
+		</script>
+		<style>
+			* {
 				padding: 0;
 				margin: 0;
 			}
-			input[type='text']{
+			
+			input[type='text'] {
 				padding: 0!important;
 			}
-			li{
+			
+			li {
 				list-style: none;
 			}
-			a{
+			
+			a {
 				text-decoration: none;
 			}
-    	body{
-    		width: 100%;
-    		height: 100%;
-    		font-size: 100px;
-    		background: #F6F6F6;
-    	}
-    </style>
-  </head>
-  <body>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+			
+			body {
+				width: 100%;
+				height: 100%;
+				font-size: 100px;
+				background: #F6F6F6;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="app"></div>
+		<!-- built files will be auto injected -->
+	</body>
+
 </html>
 <script src='static/mui/mui.min.js'></script>
 <script src='static/MD5/md5.js'></script>

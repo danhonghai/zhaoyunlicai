@@ -17,7 +17,7 @@
    			<li>
    				<dl>
    					<dt><a href="#"><img src="../assets/4@2x.png"/></a></dt>
-   					<dd>公司介绍</dd>
+   					<dd><router-link to='login'>公司介绍</router-link></dd>
    				</dl>
    			</li>
    			<li>
@@ -127,9 +127,6 @@ export default {
   			this.$router.push({path: '/personal'})
   		}
   	}
-  },
-  mouted() {
-  	
   }
 }
 </script>

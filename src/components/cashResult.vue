@@ -1,5 +1,5 @@
 <template>
-	<div class="buyResult" v-title data-title="结果">
+	<div class="cashResult" v-title data-title="结果">
 		<div class='header'>
 			<img src="../assets/Path 145@2x.png" alt="" @click='goBack' />
 			<p>结果</p>
@@ -15,18 +15,20 @@
 					</div>
 				</div>
 				<dl>
-					<dt class="active">申购产品成功,申购金额100000.00</dt>
+					<dt class="active">申请提现申请成功,金额100000.00</dt>
 					<dd>2017-04-01 14:01</dd>
 				</dl>
 				<dl>
-					<dt>交易处理中</dt>
+					<dt>银行通道审核中</dt>
 					<dd>2017-04-01 14:01</dd>
 				</dl>
 				<dl>
-					<dt>开始计息</dt>
+					<dt>提现成功</dt>
 					<dd>2017-04-01 14:01</dd>
 				</dl>
 			</div>
+			<p>工作日提现,与周末或节假日需顺延至下个工作日</p>
+			<!--修改提示语-->
 			<button @click="finish">完成</button>
 		</div>
 		<div class="bottom">
@@ -38,7 +40,7 @@
 
 <script>
 	export default {
-		name: 'buyResult',
+		name: 'cashResult',
 		data() {
 			return {
 
@@ -62,7 +64,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='scss' scoped>
-	.buyResult {
+	.cashResult {
 		width: 100%;
 		height: 100%;
 		.header {
@@ -148,6 +150,14 @@
 					}
 				}
 			}
+			p {
+				font-size: .11rem;
+				color: #999999;
+				line-height: .11rem;
+				margin: 0;
+				margin-top: .12rem;
+				padding-left: 7%;
+			}
 			button {
 				width: 94%;
 				height: .45rem;
@@ -160,15 +170,15 @@
 				margin: .2rem 3% 0;
 			}
 		}
-		.bottom {
+		.bottom{
 			width: 100%;
 			position: fixed;
 			bottom: 0;
-			p {
+			p{
 				font-size: .13rem;
 				line-height: .13rem;
 			}
-			a {
+			a{
 				display: block;
 				width: 1.1rem;
 				font-size: .16rem;
