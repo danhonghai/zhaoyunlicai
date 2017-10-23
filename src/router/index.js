@@ -22,10 +22,9 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/homepage',
+      path: '/',
       name: 'homepage',
-      component: homepage,
-      meta: {title:'首页'}
+      component: homepage
     },
     {
       path: '/invest',
