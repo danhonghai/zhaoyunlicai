@@ -127,6 +127,9 @@ export default {
   			this.$router.push({path: '/personal'})
   		}
   	}
+  },
+  mouted() {
+  	
   }
 }
 </script>

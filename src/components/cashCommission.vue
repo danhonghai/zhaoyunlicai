@@ -18,7 +18,21 @@
 			<input type="number" placeholder="输入提现金额" />
 			<div class='btn'>全部金额</div>
 		</div>
-		<!--<button>确定</button>-->
+		<div class='arriveTime'>预计两小时内到账</div>
+		<button>确定</button>
+		<div class='cashPsd' v-if='cashPsdStatus'>
+			<div class='outer'>
+				<p>输入交易密码</p>
+				<div class='inner'>
+					<input class='inp1' type="password" maxlength="1" />
+					<input class='inp2' type="password" maxlength="1" />
+					<input class='inp3' type="password" maxlength="1" />
+					<input class='inp4' type="password" maxlength="1" />
+					<input class='inp5' type="password" maxlength="1" />
+					<input class='inp6' type="password" maxlength="1" />
+				</div>
+			</div>
+		</div>
 		<div class='tips' v-if='tipsstatus' v-text='tips'></div>
 		<div class='haunchong' v-if='huanchongStatus'>
 			<img src="../assets/loading.gif" alt="" />
@@ -34,7 +48,8 @@ export default {
       msg: 'Welcome to Your Vue.js App',
       tipsstatus: false,
       tips: '提示框',
-      huanchongStatus: false
+      huanchongStatus: false,
+      cashPsdStatus: false
     }
   },
   methods: {
@@ -126,24 +141,37 @@ export default {
 			font-size: 0.15rem;
 			line-height: 0.45rem;
 			color: #333;
+			margin-left: 0.3rem;
 		}
 		input{
 			float: left;
-			width: 1.5rem;
+			width: 1.8rem;
 			height: 0.45rem;
 			font-size: 0.15rem;
 			line-height: 0.45rem;
 			color: #333;
+			padding-left: 0.1rem;
+			border: none;
+			margin-bottom: 0;
 		}
 		.btn{
 			float: right;
 			font-size: 0.15rem;
 			line-height: 0.45rem;
 			color: #4A77A6;
+			margin-right: 0.28rem;
 		}
 	}
+	.arriveTime{
+		height: 0.32rem;
+		text-align: left;
+		font-size: 0.12rem;
+		line-height: 0.32rem;
+		color: #999;
+		padding-left: 0.3rem;
+	}
 	button{
-		width: 3.23rem;
+		width: 3.51rem;
 		height:0.45rem;
 		background: #FFC266;
 		font-size: 0.18rem;
@@ -152,8 +180,54 @@ export default {
 		border-radius: 0.03rem;
 		border: none;
 		padding: 0;
+		margin-top: 0.1rem;
 	}
-	
+	.cashPsd{
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(55,55,55,.3);
+		z-index: 10;
+	}
+	.outer{
+		position: absolute;
+		width: 3.4rem;
+		height: 1.5rem;
+		left: 0.18rem;
+		top: 1rem;
+		background: #fff;
+		p{
+			height: 0.5rem;
+			font-size: 0.2rem;
+			line-height: 0.5rem;
+			border-bottom: 1px solid #D7D7D7;
+		}
+		.inner{
+			width: 3.28rem;
+			height: 0.46rem;
+			border: 1px solid #D7D7D7;
+			margin-left: 0.08rem;
+			margin-top: 0.2rem;
+			input{
+				float: left;
+				height:0.43rem;
+				width: 0.54rem;
+				margin-bottom: 0;
+				padding: 0;
+				border-radius: 0;
+				border: none;
+				border-right: 1px solid #D7D7D7;
+				text-align: center;
+				font-size: 0.26rem;
+				line-height: 0.43rem;
+			}
+			input:last-child{
+				border-right: 0;
+			}
+		}
+	}
 	
 	.tips{
 		position: absolute;
