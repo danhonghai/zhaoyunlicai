@@ -1,9 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import homepage from '@/components/homepage'
-import invest from '@/components/invest'
-import regular from '@/components/regular'
-import ranklist from '@/components/ranklist'
+import homepage from '@/components/homepage'			//首页
+import invest from '@/components/invest'					//产品列表
+import regular from '@/components/regular'				//定期详情
+import unregular from '@/components/unregular'		//散标详情
+import buy from '@/components/buy'								//购买
+import buyResult from '@/components/buyResult'		//购买结果
+import recharge from '@/components/recharge'			//充值
+import ranklist from '@/components/ranklist'			//购买排行
 import personal from '@/components/personal'
 import setPayPsd from '@/components/setPayPsd'
 import certification from '@/components/certification'
@@ -35,6 +39,26 @@ export default new Router({
       path: '/regular',
       name: 'regular',
       component: regular
+    },
+    {
+      path: '/unregular',
+      name: 'unregular',
+      component: unregular
+    },
+    {
+      path: '/buy',
+      name: 'buy',
+      component: buy
+    },
+    {
+      path: '/buyResult',
+      name: 'buyResult',
+      component: buyResult
+    },
+    {
+      path: '/recharge',
+      name: 'recharge',
+      component: recharge
     },
     {
       path: '/ranklist',
@@ -86,6 +110,5 @@ export default new Router({
       name: 'cashCommission',
       component: cashCommission
     }
-    
   ]
 })

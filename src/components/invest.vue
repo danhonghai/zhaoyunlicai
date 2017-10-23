@@ -1,5 +1,5 @@
 <template>
-  <div class="invest">
+  <div class="invest" v-title data-title="投资">
   	<div class="top">
   		<ul>
   			<li v-bind:class="{active:classify==0}" @click="tab(0)">定期</li>
@@ -76,7 +76,7 @@
     	</div>
 			<div class="unregular" v-show="classify==1">
 				<ul>
-    			<li class="saling">
+    			<li class="saling" @click="unregular()">
     				<div class="item-title">
     					<h3>散标20102期</h3>
     				</div>
@@ -166,6 +166,9 @@ export default {
   	},
   	regular(){
   		this.$router.push({path: '/regular'})
+  	},
+  	unregular(){
+  		this.$router.push({path: '/unregular'})
   	}
   }
 }
