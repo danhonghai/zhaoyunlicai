@@ -4,7 +4,7 @@
   		<div class='personInfo'>
   			<div class='logo'></div>
 	    	<span>用户名</span>
-	    	<div class='goUserSet'>设置</div>
+	    	<div @click="Goto('accountSet')" class='goUserSet'>设置</div>
   		</div>
 	  	<div class='income'>
 	  		<div class='left'>
@@ -26,19 +26,19 @@
   	<div class='changeSum'>
   		<span>可用余额：</span>
   		<span>2000.00元</span>
-  		<button :class='{btnBackground:isYellow==0}' @click='yellow(0)'>充值</button>
-  		<button :class='{btnBackground:isYellow==1}' @click='yellow(1)'>提现</button>
+  		<router-link to="recharge"><button :class='{btnBackground:isYellow==0}' @click='yellow(0)'>充值</button></router-link>
+  		<router-link to="cashCommission"><button :class='{btnBackground:isYellow==1}' @click='yellow(1)'>提现</button></router-link>
   	</div>
   	<ul class='record'>
-  		<li>
+  		<li @click="Goto('investRecord')">
   			<img src="../assets/record@2x.png" alt="" />
   			<span>投资记录</span>
   		</li>
-  		<li>
-  			<img src="../assets/money@2x.png" alt="" />
-  			<span>资金流水记录</span>
+  		<li @click="Goto('moneyRecord')">
+	  			<img src="../assets/money@2x.png" alt="" />
+	  			<span>资金流水记录</span>
   		</li>
-  		<li>
+  		<li @click="Goto('myBankcard')">
   			<img src="../assets/card@2x.png" alt="" />
   			<span>我的银行卡</span>
   		</li>
@@ -53,7 +53,7 @@
   			<span>客服电话</span>
   			<span>0571-2939291</span>
   		</li>
-  		<li>
+  		<li @click="Goto('suggestion')">
   			<img src="../assets/opinion@2x.png" alt="" />
   			<span>意见反馈</span>
   		</li>
@@ -97,6 +97,9 @@ export default {
   		}else if(this.isLight == 3){
   			this.$router.push({path: '/personal'})
   		}
+  	},
+  	Goto(str){
+  		this.$router.push({path: '/'+str});
   	},
   	yellow(index){
   		this.isYellow = index
@@ -272,37 +275,38 @@ export default {
 	}
 	.bottom{
 		position: fixed;
-	  bottom: 0;
-	  width: 100%;
-	  height: 0.5rem;
-	  background: #FFFFFF;
+    bottom: 0;
+    width: 100%;
+    height: 0.5rem;
+    background: #FFFFFF;
+    box-shadow: inset 0 1px 1px -1px #D8D8D8;
     ul{
       width: 100%;
-      box-shadow: inset 0 1px 1px -1px #D8D8D8;
-      li{
-        float: left;
-        width: 33%;
-        height: .5rem;
-        float: left;
-        font-size: .1rem;
-        line-height: .1rem;
-        img{
-          display: block;
-          width: .2rem;
-          height: .2rem;
-          margin: .08rem auto .05rem;
-        }
-        p{
-          margin: 0;
-          color: #BCBCBC;
-        }
-      }
-    }
-    .active{
-      p{
-        color: #FC9800;
-      }
-    }
-  }
+      background: #FFFFFF;
+			li{
+				float: left;
+				width: 33%;
+				height: .5rem;
+				float: left;
+				font-size: .1rem;
+				line-height: .1rem;
+				img{
+					display: block;
+					width: .2rem;
+					height: .2rem;
+					margin: .08rem auto .05rem;
+				}
+				p{
+					margin: 0;
+					color: #BCBCBC;
+				}
+			}
+		}
+		.active{
+			p{
+				color: #FC9800;
+			}
+		}
+	}
 }
 </style>

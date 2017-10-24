@@ -233,7 +233,7 @@ export default {
 					width: 33%;
 					float: left;
 					font-size: .13rem;
-					line-height: .13rem;
+					line-height: .15rem;
 					color: #999999;
 				}
 				li:nth-child(1){

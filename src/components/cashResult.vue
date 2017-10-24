@@ -47,10 +47,10 @@
 			}
 		},
 		methods: {
-			goBack() {
+			goBack() {	//后退
 				this.$router.go(-1)
 			},
-			finish() {
+			finish() {	//点击完成
 				this.$router.push({
 					path: '/regular'
 				});

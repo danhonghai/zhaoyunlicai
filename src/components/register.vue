@@ -8,12 +8,18 @@
 			<div class="codeRegister">
 				<input type="tel" v-model="phoneNum" v-on:focus="" class="phoneNum" maxlength="11" placeholder="手机号" />
 				<img v-show="clearStatus" @click="clear" src="../assets/Combined Shape Copy@2x.png" />
-				<input type="tel" class="code" maxlength="6" placeholder="验证码" />
+				<input type="tel" v-model="code" class="code" maxlength="6" placeholder="验证码" />
 				<div class="getCode" @click="getCode">{{codeContent}}</div>
 				<p>验证码错误</p>
 			</div>
 			<button>确定</button>
 			<span>已有账号？<router-link v-bind:to="'login'">登录</router-link></span>
+		</div>
+		<transition name="fade">
+			<div class='tips' v-if='tipsstatus' v-text='tips'></div>
+		</transition>
+		<div class='haunchong' v-if='huanchongStatus'>
+			<img src="../assets/loading.gif" alt="" />
 		</div>
 	</div>
 </template>
@@ -23,11 +29,16 @@
 		name: 'register',
 		data() {
 			return {
-				codeContent: '获取验证码',
-				wait: 60, //获取验证码倒计时
-				getCodeStatus: true, //获取验证码状态
-				clearStatus: false,
-				phoneNum: null
+				codeContent: '获取验证码',		//获取验证码
+				wait: 60, 						//获取验证码倒计时
+				getCodeStatus: true, 			//获取验证码状态
+				clearStatus: false,				//清楚手机号X显隐
+				phoneNum: null,					//手机号
+				code: null,						//验证码
+				codestatus: true,				//验证码错误显隐
+				tipsstatus: false,				//提示框显隐
+				tips: '提示框',					//提示框内容
+				huanchongStatus: false,			//缓冲框显隐
 			}
 		},
 		watch: {
@@ -40,17 +51,24 @@
 			}
 		},
 		methods: {
-			goBack() {
+			goBack() {	//后退
 				var opened = window.open('about:blank', '_self');
 				opened.opener = null;
 				opened.close();
 			},
-			clear() {
+			clear() {	//手机号码清除
 				this.phoneNum = null;
 			},
-			getCode() {
-				var that = this;
-				if(that.getCodeStatus) {
+			getCode() {	//获取验证码
+				let that = this;
+				let regphone = /^1[34578]\d{9}$/;
+				if(!regphone.test(that.phoneNum)){
+					that.tipsstatus = true;
+					that.tips = '请输入正确的手机号';
+					setTimeout(function() {
+						that.tipsstatus = false;
+					}, 1500);
+				}else if(that.getCodeStatus) {
 					that.getCodeStatus = false;
 					let timer = setInterval(function() {
 						if(that.wait == 0) {
@@ -79,6 +97,19 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='scss' scoped>
+	.fade-enter-active,
+	.fade-leave-active {
+		transition: opacity .5s
+	}
+	
+	.fade-enter,
+	.fade-leave-to
+	/* .fade-leave-active in below version 2.1.8 */
+	
+	{
+		opacity: 0
+	}
+	
 	::-webkit-input-placeholder {
 		/* WebKit browsers */
 		color: #999;
@@ -193,6 +224,36 @@
 				a {
 					color: #F5BA4E;
 				}
+			}
+		}
+		.tips {
+			position: absolute;
+			left: 0.8rem;
+			top: 0.5rem;
+			width: 2rem;
+			font-size: 0.15rem;
+			color: #fff;
+			line-height: 0.3rem;
+			background: rgba(55, 55, 55, .8);
+			padding-left: 0.07rem;
+			padding-right: 0.07rem;
+			z-index: 100;
+		}
+		.haunchong {
+			position: fixed;
+			width: 100%;
+			height: 100%;
+			left: 0;
+			top: 0;
+			background: rgba(55, 55, 55, .3);
+			z-index: 20;
+			img {
+				position: absolute;
+				left: 1.5rem;
+				top: 2rem;
+				width: 0.8rem;
+				height: 0.8rem;
+				border-radius: 0.06rem;
 			}
 		}
 	}

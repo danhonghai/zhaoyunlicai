@@ -7,20 +7,26 @@
 			<div class="tabs" v-bind:class="{active:classify==0}" @click="tab(0)">手机验证码登录</div>
 			<div class="tabs" v-bind:class="{active:classify==1}" @click="tab(1)">密码登录</div>
 			<div class="codeLogin" v-show="classify==0">
-				<input type="tel" v-model="phoneNum" v-on:focus="changeStyleF('phoneNum')" v-on:blur="changeStyleB('phoneNum')" id="phoneNum" class="phoneNum" maxlength="11" placeholder="手机号" />
+				<input type="tel" v-model="phoneNum" v-on:focus="changeStyleF('phoneNum')" v-on:blur="changeStyleB('phoneNum')" id="phoneNum" class="phoneNum" maxlength="11" pattern="/^1(3|4|5|7|8)\d{9}$/" placeholder="手机号" />
 				<img v-show="clearStatus" @click="clear" src="../assets/Combined Shape Copy@2x.png" />
-				<input type="tel" v-on:focus="changeStyleF('code')" v-on:blur="changeStyleB('code')" id="code" maxlength="6" placeholder="验证码" />
+				<input type="tel" v-model="code" v-on:focus="changeStyleF('code')" v-on:blur="changeStyleB('code')" id="code" maxlength="6" placeholder="验证码" />
 				<div class="getCode" @click="getCode">{{codeContent}}</div>
-				<p>验证码错误</p>
+				<p v-show="codestatus">验证码错误</p>
 			</div>
 			<div class="psdLogin" v-show="classify==1">
-				<input type="tel" v-on:focus="changeStyleF('phoneNum2')" v-on:blur="changeStyleB('phoneNum2')" id="phoneNum2" v-model="phoneNum" class="phoneNum" maxlength="11" placeholder="手机号" />
+				<input type="tel" v-model="phoneNum" v-on:focus="changeStyleF('phoneNum2')" v-on:blur="changeStyleB('phoneNum2')" id="phoneNum2" class="phoneNum" maxlength="11" placeholder="手机号" />
 				<img v-show="clearStatus" @click="clear" src="../assets/Combined Shape Copy@2x.png" />
-				<input type="password" v-on:focus="changeStyleF('psd')" v-on:blur="changeStyleB('psd')" id="psd" placeholder="密码" />
-				<p>登录密码错误</p>
+				<input type="password" v-model="psd" v-on:focus="changeStyleF('psd')" v-on:blur="changeStyleB('psd')" id="psd" placeholder="密码" />
+				<p v-show="psdstatus">登录密码错误</p>
 			</div>
-			<button>确定</button>
+			<button @click="submit">确定</button>
 			<span><router-link to="register">注册</router-link></span>
+		</div>
+		<transition name="fade">
+			<div class='tips' v-if='tipsstatus' v-text='tips'></div>
+		</transition>
+		<div class='haunchong' v-if='huanchongStatus'>
+			<img src="../assets/loading.gif" alt="" />
 		</div>
 	</div>
 </template>
@@ -30,12 +36,19 @@
 		name: 'login',
 		data() {
 			return {
-				classify: 0,
-				codeContent: '获取验证码',
-				wait: 60, //获取验证码倒计时
-				getCodeStatus: true, //获取验证码状态
-				clearStatus: false,
-				phoneNum: null
+				classify: 0,					//tab切换
+				codeContent: '获取验证码',		//获取验证码内容
+				wait: 60, 						//获取验证码倒计时
+				getCodeStatus: true, 			//获取验证码状态
+				clearStatus: false,				//清除手机号码X显隐
+				phoneNum: null,					//手机号码
+				code: null,						//验证码
+				codestatus: true,				//验证码错误显隐
+				psd: null,						//密码
+				psdstatus: true,				//密码错误显隐
+				tipsstatus: false,				//提示框显隐
+				tips: '提示框',					//提示框内容
+				huanchongStatus: false,			//缓冲框显隐
 			}
 		},
 		watch: {
@@ -48,26 +61,39 @@
 			}
 		},
 		methods: {
-			goBack() {
+			goBack() {	//关闭窗口
 				var opened = window.open('about:blank', '_self');
 				opened.opener = null;
 				opened.close();
 			},
-			tab(index) {
+			tab(index) {	//tab切换
 				this.classify = index;
 			},
-			clear() {
+			clear() {		//清除手机号
 				this.phoneNum = null;
 			},
-			changeStyleF(ID){
+			changeStyleF(ID) {		//获取焦点后
 				document.getElementById(ID).style.border = '1px solid #FF6666';
+				if(ID == 'code'){
+					this.codestatus = false;
+				}
+				if(ID == 'psd'){
+					this.psdstatus = false;
+				}
 			},
-			changeStyleB(ID){
+			changeStyleB(ID) {		//失去焦点后
 				document.getElementById(ID).style.border = '1px solid #e0e0e0';
 			},
-			getCode() {
-				var that = this;
-				if(that.getCodeStatus) {
+			getCode() {			//获取验证码
+				let that = this;
+				let regphone = /^1[34578]\d{9}$/;
+				if(!regphone.test(that.phoneNum)){
+					that.tipsstatus = true;
+					that.tips = '请输入正确的手机号';
+					setTimeout(function() {
+						that.tipsstatus = false;
+					}, 1500);
+				}else if(that.getCodeStatus) {
 					that.getCodeStatus = false;
 					let timer = setInterval(function() {
 						if(that.wait == 0) {
@@ -82,13 +108,29 @@
 						}
 					}, 1000);
 				}
+			},
+			submit() {		//提交
+				let that = this;
+				let regphone = /^1[34578]\d{9}$/;
+				/*let regCode = /^\d{6}$/;*/
+				if(!regphone.test(that.phoneNum)){
+					that.tipsstatus = true;
+					that.tips = '请输入正确的手机号';
+					setTimeout(function() {
+						that.tipsstatus = false;
+					}, 1500);
+				}/*else if(!regCode.test(that.code) && that.classify == 0){
+					that.codestatus = true;
+				}*/
 			}
 		},
 		mounted() {
 			document.body.style.background = '#FFFFFF';
 		},
-		beforeRouteLeave(to, from, next) {
+		beforeRouteLeave(to, from, next) {		//路由离开前
 			document.body.style.background = '#F6F6F6';
+			this.phoneNum = null;
+			this.psd = null;
 			next();
 		}
 	}
@@ -96,6 +138,19 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='scss' scoped>
+	.fade-enter-active,
+	.fade-leave-active {
+		transition: opacity .5s
+	}
+	
+	.fade-enter,
+	.fade-leave-to
+	/* .fade-leave-active in below version 2.1.8 */
+	
+	{
+		opacity: 0
+	}
+	
 	::-webkit-input-placeholder {
 		/* WebKit browsers */
 		color: #999;
@@ -157,6 +212,7 @@
 				float: left;
 				width: 100%;
 				position: relative;
+				padding-bottom: .3rem;
 				input {
 					width: 100%;
 					height: .45rem;
@@ -179,6 +235,8 @@
 					line-height: .3rem;
 					text-align: left;
 					margin: 0;
+					position: absolute;
+					bottom: 0;
 				}
 				img {
 					width: .1rem;
@@ -216,6 +274,36 @@
 				a {
 					color: #666666;
 				}
+			}
+		}
+		.tips {
+			position: absolute;
+			left: 0.8rem;
+			top: 0.5rem;
+			width: 2rem;
+			font-size: 0.15rem;
+			color: #fff;
+			line-height: 0.3rem;
+			background: rgba(55, 55, 55, .8);
+			padding-left: 0.07rem;
+			padding-right: 0.07rem;
+			z-index: 100;
+		}
+		.haunchong {
+			position: fixed;
+			width: 100%;
+			height: 100%;
+			left: 0;
+			top: 0;
+			background: rgba(55, 55, 55, .3);
+			z-index: 20;
+			img {
+				position: absolute;
+				left: 1.5rem;
+				top: 2rem;
+				width: 0.8rem;
+				height: 0.8rem;
+				border-radius: 0.06rem;
 			}
 		}
 	}

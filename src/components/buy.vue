@@ -13,7 +13,7 @@
 					<b><router-link to="/recharge">充值</router-link></b>
 				</div>
 				<div class="investMoney">投资金额
-					<input @keyup="change" type="number" v-model="investMoney" placeholder="100起投 100的整数" />
+					<input type="number" v-model="investMoney" placeholder="100起投 100的整数" />
 				</div>
 			</div>
 			<p>预计收益： <span>{{50 | number(2)}}</span>元</p>
@@ -46,20 +46,20 @@
 		name: 'setPayPsd',
 		data() {
 			return {
-				balance: 20,
-				payWord: '购买',
-				investMoney: '',
-				sixPsd: null,
-				sixPsdStatus: [false, false, false, false, false, false],
-				tipsstatus: false,
-				tips: '提示框',
-				huanchongStatus: false,
-				paypsdStatus: false
+				balance: 20,				//账户余额
+				payWord: '购买',				//购买、充值转换
+				investMoney: null,			//投资金额
+				sixPsd: null,				//支付密码
+				sixPsdStatus: [false, false, false, false, false, false],		//支付密码输入状态
+				tipsstatus: false,			//提示框显隐
+				tips: '提示框',				//提示框内容
+				huanchongStatus: false,		//缓冲框显隐
+				paypsdStatus: false			//支付密码显隐
 			}
 		},
 		directives: {
 			focus: {
-				// 指令的定义
+				// 自动获得焦点
 				inserted: function(el) {
 					el.focus()
 				}
@@ -79,22 +79,24 @@
 						path: '/buyResult'
 					});
 				}
-			}
-		},
-		methods: {
-			goBack() {
-				this.$router.go(-1)
 			},
-			change() {
+			investMoney: function(){
+				//this.investMoney =this.investMoney.toFixed(2)
+				console.log(this.investMoney)
 				if(this.investMoney > this.balance) {
 					this.payWord = '余额不足,请充值';
 				} else {
 					this.payWord = '购买';
 				}
+			}
+		},
+		methods: {
+			goBack() {	//后退
+				this.$router.go(-1)
 			},
-			pay() {
+			pay() {	//点击购买or余额不足按钮
 				console.log(this.investMoney);
-				if(this.investMoney == '') {
+				if(!this.investMoney) {
 					this.tipsstatus = true;
 					this.tips = '请输入金额';
 					let that = this;
@@ -111,8 +113,10 @@
 					this.paypsdStatus = true;
 				}
 			},
-			close() {
+			close() {	//关闭输入交易密码框
 				this.paypsdStatus = false;
+				this.sixPsd = null;
+				this.sixPsdStatus = [false, false, false, false, false, false];
 			}
 		},
 		mounted() {

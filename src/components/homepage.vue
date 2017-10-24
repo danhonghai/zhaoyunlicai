@@ -11,6 +11,12 @@
 		    <!--支持循环，需要重复图片节点-->
 		    <div class="mui-slider-item mui-slider-item-duplicate"><a href="#"><img src="../assets/banner.png" /></a></div>
 		  </div>
+		  <div class="mui-slider-indicator" id="bannerDot">
+				<div class="mui-indicator mui-active"></div>
+				<div class="mui-indicator"></div>
+				<div class="mui-indicator"></div>
+				<div class="mui-indicator"></div>
+			</div>
 		</div>
    	<div class="sort">
    		<ul>
@@ -127,6 +133,12 @@ export default {
   			this.$router.push({path: '/personal'})
   		}
   	}
+  },
+  mounted() {
+  	var gallery = mui('.mui-slider');
+		gallery.slider({
+		  interval:5000//自动轮播周期，若为0则不自动播放，默认为0；
+		});
   }
 }
 </script>
@@ -138,6 +150,23 @@ export default {
 	height: 100%;
 	position: relative;
 	padding-bottom: .5rem;
+	#bannerDot{
+		width: auto;
+		right: 4%;
+		bottom: .09rem;
+		.mui-indicator{
+			width: .06rem;
+			height: .06rem;
+			background: #FFFFFF;
+			border-radius: .06rem;
+			display: block;
+			float: left;
+			transition: width 500ms ease;		/*	动画*/
+		}
+		.mui-indicator.mui-active{
+			width: .17rem;
+		}
+	}
 	.bottom{
 		position: fixed;
     bottom: 0;
@@ -340,7 +369,6 @@ export default {
 					}
 				}
 			}
-			
 		}
 	}
 }

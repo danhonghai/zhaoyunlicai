@@ -146,7 +146,7 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
-      classify: 0
+      classify: 0					//tab切换
     }
   },
   methods: {
@@ -161,7 +161,7 @@ export default {
   			this.$router.push({path: '/personal'})
   		}
   	},
-  	tab(index){
+  	tab(index){	//tab切换
   		this.classify = index;
   	},
   	regular(){
