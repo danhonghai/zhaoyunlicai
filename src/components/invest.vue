@@ -210,7 +210,7 @@ h3{
 		}
 	}
 	.content{
-		margin-top: .45rem;
+		padding-top: .45rem;
 		.regular,
 		.unregular{
 			ul{

@@ -151,7 +151,7 @@ export default {
 		}
 	}
 	.content{
-		margin-top: .5rem;
+		padding-top: .5rem;
 		.goodInfo{
 			width: 100%;
 			padding: 0 7%;

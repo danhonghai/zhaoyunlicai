@@ -110,8 +110,7 @@
 		.content {
 			width: 100%;
 			padding-left: 7%;
-			margin-top: .53rem;
-			padding-top: .12rem;
+			padding-top: .65rem;
 			text-align: left;
 			background: #FFFFFF;
 			overflow: hidden;

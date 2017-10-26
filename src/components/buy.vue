@@ -168,7 +168,7 @@
 			}
 		}
 		.content {
-			margin-top: .5rem;
+			padding-top: .5rem;
 			h3 {
 				width: 100%;
 				height: .45rem;

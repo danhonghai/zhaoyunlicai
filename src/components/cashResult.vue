@@ -90,8 +90,7 @@
 			}
 		}
 		.content {
-			margin-top: .5rem;
-			padding-top: .12rem;
+			padding-top: .62rem;
 			text-align: left;
 			.progress {
 				width: 100%;

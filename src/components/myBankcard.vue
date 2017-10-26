@@ -61,14 +61,13 @@
 		}
 		.content {
 			width: 100%;
-			padding-left: 7%;
-			margin-top: .53rem;
+			padding-top: .53rem;
 			text-align: left;
-			background: #FFFFFF;
 			overflow: hidden;
 			.bankcard{
 				width: 100%;
 				height: .8rem;
+				padding-left: 7%;
 				background: #FFFFFF;
 				margin-bottom: .12rem;
 				.cardnum{

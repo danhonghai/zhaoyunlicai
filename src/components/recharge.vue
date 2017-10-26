@@ -96,8 +96,7 @@ export default {
 		}
 	}
 	.content{
-		margin-top: .5rem; 
-		padding-top: .12rem;
+		padding-top: .62rem;
 		text-align: left;
 		overflow: hidden;
 		.bankcard{
