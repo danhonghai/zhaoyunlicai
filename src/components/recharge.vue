@@ -41,7 +41,7 @@ export default {
   },
   watch: {
   	rechargeMoney: function(){
-  		if(this.rechargeMoney){
+  		if(this.rechargeMoney >= 10){
   			this.disable = false;
   		}else{
   			this.disable = true;

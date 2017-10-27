@@ -13,7 +13,7 @@
 			<input type="text" placeholder="输入短信验证码" />
 			<span class='getCodebtn'>获取验证码</span>
 		</div>
-		<button>下一步</button>
+		<span id="btn">下一步</span>
 		<div class='tips' v-if='tipsstatus' v-text='tips'></div>
 		<div class='haunchong' v-if='huanchongStatus'>
 			<img src="../assets/loading.gif" alt="" />
@@ -130,7 +130,9 @@ export default {
 			color: #4A77A6;
 		}
 	}
-	button{
+	#btn{
+		display: block;
+		margin-left: .26rem;
 		width: 3.23rem;
 		height:0.45rem;
 		background: #FFC266;

@@ -14,8 +14,8 @@ import personal from '@/components/personal'                //我的
 import setPayPsd from '@/components/setPayPsd'              //设置交易密码
 import certification from '@/components/certification'      //认证（实名&绑定银行卡）
 import accountSet from '@/components/accountSet'            //账户设置
-import modifyLoginPsdB from '@/components/modifyLoginPsdB'  //修改交易密码B页面
-import modifyLoginPsdA from '@/components/modifyLoginPsdA'  //修改交易密码A页面
+import modifyLoginPsdB from '@/components/modifyLoginPsdB'  //修改登录密码B页面
+import modifyLoginPsdA from '@/components/modifyLoginPsdA'  //修改登录密码A页面
 import modifyPayPsdA from '@/components/modifyPayPsdA'      //修改交易密码A页面
 import modifyPayPsdB from '@/components/modifyPayPsdB'      //修改交易密码B页面
 import cashCommission from '@/components/cashCommission'    //提现

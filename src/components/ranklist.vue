@@ -4,63 +4,59 @@
 			<img src="../assets/Path 145@2x.png" alt="" @click='goBack' />
 			<p>已投资列表</p>
 		</div>
-		<!--下拉刷新容器-->
-		<div id="refreshContainer" class="mui-content mui-scroll-wrapper">
-			<div class="mui-scroll">
-				<!--数据列表-->
-				<ul class="mui-table-view mui-table-view-chevron">
-					<li>1</li>
-					<li>1</li>
-					<li>1</li>
-					<li>1</li>
-					<li>1</li>
-					<li>1</li>
-					<li>1</li>
-				</ul>
-			</div>
+		<div id="mescroll" class="mescroll">
+			<!--展示上拉加载的数据列表-->
+			<ul id="rankList" class="rankList">
+				<li>
+					<div class="rank"><img src="../assets/1奖牌@2x.png" /></div>		<!--采用v-show显隐区别后面几名-->
+					<dl>
+						<dt>186 **** 6293</dt>
+						<dd>2017-10-19 16:35</dd>
+					</dl>
+					<span class="cssd0566bb63175d2 fc9800">100000.00元</span>
+				</li>
+				<li>
+					<div class="rank"><img src="../assets/2奖牌@2x.png" /></div>
+					<dl>
+						<dt>186 **** 6293</dt>
+						<dd>2017-10-19 16:35</dd>
+					</dl>
+					<span class="cssd0566bb63175d2 fc9800">100000.00元</span>
+				</li>
+				<li>
+					<div class="rank"><img src="../assets/3奖牌@2x.png" /></div>
+					<dl>
+						<dt>186 **** 6293</dt>
+						<dd>2017-10-19 16:35</dd>
+					</dl>
+					<span class="cssd0566bb63175d2 fc9800">100000.00元</span>
+				</li>
+				<li>
+					<div class="rank cssd0566bb63175d2">第 4 名</div>
+					<dl>
+						<dt>186 **** 6293</dt>
+						<dd>2017-10-19 16:35</dd>
+					</dl>
+					<span class="cssd0566bb63175d2">100000.00元</span>
+				</li>
+				<li>
+					<div class="rank cssd0566bb63175d2">第 5 名</div>
+					<dl>
+						<dt>186 **** 6293</dt>
+						<dd>2017-10-19 16:35</dd>
+					</dl>
+					<span class="cssd0566bb63175d2">100000.00元</span>
+				</li>
+				<li v-for="p in pdlist">
+					<div class="rank cssd0566bb63175d2">第 {{p}} 名</div>
+					<dl>
+						<dt>186 **** 6293</dt>
+						<dd>2017-10-19 16:35</dd>
+					</dl>
+					<span class="cssd0566bb63175d2">100000.00元</span>
+				</li>
+			</ul>
 		</div>
-		<ul class="rankList">
-			<li>
-				<div class="rank"><img src="../assets/1奖牌@2x.png" /></div>
-				<dl>
-					<dt>186 **** 6293</dt>
-					<dd>2017-10-19 16:35</dd>
-				</dl>
-				<span class="cssd0566bb63175d2 fc9800">100000.00元</span>
-			</li>
-			<li>
-				<div class="rank"><img src="../assets/2奖牌@2x.png" /></div>
-				<dl>
-					<dt>186 **** 6293</dt>
-					<dd>2017-10-19 16:35</dd>
-				</dl>
-				<span class="cssd0566bb63175d2 fc9800">100000.00元</span>
-			</li>
-			<li>
-				<div class="rank"><img src="../assets/3奖牌@2x.png" /></div>
-				<dl>
-					<dt>186 **** 6293</dt>
-					<dd>2017-10-19 16:35</dd>
-				</dl>
-				<span class="cssd0566bb63175d2 fc9800">100000.00元</span>
-			</li>
-			<li>
-				<div class="rank cssd0566bb63175d2">第 4 名</div>
-				<dl>
-					<dt>186 **** 6293</dt>
-					<dd>2017-10-19 16:35</dd>
-				</dl>
-				<span class="cssd0566bb63175d2">100000.00元</span>
-			</li>
-			<li>
-				<div class="rank cssd0566bb63175d2">第 5 名</div>
-				<dl>
-					<dt>186 **** 6293</dt>
-					<dd>2017-10-19 16:35</dd>
-				</dl>
-				<span class="cssd0566bb63175d2">100000.00元</span>
-			</li>
-		</ul>
 	</div>
 </template>
 
@@ -69,14 +65,115 @@
 		name: 'ranklist',
 		data() {
 			return {
-				msg: 'Welcome to Your Vue.js App'
+				msg: 'Welcome to Your Vue.js App',
+				pdlist: []
 			}
+		},
+		watch: {
+			pdlist: function(){
+				console.log(this.pdlist)
+			}
+		},
+		mounted: function() {
+			//创建MeScroll对象,down可以不用配置,因为内部已默认开启下拉刷新,重置列表数据为第一页
+			//解析: 下拉回调默认调用mescroll.resetUpScroll(); 而resetUpScroll会将page.num=1,再执行up.callback,从而实现刷新列表数据为第一页;
+			var self = this;
+			self.mescroll = new MeScroll("mescroll", {
+				/*down: {
+					callback: self.downCallback //下拉刷新的回调,别写成downCallback(),多了括号就自动执行方法了
+					
+				},*/
+				up: {
+					callback: self.upCallback, //上拉回调
+					//以下参数可删除,不配置
+					//page:{size:3}, //可配置每页8条数据,默认10
+					/*toTop:{ //配置回到顶部按钮
+						src : "../res/img/mescroll-totop.png", //默认滚动到1000px显示,可配置offset修改
+						//offset : 1000
+					},
+					empty:{ //配置列表无任何数据的提示
+						warpId:"dataList",
+						icon : "../res/img/mescroll-empty.png" , 
+//						  	tip : "亲,暂无相关数据哦~" , 
+//						  	btntext : "去逛逛 >" , 
+//						  	btnClick : function() {
+//						  		alert("点击了去逛逛按钮");
+//						  	} 
+					}*/
+				}
+			});
+			
+			//初始化vue后,显示vue模板布局
+			document.getElementById("rankList").style.display="block";
 		},
 		methods: {
 			goBack() {
 				this.$router.go(-1)
+			},
+			upCallback: function(page) {
+				console.log(page)
+				var self = this;
+				console.log(page.num + '   ' + page.size);
+				getListDataFromNet(page.num, page.size, function(curPageData) {
+					//curPageData=[]; //打开本行注释,可演示列表无任何数据empty的配置
+					//如果是第一页需手动制空列表
+					if(page.num == 1) self.pdlist = [];
+					
+					//更新列表数据
+					self.pdlist = self.pdlist.concat(curPageData);
+					console.log(self.pdlist)
+					//联网成功的回调,隐藏下拉刷新和上拉加载的状态;
+					//mescroll会根据传的参数,自动判断列表如果无任何数据,则提示空;列表无下一页数据,则提示无更多数据;
+					console.log("page.num="+page.num+", page.size="+page.size+", curPageData.length="+curPageData.length+", self.pdlist.length==" + self.pdlist.length);
+					
+					//方法一(推荐): 后台接口有返回列表的总页数 totalPage
+					//self.mescroll.endByPage(curPageData.length, totalPage); //必传参数(当前页的数据个数, 总页数)
+					
+					//方法二(推荐): 后台接口有返回列表的总数据量 totalSize
+					//self.mescroll.endBySize(curPageData.length, totalSize); //必传参数(当前页的数据个数, 总数据量)
+					
+					//方法三(推荐): 您有其他方式知道是否有下一页 hasNext
+					//self.mescroll.endSuccess(curPageData.length, hasNext); //必传参数(当前页的数据个数, 是否有下一页true/false)
+					
+					//方法四 (不推荐),会存在一个小问题:比如列表共有20条数据,每页加载10条,共2页.如果只根据当前页的数据个数判断,则需翻到第三页才会知道无更多数据,如果传了hasNext,则翻到第二页即可显示无更多数据.
+					self.mescroll.endSuccess(curPageData.length);
+				
+				}, function() {
+					//联网失败的回调,隐藏下拉刷新和上拉加载的状态;
+					self.mescroll.endErr();
+				});
 			}
 		}
+	}
+	/*联网加载列表数据*/
+	function getListDataFromNet(pageNum,pageSize,successCallback,errorCallback) {
+		//延时一秒,模拟联网
+        setTimeout(function () {
+//          	axios.get("xxxxxx", {
+//					params: {
+//						num: pageNum, //页码
+//						size: pageSize //每页长度
+//					}
+//				})
+//				.then(function(response) {
+				var data=['1','2','3','5','5','6','7','8','9','10',
+				'1','2','3','5','5','6','7','8','9','10',
+				'1','2','3','5','5','6','7','8','9','10',
+				'1','2','3','5','5','6','7','8','9','10'
+				]; // 模拟数据: ../res/pdlist1.js
+            	var listData=[];//模拟分页数据
+            	console.log('pageNum:'+pageNum)
+				for (var i = (pageNum-1)*pageSize; i < pageNum*pageSize; i++) {
+            		if(i==data.length) break;
+            		listData.push(data[i]);
+            		console.log(i)
+            	}
+            	successCallback&&successCallback(listData);//成功回调
+//				})
+//				.catch(function(error) {
+//					errorCallback&&errorCallback()//失败回调
+//				});
+        },500)
 	}
 </script>
 
@@ -107,11 +204,17 @@
 				color: #333;
 			}
 		}
+		.mescroll{
+			position: fixed;
+			top: .5rem;
+			bottom: 0;
+			height: auto;
+			background: #FFFFFF;
+		}
 		.rankList {
 			width: 100%;
 			padding-left: 7%;
 			float: left;
-			margin-top: .5rem;
 			background: #FFFFFF;
 			li {
 				width: 100%;

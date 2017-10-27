@@ -27,16 +27,16 @@
 			</li>
 		</ul>
 		<ul class='modify'>
-			<li>
+			<li  @click="Goto('modifyLoginPsdA')">
 				<span>修改登录密码</span>
 				<img src="../assets/Path 145 Copy 2@2x.png" alt="" />
 			</li>
-			<li>
+			<li @click="Goto('modifyPayPsdA')">
 				<span>修改交易密码</span>
 				<img src="../assets/Path 145 Copy 2@2x.png" alt="" />
 			</li>
 		</ul>
-		<button>退出登录</button>
+		<span id="btn">退出登录</span>
 		<div class='tips' v-if='tipsstatus' v-text='tips'></div>
 		<div class='haunchong' v-if='huanchongStatus'>
 			<img src="../assets/loading.gif" alt="" />
@@ -56,8 +56,8 @@ export default {
     }
   },
   methods: {
-  	dianji(index){
-  	
+  	Goto(str){
+  		this.$router.push({path: '/'+str});
   	},
   	goBack(){
   		this.$router.go(-1)
@@ -156,7 +156,8 @@ export default {
 			border: none;
 		}
 	}
-	button{
+	#btn{
+		display: block;
 		width: 100%;
 		height: 0.45rem;
 		background: #fff;
