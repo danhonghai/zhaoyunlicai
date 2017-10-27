@@ -6,7 +6,7 @@
 		</div>
 		<div class='restMoney'>
 			<span>可提现金额</span>
-			<span>1200000.00元</span>
+			<span>{{sumCashMoney | number(2)}}元</span>
 		</div>
 		<div class='bankInfo'>
 			<img src="../assets/4@2x.png" alt="" />
@@ -15,8 +15,8 @@
 		</div>
 		<div class='money'>
 			<span>提现金额</span>
-			<input type="number" placeholder="输入提现金额" />
-			<div class='btn'>全部金额</div>
+			<input v-model="cashMoney" @blur="filterNum" @focus="typeinput='text'" v-bind:type="typeinput" placeholder="输入提现金额" />
+			<div class='btn' @click="allMoney">全部金额</div>
 		</div>
 		<div class='arriveTime'>预计两小时内到账</div>
 		<button>确定</button>
@@ -49,15 +49,27 @@ export default {
       tipsstatus: false,
       tips: '提示框',
       huanchongStatus: false,
-      cashPsdStatus: false
+      cashPsdStatus: false,
+      typeinput: 'number',		//input输入框类型
+      sumCashMoney: 120000,		//可提现金额
+      cashMoney: null					//提现金额
     }
   },
+  watch: {
+  	cashMoney: function(){
+	    this.cashMoney = this.moneyType(this.cashMoney);
+  	}
+  },
   methods: {
-  	dianji(index){
-  	
+  	allMoney(){
+  		this.cashMoney = this.sumCashMoney.toFixed(2);
   	},
   	goBack(){
-  		this.$router.go(-1)
+  		this.$router.go(-1);
+  	},
+  	filterNum(){
+  		this.typeinput = 'number';
+  		this.cashMoney = parseFloat(this.cashMoney).toFixed(2);
   	}
   }
 }
@@ -153,6 +165,9 @@ export default {
 			padding-left: 0.1rem;
 			border: none;
 			margin-bottom: 0;
+			margin: 0;
+			padding: 0;
+			padding-left: .2rem !important;
 		}
 		.btn{
 			float: right;

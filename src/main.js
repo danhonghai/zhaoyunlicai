@@ -3,10 +3,13 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import common from './common/common'
 
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
+
+Vue.use(common);
 
 Vue.directive('title', {
   inserted: function (el, binding) {

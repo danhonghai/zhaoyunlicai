@@ -14,7 +14,7 @@
 		</div>
 		<div class="money">
 			<label for="money">充值金额</label>
-			<input type="number" v-model="rechargeMoney" id="money" placeholder="10元起充" />
+			<input v-bind:type="typeinput" v-model="rechargeMoney" @focus="typeinput='text'" @blur="filterNum" id="money" placeholder="10元起充" />
 		</div>
 	</div>
 	<button v-bind:class="{disable : disable}" v-bind:disabled="disable" @click="recharge">充值</button>
@@ -32,20 +32,22 @@ export default {
   name: 'recharge',
   data () {
     return {
-      rechargeMoney: null,
-      disable: true,
-      tipsstatus: false,
-      tips: '提示框',
-      huanchongStatus: false
+      typeinput: 'number',				//input输入框类型
+      rechargeMoney: null,				//充值金额
+      disable: true,							//充值按钮是否禁用
+      tipsstatus: false,					//提示框显隐
+      tips: '提示框',							//提示框内容
+      huanchongStatus: false			//缓冲框显隐
     }
   },
   watch: {
   	rechargeMoney: function(){
-  		if(this.rechargeMoney >= 10){
-  			this.disable = false;
-  		}else{
-  			this.disable = true;
-  		}
+	    this.rechargeMoney = this.moneyType(this.rechargeMoney);
+	    if(parseFloat(this.rechargeMoney) >= 10){
+	    	this.disable = false;
+	    }else{
+	    	this.disable = true;
+	    }
   	}
   },
   methods: {
@@ -54,6 +56,10 @@ export default {
   	},
   	recharge(){
   		alert('12')
+  	},
+  	filterNum(){
+  		this.typeinput = 'number';
+  		this.rechargeMoney = parseFloat(this.rechargeMoney).toFixed(2);
   	}
   },
   mounted() {
@@ -140,7 +146,7 @@ export default {
 				width: 70%;
 				font-size: .15rem;
 				border: 0;
-				padding-left: .1rem;
+				padding-left: .1rem !important;
 			}
 		}
 	}

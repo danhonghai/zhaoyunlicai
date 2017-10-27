@@ -13,7 +13,7 @@
 					<b><router-link to="/recharge">充值</router-link></b>
 				</div>
 				<div class="investMoney">投资金额
-					<input type="number" v-model="investMoney" placeholder="100起投 100的整数" />
+					<input v-bind:type="typeinput" v-model="investMoney" @focus="typeinput='text'" @blur="filterNum" placeholder="100起投 100的整数" />
 				</div>
 			</div>
 			<p>预计收益： <span>{{50 | number(2)}}</span>元</p>
@@ -49,6 +49,7 @@
 				balance: 20,				//账户余额
 				payWord: '购买',				//购买、充值转换
 				investMoney: null,			//投资金额
+				typeinput: 'number',		//input输入框类型
 				sixPsd: null,				//支付密码
 				sixPsdStatus: [false, false, false, false, false, false],		//支付密码输入状态
 				tipsstatus: false,			//提示框显隐
@@ -81,8 +82,7 @@
 				}
 			},
 			investMoney: function(){
-				//this.investMoney =this.investMoney.toFixed(2)
-				console.log(this.investMoney)
+			   	this.investMoney = this.moneyType(this.investMoney);
 				if(this.investMoney > this.balance) {
 					this.payWord = '余额不足,请充值';
 				} else {
@@ -117,7 +117,11 @@
 				this.paypsdStatus = false;
 				this.sixPsd = null;
 				this.sixPsdStatus = [false, false, false, false, false, false];
-			}
+			},
+			filterNum(){
+		  		this.typeinput = 'number';
+		  		this.investMoney = parseFloat(this.investMoney).toFixed(2);
+		  	}
 		},
 		mounted() {
 			if(this.balance <= 0) {
@@ -214,7 +218,7 @@
 						width: 70%;
 						font-size: .15rem;
 						border: 0;
-						padding-left: .1rem;
+						padding-left: .15rem !important;
 					}
 				}
 			}

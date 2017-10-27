@@ -18,7 +18,7 @@
 					<span>135***5252</span>
 				</div>
 			</li>
-			<li>
+			<li  @click="Goto('myBankcard')">
 				<div class='title'>银行卡</div>
 				<div class='details'>
 					<span>招商银行</span>
