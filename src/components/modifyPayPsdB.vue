@@ -6,7 +6,7 @@
 		</div>
 		<div class='newLoginPsd'>
 			<span>新密码</span>
-			<input type="text" placeholder="输入密码" />
+			<input type="text" placeholder="输入密码" v-model='newPsd' maxlength="6" />
 		</div>
 		<button>确定</button>
 		<div class='tips' v-if='tipsstatus' v-text='tips'></div>
@@ -24,13 +24,39 @@ export default {
       msg: 'Welcome to Your Vue.js App',
       tipsstatus: false,
       tips: '提示框',
-      huanchongStatus: false
+      huanchongStatus: false,
+      newPsd: ''
     }
   },
   methods: {
-  	dianji(index){
-  	
-  	},
+  	modyfyPsd() {
+//  this.huanchongStatus = true;
+//	var that = this;
+//	ajax({
+//			type:'post',
+//			url: baseURL + '/auth/get-fee?token='+ Token,
+//			success:function(res){
+//				that.huanchongStatus = false;
+//				var res = res;
+//				console.log(res)
+//				if(res.success == 'true'){
+//					//接参数
+//					that.$router.push({path: '/login'});
+//					
+//				}else{
+//					//提示信息
+//					that.huanchongStatus = false;
+//					that.tipsstatus = true;
+//			  		that.tips = res.errMsg;
+//			  		setTimeout(function(){
+//			  			that.tipsstatus = false
+//			  			that.tips = ''
+//							that.$router.push({path: '/modifyPayPsdA'})
+//			  		},300)
+//				}
+//			}
+//		})
+	  },
   	goBack(){
   		this.$router.go(-1)
   	}

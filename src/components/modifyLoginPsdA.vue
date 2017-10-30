@@ -83,7 +83,33 @@ export default {
 					that.tipsstatus = false;
 				}, 1500);
 			}else{
-				that.$router.push({path: '/modifyPayPsdB'});
+				
+//  this.huanchongStatus = true;
+//	var that = this;
+//	ajax({
+//			type:'post',
+//			url: baseURL + '/auth/get-fee?token='+ Token,
+//			success:function(res){
+//				that.huanchongStatus = false;
+//				var res = res;
+//				console.log(res)
+//				if(res.success == 'true'){
+//					//接参数
+//					that.$router.push({path: '/modifyLoginPsdB'});
+//					
+//				}else{
+//					//提示信息
+//					that.huanchongStatus = false;
+//					that.tipsstatus = true;
+//			  		that.tips = res.errMsg;
+//			  		setTimeout(function(){
+//			  			that.tipsstatus = false
+//			  			that.tips = ''
+//			  		},1500)
+//				}
+//			}
+//		})
+
 			}
   	}
   }
