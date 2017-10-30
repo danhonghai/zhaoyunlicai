@@ -9,23 +9,23 @@
 	  	<div class='income'>
 	  		<div class='left'>
 	  			<span>昨日收益(元)</span>
-	  			<span class='cssd0566bb63175d2'>10.00</span>
+	  			<span class='cssd0566bb63175d2'>{{yesIncome.toFixed(2)}}</span>
 	  		</div>
 	  		<div class='right'>
 	  			<div class='rightT'>
 	  				<span>累计收益(元)</span>
-	  				<span class='cssd0566bb63175d2'>22.00</span>
+	  				<span class='cssd0566bb63175d2'>{{allIncome.toFixed(2)}}</span>
 	  			</div>
 	  			<div class='rightB'>
 	  				<span>总资产(元)</span>
-	  				<span class='cssd0566bb63175d2'>22.00</span>
+	  				<span class='cssd0566bb63175d2'>{{totalMoney.toFixed(2)}}</span>
 	  			</div>
 	  		</div>
 	  	</div>
     </div>
   	<div class='changeSum'>
   		<span>可用余额：</span>
-  		<span>2000.00元</span>
+  		<span>{{restSum.toFixed(2)}}元</span>
   		<router-link to="recharge"><button :class='{btnBackground:isYellow==0}' @click='yellow(0)'>充值</button></router-link>
   		<router-link to="cashCommission"><button :class='{btnBackground:isYellow==1}' @click='yellow(1)'>提现</button></router-link>
   	</div>
@@ -83,7 +83,11 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
-      isYellow: 0
+      isYellow: 0,
+      yesIncome: 22,
+      allIncome: 25,
+      totalMoney: 30,
+      restSum: 2020
     }
   },
   methods: {
@@ -101,9 +105,43 @@ export default {
   	Goto(str){
   		this.$router.push({path: '/'+str});
   	},
+  	goAccountSet() {//去个人账户设置中心需要判断是否已实名认证，若未实名则不允许进入
+  		if('已实名'){//进入账户设置页面
+  			this.$router.push({path: '/accountSet'})
+  		}
+  		if('未实名'){//进入实名认证页面
+  			this.$router.push({path: '/certification'})
+  		}
+  	},
   	yellow(index){
   		this.isYellow = index
   	}
+  },
+  mounted() {
+  	
+//	ajax({
+//			type:'post',
+//			url: baseURL + '/auth/get-fee?token='+ Token,
+//			success:function(res){
+//				
+//				var res = res;
+//				console.log(res)
+//				if(res.success == 'true'){
+//					//接参数
+//					sessionStorage.setItem('loanRate',res.body.data.rate)//借款利率
+//					
+//				}else{
+//					//提示信息
+//					that.tipsstatus = true;
+//			  		that.tips = res.errMsg;
+//			  		setTimeout(function(){
+//			  			that.tipsstatus = false
+//			  			that.tips = ''
+//			  		},1500)
+//				}
+//			}
+//		})
+  	
   }
 }
 </script>

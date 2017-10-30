@@ -8,21 +8,21 @@
 			<li>
 				<div class='title'>实名认证</div>
 				<div class='details'>
-					<span>航博士</span>
-					<span>3412241991*****5252</span>
+					<span>{{name}}</span>
+					<span>{{IDnum}}</span>
 				</div>
 			</li>
 			<li>
 				<div class='title'>手机绑定</div>
 				<div class='details'>
-					<span>135***5252</span>
+					<span>{{telNum}}</span>
 				</div>
 			</li>
 			<li  @click="Goto('myBankcard')">
 				<div class='title'>银行卡</div>
 				<div class='details'>
-					<span>招商银行</span>
-					<span>3412241991*****5252</span>
+					<span>{{bankName}}</span>
+					<span>{{bankCard}}</span>
 				</div>
 			</li>
 		</ul>
@@ -36,7 +36,7 @@
 				<img src="../assets/Path 145 Copy 2@2x.png" alt="" />
 			</li>
 		</ul>
-		<span id="btn">退出登录</span>
+		<span id="btn" @click="logOff">退出登录</span>
 		<div class='tips' v-if='tipsstatus' v-text='tips'></div>
 		<div class='haunchong' v-if='huanchongStatus'>
 			<img src="../assets/loading.gif" alt="" />
@@ -52,7 +52,12 @@ export default {
       msg: 'Welcome to Your Vue.js App',
       tipsstatus: false,
       tips: '提示框',
-      huanchongStatus: false
+      huanchongStatus: false,
+      name: '张三',
+      IDnum: '341558526541258965',
+      telNum: '15658965412',
+      bankName: '中国银行',
+      bankCard: '5896547854123654'
     }
   },
   methods: {
@@ -61,7 +66,43 @@ export default {
   	},
   	goBack(){
   		this.$router.go(-1)
+  	},
+  	logOff() {//退出登录
+  		this.$router.push({path: '/login'})
   	}
+  },
+  mounted() {
+
+    this.IDnum = (this.IDnum).replace(/^(\d{4})\d+(\d{4})$/, "$1********$2");//身份证号
+    this.telNum = (this.telNum).replace(/^(\d{3})\d+(\d{4})$/, "$1****$2");//手机号
+    this.bankCard = (this.bankCard).replace(/^(\d{4})\d+(\d{4})$/, "$1********$2");//银行卡号
+  	
+//	this.huanchongStatus = true;
+//	var that = this;
+//	ajax({
+//			type:'post',
+//			url: baseURL + '/auth/get-fee?token='+ Token,
+//			success:function(res){
+//				that.huanchongStatus = false;
+//				var res = res;
+//				console.log(res)
+//				if(res.success == 'true'){
+//					//接参数
+//					sessionStorage.setItem('loanRate',res.body.data.rate)//借款利率
+//					
+//				}else{
+//					//提示信息
+//					that.huanchongStatus = false;
+//					that.tipsstatus = true;
+//			  		that.tips = res.errMsg;
+//			  		setTimeout(function(){
+//			  			that.tipsstatus = false
+//			  			that.tips = ''
+//			  		},1500)
+//				}
+//			}
+//		})
+  	
   }
 }
 </script>
