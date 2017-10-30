@@ -7,7 +7,7 @@
 			<div class="tabs" v-bind:class="{active:classify==0}" @click="tab(0)">手机验证码登录</div>
 			<div class="tabs" v-bind:class="{active:classify==1}" @click="tab(1)">密码登录</div>
 			<div class="codeLogin" v-show="classify==0">
-				<input type="tel" v-model="phoneNum" v-on:focus="changeStyleF('phoneNum')" v-on:blur="changeStyleB('phoneNum')" id="phoneNum" class="phoneNum" maxlength="11" pattern="/^1(3|4|5|7|8)\d{9}$/" placeholder="手机号" />
+				<input type="tel" v-model="phoneNum" v-on:focus="changeStyleF('phoneNum')" v-on:blur="changeStyleB('phoneNum')" id="phoneNum" class="phoneNum" maxlength="11" placeholder="手机号" />
 				<img v-show="clearStatus" @click="clear" src="../assets/Combined Shape Copy@2x.png" />
 				<input type="tel" v-model="code" v-on:focus="changeStyleF('code')" v-on:blur="changeStyleB('code')" id="code" maxlength="6" placeholder="验证码" />
 				<div class="getCode" @click="getCode">{{codeContent}}</div>

@@ -6,14 +6,14 @@
 		</div>
 		<div class='newLoginPsd'>
 			<span>手机号</span>
-			<input type="text" placeholder="输入手机号" />
+			<input type="tel" v-model="phoneNum" placeholder="输入手机号" />
 		</div>
 		<div class='codeDetail'>
 			<span>验证码</span>
-			<input type="text" placeholder="输入短信验证码" />
-			<span class='getCodebtn'>获取验证码</span>
+			<input type="text" v-model="code" placeholder="输入短信验证码" />
+			<span class='getCodebtn' @click="getCode">{{codeContent}}</span>
 		</div>
-		<span id="btn">下一步</span>
+		<span id="btn" @click="nextStep">下一步</span>
 		<div class='tips' v-if='tipsstatus' v-text='tips'></div>
 		<div class='haunchong' v-if='huanchongStatus'>
 			<img src="../assets/loading.gif" alt="" />
@@ -29,15 +29,62 @@ export default {
       msg: 'Welcome to Your Vue.js App',
       tipsstatus: false,
       tips: '提示框',
-      huanchongStatus: false
+      huanchongStatus: false,
+      phoneNum: null,									//手机号码
+      codeContent: '获取验证码',				//获取验证码内容
+			wait: 60, 											//获取验证码倒计时
+			getCodeStatus: true, 						//获取验证码状态				
+			code: null											//验证码
     }
   },
   methods: {
-  	dianji(index){
-  	
+  	getCode(){
+  		let that = this;
+			let regphone = /^1[34578]\d{9}$/;
+			if(!regphone.test(that.phoneNum)){
+				that.tipsstatus = true;
+				that.tips = '请输入正确的手机号';
+				setTimeout(function() {
+					that.tipsstatus = false;
+				}, 1500);
+			}else if(that.getCodeStatus) {
+				that.getCodeStatus = false;
+				let timer = setInterval(function() {
+					if(that.wait == 0) {
+						console.log('重新获取验证码')
+						that.codeContent = '获取验证码'
+						that.wait = 60;
+						that.getCodeStatus = true;
+						clearInterval(timer);
+					} else {
+						that.codeContent = that.wait + "s后重试";
+						that.wait--;
+					}
+				}, 1000);
+			}
   	},
   	goBack(){
   		this.$router.go(-1)
+  	},
+  	nextStep(){
+  		let that = this;
+			let regphone = /^1[34578]\d{9}$/;
+			let regCode = /^\d{6}$/;
+			if(!regphone.test(that.phoneNum)){
+				that.tipsstatus = true;
+				that.tips = '请输入正确的手机号';
+				setTimeout(function() {
+					that.tipsstatus = false;
+				}, 1500);
+			}else if(!regCode.test(that.code)){
+				that.tipsstatus = true;
+				that.tips = '验证码错误';
+				setTimeout(function() {
+					that.tipsstatus = false;
+				}, 1500);
+			}else{
+				that.$router.push({path: '/modifyPayPsdB'});
+			}
   	}
   }
 }
@@ -84,6 +131,8 @@ export default {
 			color: #333;
 		}
 		input{
+			padding: 0;
+			margin: 0;
 			float: left;
 			width: 2.5rem;
 			height: 0.45rem;

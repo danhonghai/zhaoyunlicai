@@ -47,7 +47,7 @@
 			<div class="list">
 				<div class="tab" v-bind:class="{active:classify==0}" @click="tab(0)">已投资列表</div>
 				<div class="tab" v-bind:class="{active:classify==1}" @click="tab(1)">项目介绍</div>
-				<ul class="ranklist" v-show="classify==0">
+				<ul class="ranklist" v-show="classify==0" v-if="ranklist.length != 0">
 					<li>
 						<div class="rank"><img src="../assets/1奖牌@2x.png"/></div>
 						<dl>
@@ -90,6 +90,12 @@
 					</li>
 					<b><router-link to="/ranklist">点击查看更多</router-link></b>
 				</ul>
+				<div class="emptyData" v-else>
+					<img src="../assets/empy@2x.png"/>
+				</div>
+				<div class="emptyData" v-show="classify==1" >
+					<img src="../assets/empy@2x.png"/>
+				</div>
 			</div>
 		</div>
 		<div class="buy">
@@ -105,8 +111,9 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
-      classify: 0,
-      title: '新人标1929期'
+      classify: 0,				//tab切换
+      title: '新人标1929期',		//标的名称
+      ranklist: [1]				//已投资列表
     }
   },
   methods: {
@@ -324,6 +331,14 @@ export default {
 			}
 			.active{
 				border-bottom: .02rem solid #FC9800;
+			}
+			.emptyData{
+				width: 100%;
+				float: left;
+				img{
+					width: 1.5rem;
+					margin: .7rem;
+				}
 			}
 			.ranklist{
 				width: 100%;
