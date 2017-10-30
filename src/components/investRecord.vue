@@ -17,6 +17,7 @@
 				 	</div>
 				 	<div class='center'>
 				 		<span class='cssd0566bb63175d2'>1000.00</span>
+				 		<span>元</span>
 				 		<span>计息天数：7天</span>
 				 	</div>
 				 	<div class='bottom'>
@@ -31,6 +32,7 @@
 				 	</div>
 				 	<div class='center'>
 				 		<span class='cssd0566bb63175d2'>1000.00</span>
+				 		<span>元</span>
 				 		<span>计息天数：7天</span>
 				 	</div>
 				 	<div class='bottom'>
@@ -46,13 +48,13 @@
 				 	</div>
 				 	<div class='left'>
 				 		<span>投资金额</span>
-				 		<span class='cssd0566bb63175d2'>1000.00</span>
+				 		<span class='cssd0566bb63175d2'>1000.00<p>元</p></span>
 				 		<span>计息天数：7天</span>
 				 	  <span>起息日：2017-04-01</span>
 				 	</div>
 				 	<div class='right'>
 				 		<span>到期收益</span>
-				 		<span class='cssd0566bb63175d2'>50.00</span>
+				 		<span class='cssd0566bb63175d2'>50.00<p>元</p></span>
 				 		<span>预计年化利率:10%</span>
 				 	  <span>回款日：2017-04-02</span>
 				 	</div>
@@ -177,9 +179,25 @@ export default {
 				.center{
 					height: 0.25rem;
 					span{
+						display: block;
 						font-size: 0.25rem;
 						line-height: 0.25rem;
 						color: #FC9800;
+					}
+					span:nth-child(1){
+						float: left;
+					}
+					span:nth-child(2){
+						float: left;
+						font-size: 0.13rem;
+						line-height: 0.13rem;
+						margin-top: 0.08rem;
+					}
+					span:nth-child(3){
+						float: right;
+						font-size: 0.13rem;
+						line-height: 0.13rem;
+						margin-top: 0.08rem;
 					}
 				}
 				.bottom{
@@ -222,6 +240,13 @@ export default {
 					font-size: 0.25rem;
 					line-height: 0.4rem;
 					color: #FC9800;
+					p{
+						display: inline-block;
+						font-size: 0.13rem;
+						line-height: 0.13rem;
+						margin-top: 0.08rem;
+						color: #FC9800;
+					}
 				}
 				span:nth-child(3){
 					color: #333;
