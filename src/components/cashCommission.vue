@@ -20,16 +20,15 @@
 		</div>
 		<div class='arriveTime'>预计两小时内到账</div>
 		<button>确定</button>
-		<div class='cashPsd' v-if='cashPsdStatus'>
-			<div class='outer'>
-				<p>输入交易密码</p>
-				<div class='inner'>
-					<input class='inp1' type="password" maxlength="1" />
-					<input class='inp2' type="password" maxlength="1" />
-					<input class='inp3' type="password" maxlength="1" />
-					<input class='inp4' type="password" maxlength="1" />
-					<input class='inp5' type="password" maxlength="1" />
-					<input class='inp6' type="password" maxlength="1" />
+		<div class='paypsd' v-if='paypsdStatus'>
+			<div class="psdContent">
+				<div class="psdHeader">
+					<img src="../assets/Path 145 Copy 3@2x.png" alt="" @click="close" />
+					<p>输入支付密码</p>
+				</div>
+				<div class="sixPassword">
+					<input type="tel" value="" v-model="sixPsd" v-focus maxlength="6" />
+					<div class="passBox" v-for="item in sixPsdStatus" v-bind:class="{active:item}"><span></span></div>
 				</div>
 			</div>
 		</div>
@@ -49,17 +48,41 @@ export default {
       tipsstatus: false,
       tips: '提示框',
       huanchongStatus: false,
-      cashPsdStatus: false,
       typeinput: 'number',		//input输入框类型
       sumCashMoney: 120000,		//可提现金额
-      cashMoney: null					//提现金额
+      cashMoney: null,					//提现金额
+      sixPsd: null,				//支付密码
+      sixPsdStatus: [false, false, false, false, false, false],		//支付密码输入状态
+      paypsdStatus: true			//支付密码显隐
     }
   },
   watch: {
   	cashMoney: function(){
 	    this.cashMoney = this.moneyType(this.cashMoney);
-  	}
+  	},
+  	sixPsd: function() {
+			for(let i = 0; i < this.sixPsdStatus.length; i++) {
+				if(i < this.sixPsd.length) {
+					this.sixPsdStatus[i] = true;
+				} else {
+					this.sixPsdStatus[i] = false;
+				}
+			}
+			if(this.sixPsd.length == this.sixPsdStatus.length) {
+				this.$router.push({
+					path: '/buyResult'
+				});
+			}
+		}
   },
+  directives: {
+		focus: {
+			// 自动获得焦点
+			inserted: function(el) {
+				el.focus()
+			}
+		}
+	},
   methods: {
   	allMoney(){
   		this.cashMoney = this.sumCashMoney.toFixed(2);
@@ -70,7 +93,12 @@ export default {
   	filterNum(){
   		this.typeinput = 'number';
   		this.cashMoney = parseFloat(this.cashMoney).toFixed(2);
-  	}
+  	},
+  	close() {	//关闭输入交易密码框
+			this.paypsdStatus = false;
+			this.sixPsd = null;
+			this.sixPsdStatus = [false, false, false, false, false, false];
+		}
   }
 }
 </script>
@@ -197,53 +225,82 @@ export default {
 		padding: 0;
 		margin-top: 0.1rem;
 	}
-	.cashPsd{
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background: rgba(55,55,55,.3);
-		z-index: 10;
-	}
-	.outer{
-		position: absolute;
-		width: 3.4rem;
-		height: 1.5rem;
-		left: 0.18rem;
-		top: 1rem;
-		background: #fff;
-		p{
-			height: 0.5rem;
-			font-size: 0.2rem;
-			line-height: 0.5rem;
-			border-bottom: 1px solid #D7D7D7;
-		}
-		.inner{
-			width: 3.28rem;
-			height: 0.46rem;
-			border: 1px solid #D7D7D7;
-			margin-left: 0.08rem;
-			margin-top: 0.2rem;
-			input{
-				float: left;
-				height:0.43rem;
-				width: 0.54rem;
-				margin-bottom: 0;
-				padding: 0;
-				border-radius: 0;
-				border: none;
-				border-right: 1px solid #D7D7D7;
-				text-align: center;
-				font-size: 0.26rem;
-				line-height: 0.43rem;
+	.paypsd {
+			position: fixed;
+			width: 100%;
+			height: 100%;
+			left: 0;
+			top: 0;
+			background: rgba(55, 55, 55, .3);
+			z-index: 20;
+			.psdContent {
+				width: 100%;
+				position: absolute;
+				bottom: 0;
+				.psdHeader {
+					width: 100%;
+					height: .5rem;
+					background: #FFFFFF;
+					font-size: .19rem;
+					line-height: .5rem;
+					text-align: center;
+					position: relative;
+					box-shadow: inset 0 -1px 1px -1px #E0E0E0;
+					img {
+						width: .07rem;
+						position: absolute;
+						left: 7%;
+						top: .18rem;
+					}
+					p {
+						color: #333333;
+					}
+				}
+				.sixPassword {
+					width: 100%;
+					height: .8rem;
+					padding-top: .19rem;
+					padding-left: .26rem;
+					background: #FBFBFB;
+					position: relative;
+					input {
+						margin: 0;
+						padding: 0;
+						position: absolute;
+						top: .19rem;
+						left: .26rem;
+						opacity: 0;
+						z-index: 10;
+						width: 3.23rem;
+						height: .45rem;
+					}
+					.passBox {
+						width: .54rem;
+						height: .45rem;
+						float: left;
+						border: .005rem solid #D7D7D7;
+						border-right: 0;
+						background: #FFFFFF;
+					}
+					.active {
+						position: relative;
+						display: flex;
+						span {
+							display: block;
+							width: .13rem;
+							height: .13rem;
+							background: #000000;
+							border-radius: 50%;
+							margin: auto;
+						}
+					}
+					.passBox:nth-last-child(1) {
+						border-right: 1px solid #D7D7D7;
+						;
+					}
+				}
 			}
-			input:last-child{
-				border-right: 0;
-			}
 		}
-	}
-	
 	.tips{
 		position: absolute;
 		left: 0.8rem;
