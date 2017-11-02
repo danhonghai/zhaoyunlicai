@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import login from '@/components/login'											//登录
 import register from '@/components/register'								//注册
 import homepage from '@/components/homepage'								//首页
+import sort3 from '@/components/sort3'											//风险控制
+import sort4 from '@/components/sort4'											//技术保障
 import invest from '@/components/invest'										//产品列表
 import regular from '@/components/regular'									//定期详情
 import unregular from '@/components/unregular'							//散标详情
@@ -46,6 +48,16 @@ export default new Router({
       path: '/',
       name: 'homepage',
       component: homepage
+    },
+    {
+      path: '/sort3',
+      name: 'sort3',
+      component: sort3
+    },
+    {
+      path: '/sort4',
+      name: 'sort4',
+      component: sort4
     },
     {
       path: '/invest',

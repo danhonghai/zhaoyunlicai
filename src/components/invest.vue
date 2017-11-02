@@ -9,6 +9,7 @@
     <div class="content">
     	<div id="Tab0" class="regular mescroll" v-show="classify==0">
     		<ul id="dataList0">
+    			<!--<router-link to="/regular/123">123</router-link>-->
     			<li class="saling" @click="regular()">
     				<div class="item-title">
     					<h3>信用贷款计划</h3><span>进行中</span>
@@ -171,7 +172,11 @@ export default {
   		} 
   	},
   	regular(){
-  		this.$router.push({path: '/regular'})
+  		this.$router.push({
+  			//name: 'regular',
+  			path: '/regular'//,
+  			//params: { userId: 123 }
+  		})
   	},
   	unregular(){
   		this.$router.push({path: '/unregular'})
@@ -248,7 +253,7 @@ export default {
 		}
   },
   mounted: function(){
-  	this.mescrollArr[0] = this.initMescroll('Tab0','dataList0');
+  	this.mescrollArr[this.classify]=this.initMescroll("Tab"+this.classify, "dataList"+this.classify);
   }
 }
 /*联网加载列表数据*/

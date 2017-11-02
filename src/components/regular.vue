@@ -126,6 +126,10 @@ export default {
   	buy(){
   		this.$router.push({path: '/buy'});
   	}
+  },
+  mounted: function(){
+  	console.log(this.$route.params.userId)
+  	//console.log('123')
   }
 }
 </script>

@@ -23,24 +23,24 @@
    			<li>
    				<dl>
    					<dt><a href="#"><img src="../assets/4@2x.png"/></a></dt>
-   					<dd><router-link to='login'>公司介绍</router-link></dd>
+   					<dd><router-link to='login'>团队介绍</router-link></dd>
    				</dl>
    			</li>
    			<li>
    				<dl>
    					<dt><a href="#"><img src="../assets/2@2x.png"/></a></dt>
-   					<dd>银行存管</dd>
+   					<dd>三方存管</dd>
    				</dl>
    			</li>
    			<li>
    				<dl>
-   					<dt><a href="#"><img src="../assets/3@2x.png"/></a></dt>
+   					<dt><router-link to='sort3'><img src="../assets/3@2x.png"/></router-link></dt>
    					<dd>风险控制</dd>
    				</dl>
    			</li>
    			<li>
    				<dl>
-   					<dt><a href="#"><img src="../assets/1@2x.png"/></a></dt>
+   					<dt><router-link to='sort4'><img src="../assets/1@2x.png"/></router-link></dt>
    					<dd>技术保障</dd>
    				</dl>
    			</li>

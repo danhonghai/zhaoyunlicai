@@ -2,7 +2,7 @@ export default{
   install(Vue,options)
   {
     Vue.prototype.moneyType = function (num) {
-      	var reg = num.toString().match(/\d+\.?\d{0,2}/);
+      var reg = num.toString().match(/\d+\.?\d{0,2}/);
 	    var txt = '';
 	    if (reg != null) {
 	        txt = reg[0];
