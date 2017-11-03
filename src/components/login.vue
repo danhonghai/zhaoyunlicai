@@ -17,7 +17,7 @@
 				<input type="tel" v-model="phoneNum" v-on:focus="changeStyleF('phoneNum2')" v-on:blur="changeStyleB('phoneNum2')" id="phoneNum2" class="phoneNum" maxlength="11" placeholder="手机号" />
 				<img v-show="clearStatus" @click="clear" src="../assets/Combined Shape Copy@2x.png" />
 				<input type="password" v-model="psd" v-on:focus="changeStyleF('psd')" v-on:blur="changeStyleB('psd')" id="psd" placeholder="密码" />
-				<p v-show="psdstatus">登录密码错误</p>
+				<p v-show="psdstatus">登录名或密码错误</p>
 			</div>
 			<button @click="submit">确定</button>
 			<span><router-link to="register">注册</router-link></span>
@@ -43,9 +43,9 @@
 				clearStatus: false,				//清除手机号码X显隐
 				phoneNum: null,					//手机号码
 				code: null,						//验证码
-				codestatus: true,				//验证码错误显隐
+				codestatus: false,				//验证码错误显隐
 				psd: null,						//密码
-				psdstatus: true,				//密码错误显隐
+				psdstatus: false,				//密码错误显隐
 				tipsstatus: false,				//提示框显隐
 				tips: '提示框',					//提示框内容
 				huanchongStatus: false,			//缓冲框显隐
@@ -93,35 +93,107 @@
 					setTimeout(function() {
 						that.tipsstatus = false;
 					}, 1500);
-				}else if(that.getCodeStatus) {
-					that.getCodeStatus = false;
-					let timer = setInterval(function() {
-						if(that.wait == 0) {
-							console.log('重新获取验证码')
-							that.codeContent = '获取验证码'
-							that.wait = 60;
-							that.getCodeStatus = true;
-							clearInterval(timer);
-						} else {
-							that.codeContent = that.wait + "s后重试";
-							that.wait--;
+				}else if(that.getCodeStatus){
+					ajax({//请求手机验证码
+						type:'POST',
+						url: baseURL + '/api/noauth/send_verify_code?mobile=' + that.phoneNum,
+						success:function(res){
+							console.log(res)
+							if( res.success == true ){
+								that.getCodeStatus = false;
+								let timer = setInterval(function() {
+									if(that.wait == 0) {
+										console.log('重新获取验证码')
+										that.codeContent = '获取验证码'
+										that.wait = 60;
+										that.getCodeStatus = true;
+										clearInterval(timer);
+									} else {
+										that.codeContent = that.wait + "s后重试";
+										that.wait--;
+									}
+								}, 1000);
+							}else{
+								that.tipsstatus = true;
+								that.tips = res.errMsg;
+								setTimeout(function() {
+									that.tipsstatus = false;
+								}, 1500);
+							}
 						}
-					}, 1000);
+					})
 				}
 			},
-			submit() {		//提交
+			submit() {		//登录
 				let that = this;
-				let regphone = /^1[34578]\d{9}$/;
-				/*let regCode = /^\d{6}$/;*/
-				if(!regphone.test(that.phoneNum)){
+				if((that.phoneNum && that.code && that.classify == 0)|| (that.phoneNum && that.psd && that.classify == 1)){
+					that.huanchongStatus = true;
+					if(that.classify == 0){
+						console.log('验证码登录')
+						mui.ajax(baseURL + '/api/noauth/login_by_code?mobile='+ that.phoneNum +'&code=' + that.code,{
+							dataType:'json',//服务器返回json格式数据
+							type:'post',//HTTP请求类型
+							//timeout:10000,//超时时间设置为10秒；
+							//headers:{'Content-Type':'application/json'},	              
+							success:function(res,text,xhr){
+								//服务器返回响应，根据响应结果，分析是否登录成功；
+								console.log(xhr.getResponseHeader('x-auth-token'))
+								localStorage.setItem('tokenZylc',xhr.getResponseHeader('x-auth-token'));
+								that.huanchongStatus = false;
+								if( res.success == true ){
+									that.tipsstatus = true;
+									that.tips = '登录成功';
+									setTimeout(function() {
+										that.tipsstatus = false;
+									}, 1500);
+									that.$router.push({path: '/'});
+								}else{
+									that.codestatus = true;
+								}
+							},
+							error:function(xhr,type,errorThrown){
+								//异常处理；
+								console.log(type);
+							}
+							
+						});
+					}
+					if(that.classify == 1){
+						console.log('密码登录')
+						mui.ajax(baseURL + '/api/noauth/login_by_password?mobile='+ that.phoneNum +'&password=' + that.psd,{
+							dataType:'json',//服务器返回json格式数据
+							type:'post',//HTTP请求类型
+							//timeout:10000,//超时时间设置为10秒；
+							headers:{'Content-Type':'application/json'},	              
+							success:function(res,text,xhr){
+								console.log(xhr.getResponseHeader('x-auth-token'))
+								localStorage.setItem('tokenZylc',xhr.getResponseHeader('x-auth-token'));
+								that.huanchongStatus = false;
+								if( res.success == true ){
+									that.tipsstatus = true;
+									that.tips = '登录成功';
+									setTimeout(function() {
+										that.tipsstatus = false;
+									}, 1500);
+									that.$router.push({path: '/'});
+								}else{
+									that.psdstatus = true;
+								}
+							},
+							error:function(xhr,type,errorThrown){
+								//异常处理；
+								console.log(type);
+							}
+							
+						});
+					}
+				}else{
 					that.tipsstatus = true;
-					that.tips = '请输入正确的手机号';
+					that.tips = '请填写完整信息';
 					setTimeout(function() {
 						that.tipsstatus = false;
 					}, 1500);
-				}/*else if(!regCode.test(that.code) && that.classify == 0){
-					that.codestatus = true;
-				}*/
+				}
 			}
 		},
 		mounted() {

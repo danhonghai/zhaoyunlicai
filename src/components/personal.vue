@@ -118,7 +118,9 @@ export default {
   	}
   },
   mounted() {
-  	
+  	if(!localStorage.getItem("tokenZylc")){
+    	this.$router.push({path: '/login'});
+    }
 //	ajax({
 //			type:'post',
 //			url: baseURL + '/auth/get-fee?token='+ Token,

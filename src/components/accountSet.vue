@@ -68,7 +68,41 @@ export default {
   		this.$router.go(-1)
   	},
   	logOff() {//退出登录
-  		this.$router.push({path: '/login'})
+  		let that = this;
+  		that.huanchongStatus = true;
+  		mui.ajax(baseURL + '/api/logout',{
+				dataType:'json',//服务器返回json格式数据
+				type:'get',//HTTP请求类型
+				//timeout:10000,//超时时间设置为10秒；
+				headers:{
+					'Content-Type':'application/json',
+					'x-auth-token':localStorage.getItem("tokenZylc")
+				},
+				success:function(res){
+					//服务器返回响应，根据响应结果，分析是否登录成功；
+					console.log(res);
+					that.huanchongStatus = false;
+					if( res.success == true ){
+						that.tipsstatus = true;
+						that.tips = res.data;
+						localStorage.removeItem("tokenZylc");
+						setTimeout(function() {
+							that.tipsstatus = false;
+						}, 1500);
+						that.$router.push({path: '/'});
+					}else{
+						that.tipsstatus = true;
+						that.tips = res.errMsg;
+						setTimeout(function() {
+							that.tipsstatus = false;
+						}, 1500);
+					}
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					console.log(type);
+				}
+			});
   	}
   },
   mounted() {
@@ -76,7 +110,9 @@ export default {
     this.IDnum = (this.IDnum).replace(/^(\d{4})\d+(\d{4})$/, "$1********$2");//身份证号
     this.telNum = (this.telNum).replace(/^(\d{3})\d+(\d{4})$/, "$1****$2");//手机号
     this.bankCard = (this.bankCard).replace(/^(\d{4})\d+(\d{4})$/, "$1********$2");//银行卡号
-  	
+  	/*if(!localStorage.getItem("tokenZylc")){
+    	this.$router.push({path: '/login'});
+    }*/
 //	this.huanchongStatus = true;
 //	var that = this;
 //	ajax({
@@ -103,7 +139,7 @@ export default {
 //			}
 //		})
   	
-  }
+ }
 }
 </script>
 
@@ -138,7 +174,7 @@ export default {
 		height: 1.35rem;
 		background: #fff;
 		padding-left: 0.26rem;
-		margin-top: 0.5rem;
+		padding-top: 0.5rem;
 		li{
 			border-bottom: 1px solid #E0E0E0;
 			padding-right: 0.27rem;
