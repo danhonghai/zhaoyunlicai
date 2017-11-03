@@ -24,8 +24,8 @@
 			<div class="duration">
 				<ul class="time-sort">
 					<li>投资日期</li>
-					<li>起息日期</li>
-					<li>回款日期</li>
+					<li>预计起息日</li>
+					<li>预计回款日</li>
 				</ul>
 				<div class="line">
 					<img src="../assets/Oval 2@2x.png"/>

@@ -2,14 +2,13 @@
   <div class="invest" v-title data-title="投资">
   	<div class="top">
   		<ul>
-  			<li v-bind:class="{active:classify==0}" @click="tab(0)">定期</li>
-  			<li v-bind:class="{active:classify==1}" @click="tab(1)">散标</li>
+  			<!--<li v-bind:class="{active:classify==0}" @click="tab(0)">自动投标</li>-->
+  			<li v-bind:class="{active:classify==1}" @click="tab(1)">散标计划</li>
   		</ul>
   	</div>
     <div class="content">
-    	<div id="Tab0" class="regular mescroll" v-show="classify==0">
+    	<!--<div id="Tab0" class="regular mescroll" v-show="classify==0">
     		<ul id="dataList0">
-    			<!--<router-link to="/regular/123">123</router-link>-->
     			<li class="saling" @click="regular()">
     				<div class="item-title">
     					<h3>信用贷款计划</h3><span>进行中</span>
@@ -74,7 +73,7 @@
     				<b class="cssd0566bb63175d2">100%</b>
     			</li>
     		</ul>
-    	</div>
+    	</div>-->
 			<div id="Tab1" class="unregular mescroll" v-show="classify==1">
 				<ul id="dataList1">
     			<li class="saling" @click="unregular()">
@@ -147,9 +146,9 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
-      classify: 0,					//tab切换
+      classify: 1,					//tab切换
       mescrollArr: [],			//上拉加载下拉刷新实例化
-      datalist0: [],					//定期标数据
+      //datalist0: [],					//定期标数据
       datalist1: [] 					//散标数据
     }
   },
@@ -224,11 +223,11 @@ export default {
 				}
 				
 				console.log('curPageData:   '+curPageData.length)
-				console.log(that.datalist0)
+				//console.log(that.datalist0)
 				console.log(that.datalist1)
 				//联网成功的回调,隐藏下拉刷新和上拉加载的状态;
 				//mescroll会根据传的参数,自动判断列表如果无任何数据,则提示空;列表无下一页数据,则提示无更多数据;
-				console.log("page.num="+page.num+", page.size="+page.size+", curPageData.length="+curPageData.length+", that.datalist0.length==" + that.datalist0.length);
+				//   console.log("page.num="+page.num+", page.size="+page.size+", curPageData.length="+curPageData.length+", that.datalist0.length==" + that.datalist0.length);
 				console.log("page.num="+page.num+", page.size="+page.size+", curPageData.length="+curPageData.length+", that.datalist1.length==" + that.datalist1.length);
 				
 				//方法一(推荐): 后台接口有返回列表的总页数 totalPage
@@ -254,6 +253,7 @@ export default {
   },
   mounted: function(){
   	this.mescrollArr[this.classify]=this.initMescroll("Tab"+this.classify, "dataList"+this.classify);
+  	console.log(this.mescrollArr)
   }
 }
 /*联网加载列表数据*/
@@ -315,7 +315,7 @@ h3{
 				float: left;
 			}
 			li:nth-child(1){
-				margin: 0 13.5% 0 33%;
+				margin: 0 39%;
 			}
 			.active{
 				color: #FFFFFF;
