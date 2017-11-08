@@ -111,7 +111,7 @@
 						success:function(res,text,xhr){
 							//服务器返回响应，根据响应结果，分析是否登录成功；
 							console.log(xhr.getResponseHeader('x-auth-token'))
-							localStorage.setItem('tokenZylc',xhr.getResponseHeader('x-auth-token'));
+							sessionStorage.setItem('tokenZylc',xhr.getResponseHeader('x-auth-token'));
 							that.huanchongStatus = false;
 							if( res.success == true ){
 								that.tipsstatus = true;

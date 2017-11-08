@@ -1,5 +1,5 @@
 <template>
-  <div class="modifyLoginPsdB">
+  <div class="modifyLoginPsdB" v-title data-title="修改登录密码">
     <div class='header'>
 			<img src="../assets/Path 145@2x.png" alt="" @click='goBack' />
     		<p>修改登录密码</p>
@@ -8,7 +8,7 @@
 			<span>新密码</span>
 			<input type="text" placeholder="输入密码" v-model='newPsd' maxlength="16" />
 		</div>
-		<button @click="modyfyPsd">确定</button>
+		<span id="btn" @click="modyfyPsd">确定</span>
 		<div class='tips' v-if='tipsstatus' v-text='tips'></div>
 		<div class='haunchong' v-if='huanchongStatus'>
 			<img src="../assets/loading.gif" alt="" />
@@ -21,42 +21,43 @@ export default {
   name: 'modifyLoginPsdB',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
-      tipsstatus: false,
-      tips: '提示框',
-      huanchongStatus: false,
-      newPsd: ''
+      tipsstatus: false,					//提示框显隐
+      tips: '提示框',							//提示框内容
+      huanchongStatus: false,			//缓冲显隐
+      newPsd: null								//新密码
     }
   },
   methods: {
   	modyfyPsd() {
-//  this.huanchongStatus = true;
-//	var that = this;
-//	ajax({
-//			type:'post',
-//			url: baseURL + '/auth/get-fee?token='+ Token,
-//			success:function(res){
-//				that.huanchongStatus = false;
-//				var res = res;
-//				console.log(res)
-//				if(res.success == 'true'){
-//					//接参数
-//					that.$router.push({path: '/login'});
-//					
-//				}else{
-//					//提示信息
-//					that.huanchongStatus = false;
-//					that.tipsstatus = true;
-//			  		that.tips = res.errMsg;
-//			  		setTimeout(function(){
-//			  			that.tipsstatus = false
-//			  			that.tips = ''
-//							that.$router.push({path: '/modifyLoginPsdA'})
-//			  		},300)
-//				}
-//			}
-//		})
-
+	    this.huanchongStatus = true;
+			var that = this;
+			mui.ajax(baseURL + '/api/change_password?password='+ that.newPsd +'&authToken='+ that.$route.params.authToken,{
+				dataType:'json',//服务器返回json格式数据
+				type:'post',//HTTP请求类型
+				headers:{
+					'Content-Type':'application/json',
+					'x-auth-token':sessionStorage.getItem("tokenZylc")
+				},
+				success:function(res){
+					that.huanchongStatus = false;
+					console.log(res);
+					if(res.success){
+						sessionStorage.removeItem("tokenZylc");
+						that.$router.push({path: '/login'});
+					}else{
+						that.tips = res.errMsg;
+						that.tipsstatus = true;
+						setTimeout(function() {
+							that.tipsstatus = false;
+							that.$router.push({path: '/modifyLoginPsdA'});
+						}, 1500);
+					}
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					console.log(type);
+				}
+			});
   	},
   	goBack(){
   		this.$router.go(-1)
@@ -115,7 +116,9 @@ export default {
 			border: none;
 		}
 	}
-	button{
+	#btn{
+		display: block;
+		margin-left: .26rem;
 		width: 3.23rem;
 		height:0.45rem;
 		background: #FFC266;
@@ -125,6 +128,7 @@ export default {
 		border-radius: 0.03rem;
 		border: none;
 		padding: 0;
+		margin-top: 0.1rem;
 	}
 	
 	

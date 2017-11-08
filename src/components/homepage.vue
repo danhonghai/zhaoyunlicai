@@ -135,9 +135,26 @@ export default {
   	}
   },
   mounted() {
+  	//轮播图
   	var gallery = mui('.mui-slider');
 		gallery.slider({
 		  interval:5000//自动轮播周期，若为0则不自动播放，默认为0；
+		});
+		//请求首页数据
+		mui.ajax(baseURL + '/api/noauth/index?type=1&count1=2&count2=2',{
+			dataType:'json',//服务器返回json格式数据
+			type:'post',//HTTP请求类型
+			headers:{
+				'Content-Type':'application/json',
+				'x-auth-token':sessionStorage.getItem("tokenZylc")
+			},
+			success:function(res){
+				console.log(res);
+			},
+			error:function(xhr,type,errorThrown){
+				//异常处理；
+				console.log(type);
+			}
 		});
   }
 }

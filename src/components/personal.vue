@@ -118,8 +118,25 @@ export default {
   	}
   },
   mounted() {
-  	if(!localStorage.getItem("tokenZylc")){
+  	console.log(sessionStorage.getItem("tokenZylc"))
+  	if(!sessionStorage.getItem("tokenZylc")){
     	this.$router.push({path: '/login'});
+    }else{
+    	mui.ajax(baseURL + '/api/user_info',{
+				dataType:'json',//服务器返回json格式数据
+				type:'get',//HTTP请求类型
+				headers:{
+					'Content-Type':'application/json',
+					'x-auth-token':sessionStorage.getItem("tokenZylc")
+				},
+				success:function(res){
+					console.log(res);
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					console.log(type);
+				}
+			});
     }
 //	ajax({
 //			type:'post',

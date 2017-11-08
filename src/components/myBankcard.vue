@@ -21,14 +21,40 @@
 		name: 'myBankcard',
 		data() {
 			return {
-
+				
 			}
 		},
 		methods: {
 			goBack() { //后退
 				this.$router.go(-1)
 			}
-		}
+		},
+		mounted: function(){
+			mui.ajax(baseURL + '/api/card_list',{
+				dataType:'json',//服务器返回json格式数据
+				type:'get',//HTTP请求类型
+				headers:{
+					'Content-Type':'application/json',
+					'x-auth-token':sessionStorage.getItem("tokenZylc")
+				},
+				success:function(res){
+					console.log(res);
+					if(res.success){
+						console.log('我的银行卡成功')
+					}else{
+						that.tips = res.errMsg;
+						that.tipsstatus = true;
+						setTimeout(function() {
+							that.tipsstatus = false;
+						}, 1500);
+					}
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					console.log(type);
+				}
+			});
+		 }
 	}
 </script>
 

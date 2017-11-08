@@ -26,6 +26,7 @@ import investRecord from '@/components/investRecord'				//投资记录
 import moneyRecord from '@/components/moneyRecord'					//资金流水记录
 import myBankcard from '@/components/myBankcard'						//我的银行卡
 import suggestion from '@/components/suggestion'						//问题反馈
+import investRecordDetail from '@/components/investRecordDetail'						//投资详情
 
 
 
@@ -115,7 +116,7 @@ export default new Router({
       component: accountSet
     },
     {
-      path: '/modifyLoginPsdB',
+      path: '/modifyLoginPsdB/:authToken',
       name: 'modifyLoginPsdB',
       component: modifyLoginPsdB
     },
@@ -163,6 +164,11 @@ export default new Router({
       path: '/suggestion',
       name: 'suggestion',
       component: suggestion
+    },
+    {
+      path: '/investRecordDetail',
+      name: 'investRecordDetail',
+      component: investRecordDetail
     }
   ]
 })

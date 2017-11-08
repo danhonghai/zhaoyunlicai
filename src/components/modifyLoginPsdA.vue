@@ -1,12 +1,12 @@
 <template>
-  <div class="modifyLoginPsdA">
+  <div class="modifyLoginPsdA" v-title data-title="修改登录密码">
     <div class='header'>
 			<img src="../assets/Path 145@2x.png" alt="" @click='goBack' />
     		<p>修改登录密码</p>
 		</div>
 		<div class='newLoginPsd'>
 			<span>手机号</span>
-			<input type="tel" v-model="phoneNum" placeholder="输入手机号" />
+			<input type="tel" v-model="phoneNum" maxlength="11" placeholder="输入手机号" />
 		</div>
 		<div class='codeDetail'>
 			<span>验证码</span>
@@ -48,19 +48,34 @@ export default {
 					that.tipsstatus = false;
 				}, 1500);
 			}else if(that.getCodeStatus) {
-				that.getCodeStatus = false;
-				let timer = setInterval(function() {
-					if(that.wait == 0) {
-						console.log('重新获取验证码')
-						that.codeContent = '获取验证码'
-						that.wait = 60;
-						that.getCodeStatus = true;
-						clearInterval(timer);
-					} else {
-						that.codeContent = that.wait + "s后重试";
-						that.wait--;
+				ajax({//请求手机验证码
+					type:'POST',
+					url: baseURL + '/api/noauth/send_verify_code?mobile=' + that.phoneNum,
+					success:function(res){
+						console.log(res)
+						if( res.success == true ){
+							that.getCodeStatus = false;
+							let timer = setInterval(function() {
+								if(that.wait == 0) {
+									console.log('重新获取验证码')
+									that.codeContent = '获取验证码'
+									that.wait = 60;
+									that.getCodeStatus = true;
+									clearInterval(timer);
+								} else {
+									that.codeContent = that.wait + "s后重试";
+									that.wait--;
+								}
+							}, 1000);
+						}else{
+							that.tipsstatus = true;
+							that.tips = res.errMsg;
+							setTimeout(function() {
+								that.tipsstatus = false;
+							}, 1500);
+						}
 					}
-				}, 1000);
+				})
 			}
   	},
   	goBack(){
@@ -83,32 +98,55 @@ export default {
 					that.tipsstatus = false;
 				}, 1500);
 			}else{
-				
-//  this.huanchongStatus = true;
-//	var that = this;
-//	ajax({
-//			type:'post',
-//			url: baseURL + '/auth/get-fee?token='+ Token,
-//			success:function(res){
-//				that.huanchongStatus = false;
-//				var res = res;
-//				console.log(res)
-//				if(res.success == 'true'){
-//					//接参数
-//					that.$router.push({path: '/modifyLoginPsdB'});
-//					
-//				}else{
-//					//提示信息
-//					that.huanchongStatus = false;
-//					that.tipsstatus = true;
-//			  		that.tips = res.errMsg;
-//			  		setTimeout(function(){
-//			  			that.tipsstatus = false
-//			  			that.tips = ''
-//			  		},1500)
-//				}
-//			}
-//		})
+		    that.huanchongStatus = true;
+				mui.ajax(baseURL + '/api/check_verify_code?mobile='+ that.phoneNum +'&code=' + that.code,{
+					dataType:'json',//服务器返回json格式数据
+					type:'post',//HTTP请求类型
+					headers:{
+						'Content-Type':'application/json',
+						'x-auth-token':sessionStorage.getItem("tokenZylc")
+					},
+					success:function(res){
+						that.huanchongStatus = false;
+						console.log(res);
+						if(res.success){
+							that.$router.push({path: '/modifyLoginPsdB/' + res.data.authToken});
+						}else{
+							that.tips = res.errMsg;
+							that.tipsstatus = true;
+							setTimeout(function() {
+								that.tipsstatus = false;
+							}, 1500);
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						console.log(type);
+					}
+				});
+				/*ajax({
+					type:'post',
+					url: baseURL + '/auth/get-fee?token='+ Token,
+					success:function(res){
+						that.huanchongStatus = false;
+						var res = res;
+						console.log(res)
+						if(res.success == 'true'){
+							//接参数
+							that.$router.push({path: '/modifyLoginPsdB'});
+							
+						}else{
+							//提示信息
+							that.huanchongStatus = false;
+							that.tipsstatus = true;
+					  		that.tips = res.errMsg;
+					  		setTimeout(function(){
+					  			that.tipsstatus = false
+					  			that.tips = ''
+					  		},1500)
+						}
+					}
+				})*/
 
 			}
   	}
@@ -122,6 +160,7 @@ export default {
 	width: 100%;
 	height: 100%;
 	position: relative;
+	padding-top: .5rem;
 	.header{
 		position: fixed;
 		top: 0;
@@ -145,7 +184,6 @@ export default {
 	.newLoginPsd{
 		width: 100%;
 		height: 0.46rem;
-		margin-top: 0.5rem;
 		background: #fff;
 		padding-left: 0.26rem;
 		border-top: 1px solid #E0E0E0;

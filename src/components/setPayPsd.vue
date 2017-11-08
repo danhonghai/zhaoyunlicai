@@ -1,5 +1,5 @@
 <template>
-  <div class="setPayPsd">
+  <div class="setPayPsd" v-title data-title="设置交易密码">
     <div class='header'>
 			<img src="../assets/Path 145@2x.png" alt="" @click='goBack' />
     		<p>设置交易密码</p>

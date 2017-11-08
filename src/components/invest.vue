@@ -246,9 +246,6 @@ export default {
 				//联网失败的回调,隐藏下拉刷新和上拉加载的状态;
 				that.mescrollArr[that.classify].endErr();
 			});
-		},
-		shuchu(){
-			console.log('123')
 		}
   },
   mounted: function(){
@@ -258,6 +255,29 @@ export default {
 }
 /*联网加载列表数据*/
 function getListDataFromNet(pageNum,pageSize,successCallback,errorCallback) {
+	mui.ajax(baseURL + '/api/noauth/investment_list',{
+		dataType:'json',//服务器返回json格式数据
+		type:'post',//HTTP请求类型
+		headers:{
+			'Content-Type':'application/json'
+		},
+		success:function(res){
+			console.log(res);
+			if(res.success){
+				console.log('散标列表成功')
+			}else{
+				that.tips = res.errMsg;
+				that.tipsstatus = true;
+				setTimeout(function() {
+					that.tipsstatus = false;
+				}, 1500);
+			}
+		},
+		error:function(xhr,type,errorThrown){
+			//异常处理；
+			console.log(type);
+		}
+	});
 	//延时一秒,模拟联网
 	setTimeout(function () {
 //         axios.get("xxxxxx", {

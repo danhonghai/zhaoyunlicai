@@ -147,6 +147,31 @@
 	}
 	/*联网加载列表数据*/
 	function getListDataFromNet(pageNum,pageSize,successCallback,errorCallback) {
+		//标的投资排行
+	  	mui.ajax(baseURL + '/api/noauth/invest_rank?pushBorrowId=121412',{
+			dataType:'json',//服务器返回json格式数据
+			type:'post',//HTTP请求类型
+			headers:{
+				'Content-Type':'application/json'
+			},
+			success:function(res){
+				console.log(res);
+				if(res.success){
+					console.log('散标投资排行成功')
+				}else{
+					console.log('散标投资排行失败')
+					/*that.tips = res.errMsg;
+					that.tipsstatus = true;
+					setTimeout(function() {
+						that.tipsstatus = false;
+					}, 1500);*/
+				}
+			},
+			error:function(xhr,type,errorThrown){
+				//异常处理；
+				console.log(type);
+			}
+		});
 		//延时一秒,模拟联网
         setTimeout(function () {
 //          	axios.get("xxxxxx", {

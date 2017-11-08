@@ -1,5 +1,5 @@
 <template>
-  <div class="certification">
+  <div class="certification" v-title data-title="认证">
     <div class='header'>
 			<img src="../assets/Path 145@2x.png" alt="" @click='goBack' />
     		<p>认证</p>

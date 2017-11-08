@@ -1,5 +1,5 @@
 <template>
-  <div class="investRecord">
+  <div class="investRecord" v-title data-title="投资记录">
     <div class='header'>
 			<img src="../assets/Path 145@2x.png" alt="" @click='goBack' />
     		<p>投资记录</p>
@@ -9,8 +9,9 @@
 			<span :class='{bcolor:isSelect==1}' @click='select(1)'>已结算</span>
 		</div>
 		<div class='resultDetail'>
-			<ul class='ing' v-if='selectStatus1'>
-				 <li>
+			<div id="Tab0" class="mescroll" v-show='selectStatus1'>
+				<ul class='ing' id="dataList0">
+				 <li @click="Goto">
 				 	<div class='top'>
 				 		<span>信用贷款计划</span>
 				 		<span>预计年化利率：10%</span>
@@ -25,7 +26,7 @@
 				 		<span>回款日：2017-04-02</span>
 				 	</div>
 				 </li>
-				 <li>
+				 <li v-for="p in datalist0">
 				 	<div class='top'>
 				 		<span>信用贷款计划</span>
 				 		<span>预计年化利率：10%</span>
@@ -40,11 +41,13 @@
 				 		<span>回款日：2017-04-02</span>
 				 	</div>
 				 </li>
-			</ul>
-			<ul class='already' v-if='selectStatus2'>
-				 <li>
+				</ul>
+			</div>
+			<div id="Tab1" class="mescroll" v-show='selectStatus2'>
+				<ul class='already' id="dataList1">
+				 <li v-for="p in datalist1">
 				 	<div class='titles'>
-				 		信用贷款计划
+				 		信用贷款计划2
 				 	</div>
 				 	<div class='left'>
 				 		<span>投资金额</span>
@@ -59,7 +62,8 @@
 				 	  <span>回款日：2017-04-02</span>
 				 	</div>
 				 </li>
-			</ul>
+				</ul>
+			</div>
 		</div>
 		
 		<!--<button>确定</button>-->
@@ -76,22 +80,31 @@ export default {
   name: 'investRecord',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
-      tipsstatus: false,
-      tips: '提示框',
-      huanchongStatus: false,
-      cashPsdStatus: false,
-      isSelect: 0,
-      selectStatus1: true,
-      selectStatus2: false
+      tipsstatus: false,					//提示框显隐
+      tips: '提示框',							//提示框内容
+      huanchongStatus: false,			//缓冲显隐
+      cashPsdStatus: false,				
+      isSelect: 0,								//tab切换
+      selectStatus1: true,				//选项卡切换
+      selectStatus2: false,				//选项卡切换
+      mescrollArr: [],						//上拉加载下拉刷新实例化
+      datalist0: [],							//投资中数据
+      datalist1: [] 							//已结算数据
     }
   },
   methods: {
   	goBack(){
   		this.$router.go(-1)
   	},
-  	select(index){
+  	Goto(){
+  		this.$router.push({path: '/investRecordDetail'})
+  	},
+  	select(index){//tab切换
   		this.isSelect = index;
+  		if(this.mescrollArr[index]==null){
+  			this.mescrollArr[index]=this.initMescroll("Tab"+index, "dataList"+index);
+  		}
+  		console.log(this.mescrollArr[1])
   		if(this.isSelect == 0){
   			this.selectStatus1 = true;
       	this.selectStatus2 = false;
@@ -99,8 +112,138 @@ export default {
   			this.selectStatus1 = false;
       	this.selectStatus2 = true;
   		}
-  	}
+  	},
+  	initMescroll(mescrollId,clearEmptyId){
+			//创建MeScroll对象,内部已默认开启下拉刷新,自动执行up.callback,刷新列表数据;
+			console.log(mescrollId+ '  ' +clearEmptyId)
+			var mescroll = new MeScroll(mescrollId, {
+				//上拉加载的配置项
+				up: {
+					callback: this.getListData, //上拉回调,此处可简写; 相当于 callback: function (page) { getListData(page); }
+					noMoreSize: 4, //如果列表已无数据,可设置列表的总数量要大于半页才显示无更多数据;避免列表数据过少(比如只有一条数据),显示无更多数据会不好看; 默认5
+					empty: {
+						icon: "../res/img/mescroll-empty.png", //图标,默认null
+						tip: "暂无相关数据~", //提示
+						btntext: "去逛逛 >", //按钮,默认""
+						btnClick: function(){//点击按钮的回调,默认null
+							alert("点击了按钮,具体逻辑自行实现");
+						} 
+					},
+					//clearEmptyId: clearEmptyId, //相当于同时设置了clearId和empty.warpId; 简化写法;默认null
+				}
+			});
+			console.log(mescroll)
+			return mescroll;
+		},
+		getListData: function(page){
+			console.log(page);
+			var that = this;
+			console.log(page.num + '   ' + page.size);
+			getListDataFromNet(that.isSelect+1,page.num, page.size, function(curPageData) {
+				//curPageData=[]; //打开本行注释,可演示列表无任何数据empty的配置
+				if(that.isSelect == 0){
+					//如果是第一页需手动制空列表
+					if(page.num == 1){
+						that.datalist0 = [];
+					} 
+					//更新列表数据
+					that.datalist0 = that.datalist0.concat(curPageData);
+				}else if(that.isSelect == 1){
+					//如果是第一页需手动制空列表
+					if(page.num == 1){
+						that.datalist1 = [];
+					} 
+					//更新列表数据
+					that.datalist1 = that.datalist1.concat(curPageData);
+				}
+				
+				console.log('curPageData:   '+curPageData.length)
+				//console.log(that.datalist0)
+				console.log(that.datalist1)
+				//联网成功的回调,隐藏下拉刷新和上拉加载的状态;
+				//mescroll会根据传的参数,自动判断列表如果无任何数据,则提示空;列表无下一页数据,则提示无更多数据;
+				//   console.log("page.num="+page.num+", page.size="+page.size+", curPageData.length="+curPageData.length+", that.datalist0.length==" + that.datalist0.length);
+				console.log("page.num="+page.num+", page.size="+page.size+", curPageData.length="+curPageData.length+", that.datalist1.length==" + that.datalist1.length);
+				
+				//方法一(推荐): 后台接口有返回列表的总页数 totalPage
+				//that.mescroll.endByPage(curPageData.length, totalPage); //必传参数(当前页的数据个数, 总页数)
+				
+				//方法二(推荐): 后台接口有返回列表的总数据量 totalSize
+				//that.mescroll.endBySize(curPageData.length, totalSize); //必传参数(当前页的数据个数, 总数据量)
+				
+				//方法三(推荐): 您有其他方式知道是否有下一页 hasNext
+				//that.mescroll.endSuccess(curPageData.length, hasNext); //必传参数(当前页的数据个数, 是否有下一页true/false)
+				
+				//方法四 (不推荐),会存在一个小问题:比如列表共有20条数据,每页加载10条,共2页.如果只根据当前页的数据个数判断,则需翻到第三页才会知道无更多数据,如果传了hasNext,则翻到第二页即可显示无更多数据.
+				that.mescrollArr[that.isSelect].endSuccess(curPageData.length);
+			
+			}, function() {
+				//联网失败的回调,隐藏下拉刷新和上拉加载的状态;
+				that.mescrollArr[that.isSelect].endErr();
+			});
+		}
+  },
+  mounted: function(){
+  	this.mescrollArr[this.isSelect]=this.initMescroll("Tab"+this.isSelect, "dataList"+this.isSelect);
+  	console.log(this.mescrollArr)
   }
+}
+/*联网加载列表数据*/
+function getListDataFromNet(statusType,pageNum,pageSize,successCallback,errorCallback) {
+	mui.ajax(baseURL + '/api/investment_record',{
+		data:{
+			status: statusType
+		},
+		dataType:'json',//服务器返回json格式数据
+		type:'post',//HTTP请求类型
+		headers:{
+			'Content-Type':'application/json',
+			'x-auth-token':sessionStorage.getItem("tokenZylc")
+		},
+		success:function(res){
+			console.log(res);
+			if(res.success){
+				console.log('投资记录成功')
+			}else{
+				that.tips = res.errMsg;
+				that.tipsstatus = true;
+				setTimeout(function() {
+					that.tipsstatus = false;
+				}, 1500);
+			}
+		},
+		error:function(xhr,type,errorThrown){
+			//异常处理；
+			console.log(type);
+		}
+	});
+	//延时一秒,模拟联网
+	setTimeout(function () {
+//         axios.get("xxxxxx", {
+//					params: {
+//						num: pageNum, //页码
+//						size: pageSize //每页长度
+//					}
+//				})
+//				.then(function(response) {
+			var data=['1','2','3','5','5','6','7','8','9','10',
+			'1','2','3','5','5','6','7','8','9','10',
+			'1','2','3','5','5','6','7','8','9','10',
+			'1','2','3','5','5','6','7','8','9','10'
+			]; // 模拟数据: 
+		var listData=[];//模拟分页数据
+		console.log('pageNum:'+pageNum)
+		for (var i = (pageNum-1)*pageSize; i < pageNum*pageSize; i++) {
+			if(i==data.length) break;
+			listData.push(data[i]);
+			console.log(i)
+		}
+		successCallback(listData);//成功回调
+//				})
+//				.catch(function(error) {
+//					errorCallback&&errorCallback()//失败回调
+//				});
+	},500)
 }
 </script>
 
@@ -110,6 +253,7 @@ export default {
 	width: 100%;
 	height: 100%;
 	position: relative;
+	padding-top: .5rem;
 	.header{
 		position: fixed;
 		top: 0;
@@ -131,7 +275,6 @@ export default {
 		}
 	}
 	.title{
-		margin-top: 0.5rem;
 		width: 100%;
 		height: 0.45rem;
 		background: #fff;
@@ -152,6 +295,12 @@ export default {
 	.resultDetail{
 		width: 100%;
 		
+	}
+	.mescroll{
+		position: fixed;
+		top: .95rem;
+		bottom: 0;
+		height: auto;
 	}
 	.ing{
 			width: 100%;

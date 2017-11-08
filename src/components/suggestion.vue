@@ -9,7 +9,13 @@
 				<textarea maxlength="200" v-model="word"></textarea>
 				<span>{{wordlength}}/200</span>
 			</div>
-			<button>提交</button>
+			<button @click="submit">提交</button>
+		</div>
+		<transition name="fade">
+			<div class='tips' v-if='tipsstatus' v-text='tips'></div>
+		</transition>
+		<div class='haunchong' v-if='huanchongStatus'>
+			<img src="../assets/loading.gif" alt="" />
 		</div>
 	</div>
 </template>
@@ -19,8 +25,11 @@
 		name: 'suggestion',
 		data() {
 			return {
-				word: null,			//输入内容
-				wordlength: 0		//输入长度
+				word: null,						//输入内容
+				wordlength: 0,					//输入长度
+				tipsstatus: false,				//提示框显隐
+				tips: '提示框',					//提示框内容
+				huanchongStatus: false,			//缓冲框显隐
 			}
 		},
 		watch: {
@@ -31,6 +40,47 @@
 		methods: {
 			goBack() { //后退
 				this.$router.go(-1)
+			},
+			submit(){
+				let that = this;
+				if(that.wordlength==0){
+					that.tips = '请输入反馈内容';
+					that.tipsstatus = true;
+					setTimeout(function() {
+						that.tipsstatus = false;
+					}, 1500);
+				}else{
+					that.huanchongStatus = true;
+					mui.ajax(baseURL + '/api/feedback?content=' + that.word,{
+						dataType:'json',//服务器返回json格式数据
+						type:'post',//HTTP请求类型
+						headers:{
+							'Content-Type':'application/json',
+							'x-auth-token':sessionStorage.getItem("tokenZylc")
+						},
+						success:function(res){
+							that.huanchongStatus = false;
+							console.log(res);
+							if(res.success){
+								that.tips = "提交成功";
+								that.tipsstatus = true;
+								setTimeout(function() {
+									that.tipsstatus = false;
+								}, 1500);
+							}else{
+								that.tips = res.errMsg;
+								that.tipsstatus = true;
+								setTimeout(function() {
+									that.tipsstatus = false;
+								}, 1500);
+							}
+						},
+						error:function(xhr,type,errorThrown){
+							//异常处理；
+							console.log(type);
+						}
+					});
+				}
 			}
 		}
 	}
@@ -38,6 +88,18 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='scss' scoped>
+	.fade-enter-active,
+	.fade-leave-active {
+		transition: opacity .5s
+	}
+	
+	.fade-enter,
+	.fade-leave-to
+	/* .fade-leave-active in below version 2.1.8 */
+	
+	{
+		opacity: 0
+	}
 	.suggestion {
 		width: 100%;
 		height: 100%;
@@ -104,6 +166,36 @@
 				margin: 0;
 				padding: 0;
 				border: 0;
+			}
+		}
+		.tips {
+			position: absolute;
+			left: 0.8rem;
+			top: 0.5rem;
+			width: 2rem;
+			font-size: 0.15rem;
+			color: #fff;
+			line-height: 0.3rem;
+			background: rgba(55, 55, 55, .8);
+			padding-left: 0.07rem;
+			padding-right: 0.07rem;
+			z-index: 100;
+		}
+		.haunchong {
+			position: fixed;
+			width: 100%;
+			height: 100%;
+			left: 0;
+			top: 0;
+			background: rgba(55, 55, 55, .3);
+			z-index: 20;
+			img {
+				position: absolute;
+				left: 1.5rem;
+				top: 2rem;
+				width: 0.8rem;
+				height: 0.8rem;
+				border-radius: 0.06rem;
 			}
 		}
 	}

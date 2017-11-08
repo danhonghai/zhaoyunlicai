@@ -145,6 +145,30 @@
 	}
 	/*联网加载列表数据*/
 	function getListDataFromNet(pageNum,pageSize,successCallback,errorCallback) {
+		mui.ajax(baseURL + '/api/money_flow',{
+			dataType:'json',//服务器返回json格式数据
+			type:'get',//HTTP请求类型
+			headers:{
+				'Content-Type':'application/json',
+				'x-auth-token':sessionStorage.getItem("tokenZylc")
+			},
+			success:function(res){
+				console.log(res);
+				if(res.success){
+					console.log('资金流水成功')
+				}else{
+					that.tips = res.errMsg;
+					that.tipsstatus = true;
+					setTimeout(function() {
+						that.tipsstatus = false;
+					}, 1500);
+				}
+			},
+			error:function(xhr,type,errorThrown){
+				//异常处理；
+				console.log(type);
+			}
+		});
 		//延时一秒,模拟联网
         setTimeout(function () {
 //          	axios.get("xxxxxx", {

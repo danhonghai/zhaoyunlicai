@@ -1,5 +1,5 @@
 <template>
-  <div class="modifyPayPsdB">
+  <div class="modifyPayPsdB" v-title data-title="修改交易密码">
     <div class='header'>
 			<img src="../assets/Path 145@2x.png" alt="" @click='goBack' />
     		<p>修改交易密码</p>

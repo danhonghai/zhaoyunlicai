@@ -1,5 +1,5 @@
 <template>
-  <div class="cashCommission">
+  <div class="cashCommission" v-title data-title="提现">
     <div class='header'>
 			<img src="../assets/Path 145@2x.png" alt="" @click='goBack' />
     		<p>提现</p>
