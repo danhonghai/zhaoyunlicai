@@ -18,28 +18,32 @@
 					<span>{{telNum}}</span>
 				</div>
 			</li>
-			<li  @click="Goto('myBankcard')">
+			<!--<li  @click="Goto('myBankcard')">
 				<div class='title'>银行卡</div>
 				<div class='details'>
 					<span>{{bankName}}</span>
 					<span>{{bankCard}}</span>
 				</div>
-			</li>
+			</li>-->
 		</ul>
 		<ul class='modify'>
 			<li  @click="Goto('modifyLoginPsdA')">
 				<span>修改登录密码</span>
 				<img src="../assets/Path 145 Copy 2@2x.png" alt="" />
 			</li>
-			<li @click="Goto('modifyPayPsdA')">
+			<!--<li @click="Goto('modifyPayPsdA')">
 				<span>修改交易密码</span>
 				<img src="../assets/Path 145 Copy 2@2x.png" alt="" />
-			</li>
+			</li>-->
 		</ul>
 		<span id="btn" @click="logOff">退出登录</span>
 		<div class='tips' v-if='tipsstatus' v-text='tips'></div>
 		<div class='haunchong' v-if='huanchongStatus'>
 			<img src="../assets/loading.gif" alt="" />
+		</div>
+		<div class="bottom">
+			<p>客服电话：</p>
+			<a href="tel:4008818815">400-881-8815</a>
 		</div>
   </div>
 </template>
@@ -55,9 +59,9 @@ export default {
       huanchongStatus: false,
       name: '张三',
       IDnum: '341558526541258965',
-      telNum: '15658965412',
+      telNum: '15658965412'/*,
       bankName: '中国银行',
-      bankCard: '5896547854123654'
+      bankCard: '5896547854123654'*/
     }
   },
   methods: {
@@ -96,6 +100,8 @@ export default {
 						setTimeout(function() {
 							that.tipsstatus = false;
 						}, 1500);
+						sessionStorage.removeItem("tokenZylc");
+						that.$router.push({path: '/'});
 					}
 				},
 				error:function(xhr,type,errorThrown){
@@ -106,40 +112,36 @@ export default {
   	}
   },
   mounted() {
-
     this.IDnum = (this.IDnum).replace(/^(\d{4})\d+(\d{4})$/, "$1********$2");//身份证号
     this.telNum = (this.telNum).replace(/^(\d{3})\d+(\d{4})$/, "$1****$2");//手机号
-    this.bankCard = (this.bankCard).replace(/^(\d{4})\d+(\d{4})$/, "$1********$2");//银行卡号
-  	/*if(!sessionStorage.getItem("tokenZylc")){
-    	this.$router.push({path: '/login'});
-    }*/
-//	this.huanchongStatus = true;
-//	var that = this;
-//	ajax({
-//			type:'post',
-//			url: baseURL + '/auth/get-fee?token='+ Token,
-//			success:function(res){
-//				that.huanchongStatus = false;
-//				var res = res;
-//				console.log(res)
-//				if(res.success == 'true'){
-//					//接参数
-//					sessionStorage.setItem('loanRate',res.body.data.rate)//借款利率
-//					
-//				}else{
-//					//提示信息
-//					that.huanchongStatus = false;
-//					that.tipsstatus = true;
-//			  		that.tips = res.errMsg;
-//			  		setTimeout(function(){
-//			  			that.tipsstatus = false
-//			  			that.tips = ''
-//			  		},1500)
-//				}
-//			}
-//		})
-  	
- }
+    //this.bankCard = (this.bankCard).replace(/^(\d{4})\d+(\d{4})$/, "$1********$2");//银行卡号
+    
+		console.log(JSON.parse(sessionStorage.getItem('realVerify')) )
+		let realVerify = JSON.parse(sessionStorage.getItem('realVerify'));
+		if(!realVerify.realVerifyStatus){
+			this.$router.push({path: '/certification'});
+		}else{
+			let that = this;
+			mui.ajax(baseURL + '/api/user_info',{
+				dataType:'json',//服务器返回json格式数据
+				type:'get',//HTTP请求类型
+				headers:{
+					'Content-Type':'application/json',
+					'x-auth-token':sessionStorage.getItem("tokenZylc")
+				},
+				success:function(res){
+					console.log(res);
+					that.name = res.data.userInfo.userName;
+					that.IDnum = res.data.userInfo.idCard;
+					that.telNum = res.data.userInfo.mobile;
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					console.log(type);
+				}
+			});
+		}
+  }
 }
 </script>
 
@@ -172,7 +174,6 @@ export default {
 	}
 	.accountDetails{
 		width: 100%;
-		height: 1.35rem;
 		background: #fff;
 		padding-left: 0.26rem;
 		li{
@@ -208,7 +209,6 @@ export default {
 	}
 	.modify{
 		width: 100%;
-		height: 0.91rem;
 		background: #fff;
 		padding-left: 0.26rem;
 		margin-top: 0.1rem;
@@ -244,6 +244,22 @@ export default {
 		margin-top: 0.1rem;
 		border: none;
 		padding: 0;
+	}
+	.bottom {
+		width: 100%;
+		position: fixed;
+		bottom: 0;
+		p {
+			font-size: .13rem;
+			line-height: .13rem;
+		}
+		a {
+			display: block;
+			width: 1.1rem;
+			font-size: .16rem;
+			line-height: .16rem;
+			margin: .07rem 0 .17rem 1.33rem;
+		}
 	}
 	.tips{
 		position: absolute;

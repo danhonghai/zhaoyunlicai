@@ -2,24 +2,24 @@
 	<div class="unregular" v-title v-bind:data-title="title">
 	    <div class='header'>
 			<img src="../assets/Path 145@2x.png" alt="" @click='goBack' />
-    		<p>散标第29次借款</p>
+    		<p>{{title}}</p>
 		</div>
 		<div class="content">
 			<div class="goodInfo">
 				<dl>
-					<dt class="cssd0566bb63175d2">10.0<span> %</span> </dt>
+					<dt class="cssd0566bb63175d2">{{investDetail.apr | number(1)}}<span> %</span> </dt>
 					<dd>利率</dd>
 				</dl>
 				<dl>
-					<dt class="cssd0566bb63175d2">30<span> 天</span> </dt>
+					<dt class="cssd0566bb63175d2">{{investDetail.numberOfDays}}<span> 天</span> </dt>
 					<dd>投资期限<span>到期还本付息</span></dd>
 				</dl>
 				<div class="progress">
-   					<span></span>
+   					<span v-bind:style="{width:investDetail.proportion*100 +'%'}"></span>
    				</div>
-   				<p>项目总额<span>120.00万</span></p>
-   				<p>剩余可投<span>20.00万</span></p>
-   				<b>70%</b>
+   				<p>项目总额<span>{{investDetail.account | moneyshow(100000)}}{{investDetail.account<100000?'元':'万'}}</span></p>
+   				<p>剩余可投<span>{{investDetail.surplusMoney | moneyshow(100000)}}{{investDetail.surplusMoney<100000?'元':'万'}}</span></p>
+   				<b>{{investDetail.proportion*100 | number(2)}}%</b>
 			</div>
 			<div class="borrowerInfo">
 				<h3>借款人信息</h3>
@@ -31,43 +31,46 @@
 						<img src="../assets/success_ok@2x.png"/>手机认证
 					</li>
 					<li>
-						<span>姓名:</span>罗纳尔迪尼奥
+						<span>姓名:</span>{{investDetail.realName}}
 					</li>
 					<li>
-						<span>年龄:</span>36岁
+						<span>年龄:</span>{{investDetail.age}}岁
 					</li>
 					<li>
-						<span>职业:</span>足球员
+						<span>职业:</span>{{investDetail.occupation}}
 					</li>
 					<li>
-						<span>性别:</span>男
+						<span>性别:</span>{{investDetail.gender == 1 ? '男' : '女'}}
 					</li>
 				</ul>
 				<h3>信用记录</h3>
 				<ul>
 					<li>
-						<span>芝麻信用:</span>459分
+						<span>芝麻信用:</span>{{investDetail.sesameCredit}}分
 					</li>
 					<li>
-						<span>逾期次数:</span>5次
+						<span>逾期次数:</span>{{investDetail.overdueTimes}}次
 					</li>
 					<li>
-						<span>借款次数:</span>10次
+						<span>借款次数:</span>{{investDetail.loanTimes}}次
 					</li>
 				</ul>
 			</div>
 			<div class="list">
 				<h3>已投资列表</h3>
-				<ul class="ranklist">
-					<li>
-						<div class="rank"><img src="../assets/1奖牌@2x.png"/></div>
+				<ul class="ranklist" v-if="ranklist.length>0">
+					<li v-for="(list,index) in ranklist" v-if="index<5">
+						<div class="rank" v-if="index==0"><img src="../assets/1奖牌@2x.png"/></div>
+						<div class="rank" v-if="index==1"><img src="../assets/2奖牌@2x.png"/></div>
+						<div class="rank" v-if="index==2"><img src="../assets/3奖牌@2x.png"/></div>
+						<div class="rank cssd0566bb63175d2" v-if="index>2">第 {{ index+1 }} 名</div>
 						<dl>
-							<dt>186 **** 6293</dt>
-							<dd>2017-10-19 16:35</dd>
+							<dt>{{list.mobile}}</dt>
+							<dd>{{list.createdTime}}</dd>
 						</dl>
-						<span class="cssd0566bb63175d2">100000.00元</span>
+						<span class="cssd0566bb63175d2">{{list.account|number(2)}}元</span>
 					</li>
-					<li>
+					<!--<li>
 						<div class="rank"><img src="../assets/2奖牌@2x.png"/></div>
 						<dl>
 							<dt>186 **** 6293</dt>
@@ -98,14 +101,17 @@
 							<dd>2017-10-19 16:35</dd>
 						</dl>
 						<span class="cssd0566bb63175d2">100000.00元</span>
-					</li>
-					<b><router-link to="/ranklist">点击查看更多</router-link></b>
+					</li>-->
+					<b v-if="ranklist.length>4" @click="goRanklist">点击查看更多</b>
 				</ul>
+				<div class="emptyData" v-else>
+					<img src="../assets/empy@2x.png"/>
+				</div>
 			</div>
 		</div>
 		<div class="buy">
-			<p>1万元收益约<span>100元</span></p>
-			<button>自动投标</button>
+			<p>1万元收益约<span>{{earnings | number(2)}}元</span></p>
+			<button @click="buy">立即投资</button>
 		</div>
 		<transition name="fade">
 			<div class='tips' v-if='tipsstatus' v-text='tips'></div>
@@ -121,21 +127,57 @@ export default {
   	name: 'unregular',
   	data () {
 	    return {
-	      	title: '散标第29次借款',
+	      	title: null,					//标题
 	      	tipsstatus: false,				//提示框显隐
 			tips: '提示框',					//提示框内容
 			huanchongStatus: false,			//缓冲框显隐
+			investDetail:{					//散标详情
+				apr: null,					//利率
+				numberOfDays: null,			//投资天数
+				proportion: null,			//进度
+				account: null,				//项目总额
+				surplusMoney: null,			//剩余可投
+				proportion: null,			//进度
+				realName: null,				//借款人姓名
+				occupation: null,			//借款人职业
+				age: null,					//借款人年龄
+				gender: null,				//借款人年龄
+				sesameCredit: null,			//借款人芝麻信用
+				overdueTimes: null,			//借款人逾期次数
+				loanTimes: null				//借款次数
+			},
+			earnings: 0,					//预计收益
+			ranklist:[]						//投资排行
 	    }
   	},
   	methods: {
 	  	goBack(){
 	  		this.$router.go(-1)
+	  	},
+	  	buy(){		//购买
+	  		let realVerify = JSON.parse(sessionStorage.getItem('realVerify'));
+	  		if(!sessionStorage.getItem("tokenZylc")){
+		    	this.$router.push({
+		    		name: 'login',
+		    		params: {
+		    			unregularId:this.$route.params.id
+		    		}
+		    	});
+		    }else if(!realVerify.realVerifyStatus){
+		    	this.$router.push({path: '/certification'});
+		    }else{
+	  			this.$router.push({path: '/buy/'+ this.$route.params.id});
+		    }
+	  	},
+	  	goRanklist(){		//跳转投资排行
+	  		this.$router.push({path: '/ranklist/'+ this.$route.params.id})
 	  	}
   	},
   	mounted: function(){
   		let that = this;
+  		let investId = that.$route.params.id;
   		//标的详情
-	  	mui.ajax(baseURL + '/api/noauth/investment_detail?borrowId=123',{
+	  	mui.ajax(baseURL + '/api/noauth/investment_detail?borrowId='+investId,{
 			dataType:'json',//服务器返回json格式数据
 			type:'post',//HTTP请求类型
 			headers:{
@@ -144,7 +186,11 @@ export default {
 			success:function(res){
 				console.log(res);
 				if(res.success){
-					console.log('散标详情成功')
+					console.log('散标详情成功');
+					that.title = res.data.borrowName;
+    				document.title = that.title;
+    				that.investDetail = res.data;
+    				that.earnings = 10000 * res.data.apr * res.data.numberOfDays / 36000;
 				}else{
 					that.tips = res.errMsg;
 					that.tipsstatus = true;
@@ -159,7 +205,7 @@ export default {
 			}
 		});
 		//标的投资排行
-	  	mui.ajax(baseURL + '/api/noauth/invest_rank?pushBorrowId=121412',{
+	  	mui.ajax(baseURL + '/api/noauth/invest_rank?pushBorrowId='+investId,{
 			dataType:'json',//服务器返回json格式数据
 			type:'post',//HTTP请求类型
 			headers:{
@@ -169,6 +215,7 @@ export default {
 				console.log(res);
 				if(res.success){
 					console.log('散标投资排行成功')
+					that.ranklist = res.data.content;
 				}else{
 					that.tips = res.errMsg;
 					that.tipsstatus = true;
@@ -406,6 +453,14 @@ export default {
 					line-height: .12rem;
 					font-weight: normal;
 					margin: .18rem 3% .11rem 34%;
+				}
+			}
+			.emptyData{
+				width: 100%;
+				float: left;
+				img{
+					width: 1.5rem;
+					margin: .7rem;
 				}
 			}
 		}

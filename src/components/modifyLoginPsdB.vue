@@ -110,7 +110,6 @@ export default {
 			width: 2.5rem;
 			height: 0.45rem;
 			font-size: 0.14rem;
-			line-height: 0.45rem;
 			color: #333;
 			margin-left: 0.2rem;
 			border: none;

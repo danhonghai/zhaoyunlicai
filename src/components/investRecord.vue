@@ -10,42 +10,33 @@
 		</div>
 		<div class='resultDetail'>
 			<div id="Tab0" class="mescroll" v-show='selectStatus1'>
+				<div class="empty" v-if="datalist0.length == 0">
+					<img src="../assets/empy@2x.png"/>
+				</div>
 				<ul class='ing' id="dataList0">
-				 <li @click="Goto">
+				 <li @click="Goto(info.tenderId)" v-for="info in datalist0">
 				 	<div class='top'>
-				 		<span>信用贷款计划</span>
-				 		<span>预计年化利率：10%</span>
+				 		<span>{{info.borrowName}}</span>
+				 		<span>预计年化利率：{{info.apr}}%</span>
 				 	</div>
 				 	<div class='center'>
-				 		<span class='cssd0566bb63175d2'>1000.00</span>
+				 		<span class='cssd0566bb63175d2'>{{info.money|number(2)}}</span>
 				 		<span>元</span>
-				 		<span>计息天数：7天</span>
+				 		<span>计息天数：{{info.numberOfDays}}天</span>
 				 	</div>
 				 	<div class='bottom'>
-				 		<span>起息日：2017-04-01</span>
-				 		<span>回款日：2017-04-02</span>
-				 	</div>
-				 </li>
-				 <li v-for="p in datalist0">
-				 	<div class='top'>
-				 		<span>信用贷款计划</span>
-				 		<span>预计年化利率：10%</span>
-				 	</div>
-				 	<div class='center'>
-				 		<span class='cssd0566bb63175d2'>1000.00</span>
-				 		<span>元</span>
-				 		<span>计息天数：7天</span>
-				 	</div>
-				 	<div class='bottom'>
-				 		<span>起息日：2017-04-01</span>
-				 		<span>回款日：2017-04-02</span>
+				 		<span>起息日：{{info.interestTime}}</span>
+				 		<span>回款日：{{info.backAccountTime}}</span>
 				 	</div>
 				 </li>
 				</ul>
 			</div>
 			<div id="Tab1" class="mescroll" v-show='selectStatus2'>
+				<div class="empty" v-if="datalist1.length == 0">
+					<img src="../assets/empy@2x.png"/>
+				</div>
 				<ul class='already' id="dataList1">
-				 <li v-for="p in datalist1">
+				 <li @click="Goto(info.tenderId)" v-for="info in datalist1">
 				 	<div class='titles'>
 				 		信用贷款计划2
 				 	</div>
@@ -96,8 +87,8 @@ export default {
   	goBack(){
   		this.$router.go(-1)
   	},
-  	Goto(){
-  		this.$router.push({path: '/investRecordDetail'})
+  	Goto(tenderId){
+  		this.$router.push({path: '/investRecordDetail/' + tenderId})
   	},
   	select(index){//tab切换
   		this.isSelect = index;
@@ -119,20 +110,11 @@ export default {
 			var mescroll = new MeScroll(mescrollId, {
 				//上拉加载的配置项
 				up: {
+					page: {size:10},
 					callback: this.getListData, //上拉回调,此处可简写; 相当于 callback: function (page) { getListData(page); }
-					noMoreSize: 4, //如果列表已无数据,可设置列表的总数量要大于半页才显示无更多数据;避免列表数据过少(比如只有一条数据),显示无更多数据会不好看; 默认5
-					empty: {
-						icon: "../res/img/mescroll-empty.png", //图标,默认null
-						tip: "暂无相关数据~", //提示
-						btntext: "去逛逛 >", //按钮,默认""
-						btnClick: function(){//点击按钮的回调,默认null
-							alert("点击了按钮,具体逻辑自行实现");
-						} 
-					},
-					//clearEmptyId: clearEmptyId, //相当于同时设置了clearId和empty.warpId; 简化写法;默认null
+					noMoreSize: 4 //如果列表已无数据,可设置列表的总数量要大于半页才显示无更多数据;避免列表数据过少(比如只有一条数据),显示无更多数据会不好看; 默认5
 				}
 			});
-			console.log(mescroll)
 			return mescroll;
 		},
 		getListData: function(page){
@@ -140,42 +122,27 @@ export default {
 			var that = this;
 			console.log(page.num + '   ' + page.size);
 			getListDataFromNet(that.isSelect+1,page.num, page.size, function(curPageData) {
-				//curPageData=[]; //打开本行注释,可演示列表无任何数据empty的配置
 				if(that.isSelect == 0){
 					//如果是第一页需手动制空列表
 					if(page.num == 1){
 						that.datalist0 = [];
 					} 
 					//更新列表数据
-					that.datalist0 = that.datalist0.concat(curPageData);
+					that.datalist0 = that.datalist0.concat(curPageData.content);
 				}else if(that.isSelect == 1){
 					//如果是第一页需手动制空列表
 					if(page.num == 1){
 						that.datalist1 = [];
 					} 
 					//更新列表数据
-					that.datalist1 = that.datalist1.concat(curPageData);
+					that.datalist1 = that.datalist1.concat(curPageData.content);
 				}
-				
-				console.log('curPageData:   '+curPageData.length)
-				//console.log(that.datalist0)
-				console.log(that.datalist1)
 				//联网成功的回调,隐藏下拉刷新和上拉加载的状态;
 				//mescroll会根据传的参数,自动判断列表如果无任何数据,则提示空;列表无下一页数据,则提示无更多数据;
-				//   console.log("page.num="+page.num+", page.size="+page.size+", curPageData.length="+curPageData.length+", that.datalist0.length==" + that.datalist0.length);
-				console.log("page.num="+page.num+", page.size="+page.size+", curPageData.length="+curPageData.length+", that.datalist1.length==" + that.datalist1.length);
 				
 				//方法一(推荐): 后台接口有返回列表的总页数 totalPage
 				//that.mescroll.endByPage(curPageData.length, totalPage); //必传参数(当前页的数据个数, 总页数)
-				
-				//方法二(推荐): 后台接口有返回列表的总数据量 totalSize
-				//that.mescroll.endBySize(curPageData.length, totalSize); //必传参数(当前页的数据个数, 总数据量)
-				
-				//方法三(推荐): 您有其他方式知道是否有下一页 hasNext
-				//that.mescroll.endSuccess(curPageData.length, hasNext); //必传参数(当前页的数据个数, 是否有下一页true/false)
-				
-				//方法四 (不推荐),会存在一个小问题:比如列表共有20条数据,每页加载10条,共2页.如果只根据当前页的数据个数判断,则需翻到第三页才会知道无更多数据,如果传了hasNext,则翻到第二页即可显示无更多数据.
-				that.mescrollArr[that.isSelect].endSuccess(curPageData.length);
+				that.mescrollArr[that.isSelect].endByPage(curPageData.content.length,curPageData.totalPages);
 			
 			}, function() {
 				//联网失败的回调,隐藏下拉刷新和上拉加载的状态;
@@ -190,10 +157,7 @@ export default {
 }
 /*联网加载列表数据*/
 function getListDataFromNet(statusType,pageNum,pageSize,successCallback,errorCallback) {
-	mui.ajax(baseURL + '/api/investment_record',{
-		data:{
-			status: statusType
-		},
+	mui.ajax(baseURL + '/api/noauth/invest_list?type=' + statusType,{
 		dataType:'json',//服务器返回json格式数据
 		type:'post',//HTTP请求类型
 		headers:{
@@ -204,12 +168,10 @@ function getListDataFromNet(statusType,pageNum,pageSize,successCallback,errorCal
 			console.log(res);
 			if(res.success){
 				console.log('投资记录成功')
+				successCallback(res.data);//成功回调
 			}else{
-				that.tips = res.errMsg;
-				that.tipsstatus = true;
-				setTimeout(function() {
-					that.tipsstatus = false;
-				}, 1500);
+				console.log('投资记录失败')
+				errorCallback&&errorCallback()//失败回调
 			}
 		},
 		error:function(xhr,type,errorThrown){
@@ -217,33 +179,6 @@ function getListDataFromNet(statusType,pageNum,pageSize,successCallback,errorCal
 			console.log(type);
 		}
 	});
-	//延时一秒,模拟联网
-	setTimeout(function () {
-//         axios.get("xxxxxx", {
-//					params: {
-//						num: pageNum, //页码
-//						size: pageSize //每页长度
-//					}
-//				})
-//				.then(function(response) {
-			var data=['1','2','3','5','5','6','7','8','9','10',
-			'1','2','3','5','5','6','7','8','9','10',
-			'1','2','3','5','5','6','7','8','9','10',
-			'1','2','3','5','5','6','7','8','9','10'
-			]; // 模拟数据: 
-		var listData=[];//模拟分页数据
-		console.log('pageNum:'+pageNum)
-		for (var i = (pageNum-1)*pageSize; i < pageNum*pageSize; i++) {
-			if(i==data.length) break;
-			listData.push(data[i]);
-			console.log(i)
-		}
-		successCallback(listData);//成功回调
-//				})
-//				.catch(function(error) {
-//					errorCallback&&errorCallback()//失败回调
-//				});
-	},500)
 }
 </script>
 
@@ -278,6 +213,8 @@ function getListDataFromNet(statusType,pageNum,pageSize,successCallback,errorCal
 		width: 100%;
 		height: 0.45rem;
 		background: #fff;
+		position: fixed;
+		top: .5rem;
 		span{
 			display: block;
 			float: left;
@@ -301,6 +238,12 @@ function getListDataFromNet(statusType,pageNum,pageSize,successCallback,errorCal
 		top: .95rem;
 		bottom: 0;
 		height: auto;
+		.empty{
+			img{
+				width: 50%;
+				margin-top: .8rem;
+			}
+		}
 	}
 	.ing{
 			width: 100%;

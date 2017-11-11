@@ -5,7 +5,7 @@
 			<p>购买</p>
 		</div>
 		<div class="content">
-			<h3>剩余可投<span>1200000.00元</span></h3>
+			<h3>剩余可投<span>{{surplusMoney |　number(2)}}元</span></h3>
 			<div class="money">
 				<div class="balance">
 					账户余额
@@ -16,7 +16,7 @@
 					<input v-bind:type="typeinput" v-model="investMoney" @focus="typeinput='text'" @blur="filterNum" placeholder="100起投 100的整数" />
 				</div>
 			</div>
-			<p>预计收益： <span>{{50 | number(2)}}</span>元</p>
+			<p>预计收益： <span>{{earnings | number(2)}}</span>元</p>
 			<button @click="pay">{{payWord}}</button>
 		</div>
 		<div class="bottom">购买即视为同意《赵云理财协议》</div>
@@ -55,7 +55,11 @@
 				tipsstatus: false,			//提示框显隐
 				tips: '提示框',				//提示框内容
 				huanchongStatus: false,		//缓冲框显隐
-				paypsdStatus: false			//支付密码显隐
+				paypsdStatus: false,		//支付密码显隐
+				surplusMoney: null,			//剩余可投
+				apr: null,					//利率
+				numberOfDays: null,			//投资期限
+				earnings: 0					//预计收益
 			}
 		},
 		directives: {
@@ -88,12 +92,38 @@
 				} else {
 					this.payWord = '购买';
 				}
+				this.earnings = this.investMoney * this.apr * this.numberOfDays / 36000;
+				console.log(this.apr)
 			}
 		},
 		methods: {
 			goBack() {	//后退
 				this.$router.go(-1)
 			},
+			postcall( url, params, target){  
+			    var tempform = document.createElement("form");  
+			    tempform.action = url;  
+			    tempform.method = "post";  
+			    tempform.style.display="none";
+			    //tempform.enctype = "multipart/form-data";
+			    if(target) {  
+			      tempform.target = target;
+			    }  
+			  
+			    for (var x in params) {  
+		        var opt = document.createElement("input");  
+		        opt.name = x;  
+		        opt.value = params[x];  
+		        tempform.appendChild(opt);  
+			    }  
+			  
+			    var opt = document.createElement("input");  
+			    opt.type = "submit";  
+			    tempform.appendChild(opt);  
+			    document.body.appendChild(tempform);  
+			    tempform.submit();  
+			    document.body.removeChild(tempform);  
+			},  
 			pay() {	//点击购买or余额不足按钮
 				console.log(this.investMoney);
 				if(!this.investMoney) {
@@ -108,9 +138,46 @@
 					this.$router.push({
 						path: '/recharge'
 					});
-				} else if(this.investMoney) {
+				}else if(this.investMoney % 100 !=0){
+					this.tipsstatus = true;
+					this.tips = '请输入100的整数';
+					let that = this;
+					setTimeout(function() {
+						that.tipsstatus = false;
+					}, 1500);
+				}else if(this.investMoney) {
 					//this.$router.push({path: '/buyResult'});
-					this.paypsdStatus = true;
+					//this.paypsdStatus = true;
+					let that = this;
+					mui.ajax(baseURL + '/api/borrow/tender?borrowId='+ that.$route.params.borrowId +'&money=' + that.investMoney,{
+						dataType:'json',//服务器返回json格式数据
+						type:'post',//HTTP请求类型
+						headers:{
+							'Content-Type':'application/json',
+							'x-auth-token':sessionStorage.getItem("tokenZylc")
+						},
+						success:function(res){
+							console.log(res);
+							if(res.success){
+								that.postcall( res.data.postUrl ,{
+									merchantID: res.data.merchantID,
+									operationType: res.data.operationType,
+									request: res.data.request,
+									sign: res.data.sign
+								})
+							}else{
+								that.tips = res.errMsg;
+								that.tipsstatus = true;
+								setTimeout(function() {
+									that.tipsstatus = false;
+								}, 1500);
+							}
+						},
+						error:function(xhr,type,errorThrown){
+							//异常处理；
+							console.log(type);
+						}
+					});
 				}
 			},
 			close() {	//关闭输入交易密码框
@@ -124,9 +191,60 @@
 		  	}
 		},
 		mounted() {
+			let that =this;
 			if(this.balance <= 0) {
 				this.payWord = '余额不足,请充值';
 			}
+			//标的详情
+		  	mui.ajax(baseURL + '/api/noauth/investment_detail?borrowId=' + that.$route.params.borrowId,{
+				dataType:'json',//服务器返回json格式数据
+				type:'post',//HTTP请求类型
+				headers:{
+					'Content-Type':'application/json'
+				},
+				success:function(res){
+					console.log(res);
+					if(res.success){
+						console.log('散标详情成功');
+						that.surplusMoney = res.data.surplusMoney;
+						that.apr = res.data.apr;
+						that.numberOfDays = res.data.numberOfDays;
+					}else{
+						that.tips = res.errMsg;
+						that.tipsstatus = true;
+						setTimeout(function() {
+							that.tipsstatus = false;
+						}, 1500);
+					}
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					console.log(type);
+				}
+			});
+			//用户信息
+			mui.ajax(baseURL + '/api/user_info',{
+				dataType:'json',//服务器返回json格式数据
+				type:'get',//HTTP请求类型
+				headers:{
+					'Content-Type':'application/json',
+					'x-auth-token':sessionStorage.getItem("tokenZylc")
+				},
+				success:function(res){
+					//更新本地实名信息
+					let realVerify = JSON.parse(sessionStorage.getItem('realVerify'));
+					realVerify.realVerifyStatus = res.data.userInfo.realVerifyStatus;
+					realVerify.emailBindingStatus = res.data.userInfo.emailBindingStatus;
+					realVerify.cardBindingStatus = res.data.userInfo.cardBindingStatus;
+					sessionStorage.setItem('realVerify',JSON.stringify(realVerify));
+					console.log(res);
+					that.balance = res.data.moneyUsable;
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					console.log(type);
+				}
+			});
 		}
 	}
 </script>

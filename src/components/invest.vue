@@ -76,47 +76,27 @@
     	</div>-->
 			<div id="Tab1" class="unregular mescroll" v-show="classify==1">
 				<ul id="dataList1">
-    			<li class="saling" @click="unregular()">
+    			<li @click="unregular(info.id)" v-bind:class="{saling: info.status==2,saled: info.status!=2}" v-for="info in datalist1">
     				<div class="item-title">
-    					<h3>散标20102期</h3>
+    					<h3>{{info.borrowName}}</h3>
     				</div>
     				<div class="goodsInfo">
     					<dl style="width: 36%;">
-	    					<dt class="cssd0566bb63175d2 shibor">10.0<span>%</span></dt>
+	    					<dt class="cssd0566bb63175d2 shibor">{{info.apr | number(1)}}<span>%</span></dt>
 	    					<dd>预计年化利率</dd>
 	    				</dl>
 	    				<dl>
-	    					<dt class="cssd0566bb63175d2">10<span>天</span></dt>
+	    					<dt class="cssd0566bb63175d2">{{info.numberOfDays}}<span>天</span></dt>
 	    					<dd>投资期限</dd>
 	    				</dl>
 	    				<dl>
-	    					<dt class="cssd0566bb63175d2">120<span>万</span></dt>
+	    					<dt class="cssd0566bb63175d2">{{info.surplusMoney | moneyshow(100000)}}<span>{{info.surplusMoney<100000?'元':'万'}}</span></dt>
 	    					<dd>剩余金额</dd>
 	    				</dl>
     				</div>
-    				<div class="progress"></div>
-    				<b class="cssd0566bb63175d2">33%</b>
-    			</li>
-    			<li class="saled" v-for="p in datalist1">
-    				<div class="item-title">
-    					<h3>散标20102期2{{p}}</h3>
-    				</div>
-    				<div class="goodsInfo">
-    					<dl style="width: 36%;">
-	    					<dt class="cssd0566bb63175d2 shibor">10.0<span>%</span></dt>
-	    					<dd>预计年化利率</dd>
-	    				</dl>
-	    				<dl>
-	    					<dt class="cssd0566bb63175d2">10<span>天</span></dt>
-	    					<dd>投资期限</dd>
-	    				</dl>
-	    				<dl>
-	    					<dt class="cssd0566bb63175d2">120<span>万</span></dt>
-	    					<dd>剩余金额</dd>
-	    				</dl>
-    				</div>
-    				<div class="progress"></div>
-    				<b class="cssd0566bb63175d2">已满标</b>
+    				<div class="progress" v-bind:style="{width:info.proportion*100 +'%'}" v-if="info.proportion!=0"></div>
+    				<div class="progress" style="width:100%;background:#D7D7D7;" v-else></div>
+    				<b class="cssd0566bb63175d2">{{info.proportion == 100 ? '已满标':parseFloat(info.proportion*100).toFixed(2)+'%'}}</b>
     			</li>
     		</ul>
 			</div>
@@ -177,14 +157,15 @@ export default {
   			//params: { userId: 123 }
   		})
   	},
-  	unregular(){
-  		this.$router.push({path: '/unregular'})
+  	unregular(borrowNo){
+  		this.$router.push({path: '/unregular/' + borrowNo})
   	},
   	initMescroll(mescrollId,clearEmptyId){
 			//创建MeScroll对象,内部已默认开启下拉刷新,自动执行up.callback,刷新列表数据;
 			var mescroll = new MeScroll(mescrollId, {
 				//上拉加载的配置项
 				up: {
+					page: {size:10},
 					callback: this.getListData, //上拉回调,此处可简写; 相当于 callback: function (page) { getListData(page); }
 					noMoreSize: 4, //如果列表已无数据,可设置列表的总数量要大于半页才显示无更多数据;避免列表数据过少(比如只有一条数据),显示无更多数据会不好看; 默认5
 					empty: {
@@ -205,43 +186,27 @@ export default {
 			var that = this;
 			console.log(page.num + '   ' + page.size);
 			getListDataFromNet(page.num, page.size, function(curPageData) {
-				//curPageData=[]; //打开本行注释,可演示列表无任何数据empty的配置
 				if(that.classify == 0){
 					//如果是第一页需手动制空列表
 					if(page.num == 1){
 						that.datalist0 = [];
 					} 
 					//更新列表数据
-					that.datalist0 = that.datalist0.concat(curPageData);
+					that.datalist0 = that.datalist0.concat(curPageData.content);
 				}else if(that.classify == 1){
 					//如果是第一页需手动制空列表
 					if(page.num == 1){
 						that.datalist1 = [];
 					} 
 					//更新列表数据
-					that.datalist1 = that.datalist1.concat(curPageData);
+					that.datalist1 = that.datalist1.concat(curPageData.content);
 				}
-				
-				console.log('curPageData:   '+curPageData.length)
-				//console.log(that.datalist0)
-				console.log(that.datalist1)
 				//联网成功的回调,隐藏下拉刷新和上拉加载的状态;
 				//mescroll会根据传的参数,自动判断列表如果无任何数据,则提示空;列表无下一页数据,则提示无更多数据;
-				//   console.log("page.num="+page.num+", page.size="+page.size+", curPageData.length="+curPageData.length+", that.datalist0.length==" + that.datalist0.length);
-				console.log("page.num="+page.num+", page.size="+page.size+", curPageData.length="+curPageData.length+", that.datalist1.length==" + that.datalist1.length);
 				
 				//方法一(推荐): 后台接口有返回列表的总页数 totalPage
 				//that.mescroll.endByPage(curPageData.length, totalPage); //必传参数(当前页的数据个数, 总页数)
-				
-				//方法二(推荐): 后台接口有返回列表的总数据量 totalSize
-				//that.mescroll.endBySize(curPageData.length, totalSize); //必传参数(当前页的数据个数, 总数据量)
-				
-				//方法三(推荐): 您有其他方式知道是否有下一页 hasNext
-				//that.mescroll.endSuccess(curPageData.length, hasNext); //必传参数(当前页的数据个数, 是否有下一页true/false)
-				
-				//方法四 (不推荐),会存在一个小问题:比如列表共有20条数据,每页加载10条,共2页.如果只根据当前页的数据个数判断,则需翻到第三页才会知道无更多数据,如果传了hasNext,则翻到第二页即可显示无更多数据.
-				that.mescrollArr[that.classify].endSuccess(curPageData.length);
-			
+				that.mescrollArr[that.classify].endByPage(curPageData.content.length,curPageData.totalPages);
 			}, function() {
 				//联网失败的回调,隐藏下拉刷新和上拉加载的状态;
 				that.mescrollArr[that.classify].endErr();
@@ -255,7 +220,8 @@ export default {
 }
 /*联网加载列表数据*/
 function getListDataFromNet(pageNum,pageSize,successCallback,errorCallback) {
-	mui.ajax(baseURL + '/api/noauth/investment_list',{
+	let page = pageNum-1;
+	mui.ajax(baseURL + '/api/noauth/investment_list?page=' + page + '&size=' + pageSize,{
 		dataType:'json',//服务器返回json格式数据
 		type:'post',//HTTP请求类型
 		headers:{
@@ -264,13 +230,11 @@ function getListDataFromNet(pageNum,pageSize,successCallback,errorCallback) {
 		success:function(res){
 			console.log(res);
 			if(res.success){
-				console.log('散标列表成功')
+				console.log('散标列表成功');
+				successCallback(res.data);//成功回调
 			}else{
-				that.tips = res.errMsg;
-				that.tipsstatus = true;
-				setTimeout(function() {
-					that.tipsstatus = false;
-				}, 1500);
+				console.log(res.errMsg);
+				errorCallback&&errorCallback()//失败回调
 			}
 		},
 		error:function(xhr,type,errorThrown){
@@ -278,33 +242,6 @@ function getListDataFromNet(pageNum,pageSize,successCallback,errorCallback) {
 			console.log(type);
 		}
 	});
-	//延时一秒,模拟联网
-	setTimeout(function () {
-//         axios.get("xxxxxx", {
-//					params: {
-//						num: pageNum, //页码
-//						size: pageSize //每页长度
-//					}
-//				})
-//				.then(function(response) {
-			var data=['1','2','3','5','5','6','7','8','9','10',
-			'1','2','3','5','5','6','7','8','9','10',
-			'1','2','3','5','5','6','7','8','9','10',
-			'1','2','3','5','5','6','7','8','9','10'
-			]; // 模拟数据: 
-		var listData=[];//模拟分页数据
-		console.log('pageNum:'+pageNum)
-		for (var i = (pageNum-1)*pageSize; i < pageNum*pageSize; i++) {
-			if(i==data.length) break;
-			listData.push(data[i]);
-			console.log(i)
-		}
-		successCallback(listData);//成功回调
-//				})
-//				.catch(function(error) {
-//					errorCallback&&errorCallback()//失败回调
-//				});
-	},500)
 }
 </script>
 
@@ -418,7 +355,6 @@ h3{
 					.progress{
 						position: absolute;
 						bottom: 0;
-						width: 33%;
 						height: .02rem;
 					}
 					b{
@@ -449,7 +385,6 @@ h3{
 						}
 					}
 					.progress{
-						width: 100%;
 						background: #D7D7D7;
 					}
 					b{
@@ -502,7 +437,6 @@ h3{
 						}
 					}
 					.progress{
-						width: 100%;
 						background: #D7D7D7;
 					}
 					b{

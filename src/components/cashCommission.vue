@@ -8,18 +8,18 @@
 			<span>可提现金额</span>
 			<span>{{sumCashMoney | number(2)}}元</span>
 		</div>
-		<div class='bankInfo'>
+		<!--<div class='bankInfo'>
 			<img src="../assets/4@2x.png" alt="" />
 			<span>招商银行</span>
 			<span>尾号1234</span>
-		</div>
+		</div>-->
 		<div class='money'>
 			<span>提现金额</span>
 			<input v-model="cashMoney" @blur="filterNum" @focus="typeinput='text'" v-bind:type="typeinput" placeholder="输入提现金额" />
 			<div class='btn' @click="allMoney">全部金额</div>
 		</div>
 		<div class='arriveTime'>预计两小时内到账</div>
-		<button>确定</button>
+		<button @click="withDraw">确定</button>
 		<div class='paypsd' v-if='paypsdStatus'>
 			<div class="psdContent">
 				<div class="psdHeader">
@@ -48,12 +48,12 @@ export default {
       tipsstatus: false,
       tips: '提示框',
       huanchongStatus: false,
-      typeinput: 'number',		//input输入框类型
-      sumCashMoney: 120000,		//可提现金额
-      cashMoney: null,					//提现金额
-      sixPsd: null,				//支付密码
+      typeinput: 'number',							//input输入框类型
+      sumCashMoney: 120000,							//可提现金额
+      cashMoney: null,									//提现金额
+      sixPsd: null,											//支付密码
       sixPsdStatus: [false, false, false, false, false, false],		//支付密码输入状态
-      paypsdStatus: true			//支付密码显隐
+      paypsdStatus: false								//支付密码显隐
     }
   },
   watch: {
@@ -98,7 +98,82 @@ export default {
 			this.paypsdStatus = false;
 			this.sixPsd = null;
 			this.sixPsdStatus = [false, false, false, false, false, false];
+		},
+		postcall( url, params, target){  
+	    var tempform = document.createElement("form");  
+	    tempform.action = url;  
+	    tempform.method = "post";  
+	    tempform.style.display="none";
+	    //tempform.enctype = "multipart/form-data";
+	    if(target) {  
+	      tempform.target = target;
+	    }  
+	  
+	    for (var x in params) {  
+        var opt = document.createElement("input");  
+        opt.name = x;  
+        opt.value = params[x];  
+        tempform.appendChild(opt);  
+	    }  
+	  
+	    var opt = document.createElement("input");  
+	    opt.type = "submit";  
+	    tempform.appendChild(opt);  
+	    document.body.appendChild(tempform);  
+	    tempform.submit();  
+	    document.body.removeChild(tempform);  
+		},  
+		withDraw(){
+			let that = this;
+  		mui.ajax(baseURL + '/api/withdraw?trdAmt='+ that.cashMoney +'&userType=1',{
+				dataType:'json',//服务器返回json格式数据
+				type:'post',//HTTP请求类型
+				headers:{
+					'Content-Type':'application/json',
+					'x-auth-token':sessionStorage.getItem("tokenZylc")
+				},
+				success:function(res){
+					console.log(res);
+					if(res.success){
+						that.postcall( res.data.postUrl, {
+							merchantID: res.data.merchantID,
+							operationType: res.data.operationType,
+							request: res.data.request,
+							sign: res.data.sign
+						});
+					}else{
+						that.tips = res.errMsg;
+						that.tipsstatus = true;
+						setTimeout(function() {
+							that.tipsstatus = false;
+						}, 1500);
+					}
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					console.log(type);
+				}
+			});
 		}
+  },
+  mounted() {
+  	let that = this;
+  	mui.ajax(baseURL + '/api/user_info',{
+			dataType:'json',//服务器返回json格式数据
+			type:'get',//HTTP请求类型
+			headers:{
+				'Content-Type':'application/json',
+				'x-auth-token':sessionStorage.getItem("tokenZylc")
+			},
+			success:function(res){
+				console.log(res);
+				that.sumCashMoney = res.data.moneyUsable
+			},
+			error:function(xhr,type,errorThrown){
+				//异常处理；
+				console.log(type);
+			}
+		});
   }
 }
 </script>
@@ -188,7 +263,6 @@ export default {
 			width: 1.8rem;
 			height: 0.45rem;
 			font-size: 0.15rem;
-			line-height: 0.45rem;
 			color: #333;
 			padding-left: 0.1rem;
 			border: none;

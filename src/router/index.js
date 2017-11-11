@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import login from '@/components/login'											//登录
 import register from '@/components/register'								//注册
 import homepage from '@/components/homepage'								//首页
+import sort2 from '@/components/sort2'											//风险控制
 import sort3 from '@/components/sort3'											//风险控制
 import sort4 from '@/components/sort4'											//技术保障
 import invest from '@/components/invest'										//产品列表
@@ -27,6 +28,7 @@ import moneyRecord from '@/components/moneyRecord'					//资金流水记录
 import myBankcard from '@/components/myBankcard'						//我的银行卡
 import suggestion from '@/components/suggestion'						//问题反馈
 import investRecordDetail from '@/components/investRecordDetail'						//投资详情
+import tender from '@/components/tender'										//自动投标
 
 
 
@@ -51,6 +53,11 @@ export default new Router({
       component: homepage
     },
     {
+      path: '/sort2',
+      name: 'sort2',
+      component: sort2
+    },
+    {
       path: '/sort3',
       name: 'sort3',
       component: sort3
@@ -71,12 +78,12 @@ export default new Router({
       component: regular
     },
     {
-      path: '/unregular',
+      path: '/unregular/:id',
       name: 'unregular',
       component: unregular
     },
     {
-      path: '/buy',
+      path: '/buy/:borrowId',
       name: 'buy',
       component: buy
     },
@@ -91,7 +98,7 @@ export default new Router({
       component: recharge
     },
     {
-      path: '/ranklist',
+      path: '/ranklist/:pushBorrowId',
       name: 'ranklist',
       component: ranklist
     },
@@ -166,9 +173,14 @@ export default new Router({
       component: suggestion
     },
     {
-      path: '/investRecordDetail',
+      path: '/investRecordDetail/:tenderId',
       name: 'investRecordDetail',
       component: investRecordDetail
+    },
+    {
+      path: '/tender',
+      name: 'tender',
+      component: tender
     }
   ]
 })

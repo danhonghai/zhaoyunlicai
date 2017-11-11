@@ -3,19 +3,19 @@
   	<div class="mui-slider">
 		  <div class="mui-slider-group mui-slider-loop">
 		    <!--支持循环，需要重复图片节点-->
-		    <div class="mui-slider-item mui-slider-item-duplicate"><a href="#"><img src="../assets/banner.png" /></a></div>
-		    <div class="mui-slider-item"><a href="#"><img src="../assets/banner.png" /></a></div>
-		    <div class="mui-slider-item"><a href="#"><img src="../assets/banner.png" /></a></div>
-		    <div class="mui-slider-item"><a href="#"><img src="../assets/banner.png" /></a></div>
-		    <div class="mui-slider-item"><a href="#"><img src="../assets/banner.png" /></a></div>
+		    <div class="mui-slider-item mui-slider-item-duplicate" v-for="(info,index) in banner" v-if="index == banner.length-1">
+		    	<a v-bind:href="info.linkUrl"><img style="height: 1.55rem;" v-bind:src="info.imgUrl" /></a>
+		    </div>
+		    <div class="mui-slider-item" v-for="info in banner">
+		    	<a v-bind:href="info.linkUrl"><img style="height: 1.55rem;" v-bind:src="info.imgUrl" /></a>
+		    </div>
 		    <!--支持循环，需要重复图片节点-->
-		    <div class="mui-slider-item mui-slider-item-duplicate"><a href="#"><img src="../assets/banner.png" /></a></div>
+		    <div class="mui-slider-item mui-slider-item-duplicate" v-for="(info,index) in banner" v-if="index == 0">
+		    	<a v-bind:href="info.linkUrl"><img style="height: 1.55rem;" v-bind:src="info.imgUrl" /></a>
+		    </div>
 		  </div>
 		  <div class="mui-slider-indicator" id="bannerDot">
-				<div class="mui-indicator mui-active"></div>
-				<div class="mui-indicator"></div>
-				<div class="mui-indicator"></div>
-				<div class="mui-indicator"></div>
+				<div class="mui-indicator" v-for="(info,index) in banner" v-bind:class="{'mui-active': index==0}"></div>
 			</div>
 		</div>
    	<div class="sort">
@@ -28,7 +28,7 @@
    			</li>
    			<li>
    				<dl>
-   					<dt><a href="#"><img src="../assets/2@2x.png"/></a></dt>
+   					<dt><router-link to='sort2'><img src="../assets/2@2x.png"/></router-link></dt>
    					<dd>三方存管</dd>
    				</dl>
    			</li>
@@ -118,7 +118,8 @@ export default {
   name: 'homepage',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      banner: null
     }
   },
   methods: {
@@ -135,11 +136,7 @@ export default {
   	}
   },
   mounted() {
-  	//轮播图
-  	var gallery = mui('.mui-slider');
-		gallery.slider({
-		  interval:5000//自动轮播周期，若为0则不自动播放，默认为0；
-		});
+  	let that = this;
 		//请求首页数据
 		mui.ajax(baseURL + '/api/noauth/index?type=1&count1=2&count2=2',{
 			dataType:'json',//服务器返回json格式数据
@@ -150,6 +147,16 @@ export default {
 			},
 			success:function(res){
 				console.log(res);
+				if(res.success){
+					that.banner = res.data.banners;
+			  	setTimeout(function(){
+			  		//轮播图
+				  	var gallery = mui('.mui-slider');
+						gallery.slider({
+						  interval:5000//自动轮播周期，若为0则不自动播放，默认为0；
+						});
+			  	},200)
+				}
 			},
 			error:function(xhr,type,errorThrown){
 				//异常处理；
@@ -267,6 +274,7 @@ export default {
 						font-size: .4rem;
 						color: #FC9800;
 						line-height: .4rem;
+						margin-bottom: .08rem;
 						span{
 							font-size: .2rem;
 							line-height: .2rem;
@@ -291,7 +299,7 @@ export default {
 					float: left;
 					box-shadow: inset 0 1px 3px 0 #E5DAC9;
 					border-radius: 8px;
-					margin-top: .15rem;
+					margin-top: .08rem;
 					position: relative;
 					span{
 						width: 23%;

@@ -33,7 +33,7 @@
 		</div>
 		<div class="bottom">
 			<p>客服电话：</p>
-			<a href="tel:0571-1929293">0571-1929293</a>
+			<a href="tel:4008818815">400-881-8815</a>
 		</div>
 	</div>
 </template>

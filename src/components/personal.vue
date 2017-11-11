@@ -1,31 +1,31 @@
 <template>
-  <div class="personal">
+  <div class="personal" v-title data-title="我的">
   	<div class='top'>
   		<div class='personInfo'>
   			<div class='logo'></div>
-	    	<span>用户名</span>
+	    	<span>{{userinfo.userInfo.mobile}}</span>
 	    	<div @click="Goto('accountSet')" class='goUserSet'>设置</div>
   		</div>
 	  	<div class='income'>
 	  		<div class='left'>
 	  			<span>昨日收益(元)</span>
-	  			<span class='cssd0566bb63175d2'>{{yesIncome.toFixed(2)}}</span>
+	  			<span class='cssd0566bb63175d2'>{{userinfo.account?userinfo.account.toFixed(2):'0.00'}}</span>
 	  		</div>
 	  		<div class='right'>
 	  			<div class='rightT'>
 	  				<span>累计收益(元)</span>
-	  				<span class='cssd0566bb63175d2'>{{allIncome.toFixed(2)}}</span>
+	  				<span class='cssd0566bb63175d2'>{{userinfo.profitsTotal.toFixed(2)}}</span>
 	  			</div>
 	  			<div class='rightB'>
 	  				<span>总资产(元)</span>
-	  				<span class='cssd0566bb63175d2'>{{totalMoney.toFixed(2)}}</span>
+	  				<span class='cssd0566bb63175d2'>{{userinfo.moneyTotal.toFixed(2)}}</span>
 	  			</div>
 	  		</div>
 	  	</div>
     </div>
   	<div class='changeSum'>
   		<span>可用余额：</span>
-  		<span>{{restSum.toFixed(2)}}元</span>
+  		<span>{{userinfo.moneyUsable.toFixed(2)}}元</span>
   		<router-link to="recharge"><button :class='{btnBackground:isYellow==0}' @click='yellow(0)'>充值</button></router-link>
   		<router-link to="cashCommission"><button :class='{btnBackground:isYellow==1}' @click='yellow(1)'>提现</button></router-link>
   	</div>
@@ -38,9 +38,10 @@
 	  			<img src="../assets/money@2x.png" alt="" />
 	  			<span>资金流水记录</span>
   		</li>
-  		<li @click="Goto('myBankcard')">
+  		<!--<li @click="Goto('myBankcard')">-->
+  		<li @click="accountLogin">
   			<img src="../assets/card@2x.png" alt="" />
-  			<span>我的银行卡</span>
+  			<span>我的账户详情</span>
   		</li>
   	</ul>
   	<ul class='service'>
@@ -51,7 +52,7 @@
   		<li>
   			<img src="../assets/phone@2x.png" alt="" />
   			<span>客服电话</span>
-  			<span>0571-2939291</span>
+  			<span><a href="tel:4008818815">400-881-8815</a></span>
   		</li>
   		<li @click="Goto('suggestion')">
   			<img src="../assets/opinion@2x.png" alt="" />
@@ -82,12 +83,19 @@ export default {
   name: 'personal',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
       isYellow: 0,
       yesIncome: 22,
       allIncome: 25,
       totalMoney: 30,
-      restSum: 2020
+      userinfo: {						//用户信息
+      	account:0,
+      	moneyTotal:0,
+      	moneyUsable:0,
+      	profitsTotal:0,
+      	userInfo: {
+      		mobile:0
+      	}
+      }		
     }
   },
   methods: {
@@ -115,10 +123,56 @@ export default {
   	},
   	yellow(index){
   		this.isYellow = index
+  	},
+  	postcall( url, params, target){  //自动构建form表单提交
+	    var tempform = document.createElement("form");  
+	    tempform.action = url;  
+	    tempform.method = "post";  
+	    tempform.style.display="none";
+	    //tempform.enctype = "multipart/form-data";
+	    if(target) {  
+	      tempform.target = target;
+	    }  
+	  
+	    for (var x in params) {  
+        var opt = document.createElement("input");  
+        opt.name = x;  
+        opt.value = params[x];  
+        tempform.appendChild(opt);  
+	    }  
+	  
+	    var opt = document.createElement("input");  
+	    opt.type = "submit";  
+	    tempform.appendChild(opt);  
+	    document.body.appendChild(tempform);  
+	    tempform.submit();  
+	    document.body.removeChild(tempform);  
+		},  
+  	accountLogin(){		//登陆三方账户
+  		let that = this;
+  		mui.ajax(baseURL + '/api/account_info',{
+				dataType:'json',
+				type:'get',
+				headers:{
+					'Content-Type':'application/json',
+					'x-auth-token':sessionStorage.getItem("tokenZylc")
+				},
+				success:function(res){
+					console.log(res);
+					that.postcall( res.data.postUrl, {
+						merchantId: res.data.merchantId,
+						userName: res.data.userName
+					},'_blank');
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					console.log(type);
+				}
+			});
   	}
   },
   mounted() {
-  	console.log(sessionStorage.getItem("tokenZylc"))
+  	let that = this;
   	if(!sessionStorage.getItem("tokenZylc")){
     	this.$router.push({path: '/login'});
     }else{
@@ -130,6 +184,13 @@ export default {
 					'x-auth-token':sessionStorage.getItem("tokenZylc")
 				},
 				success:function(res){
+					that.userinfo = res.data;
+					//更新本地实名信息
+					let realVerify = JSON.parse(sessionStorage.getItem('realVerify'));
+					realVerify.realVerifyStatus = res.data.userInfo.realVerifyStatus;
+					realVerify.emailBindingStatus = res.data.userInfo.emailBindingStatus;
+					realVerify.cardBindingStatus = res.data.userInfo.cardBindingStatus;
+					sessionStorage.setItem('realVerify',JSON.stringify(realVerify));
 					console.log(res);
 				},
 				error:function(xhr,type,errorThrown){
@@ -138,29 +199,7 @@ export default {
 				}
 			});
     }
-//	ajax({
-//			type:'post',
-//			url: baseURL + '/auth/get-fee?token='+ Token,
-//			success:function(res){
-//				
-//				var res = res;
-//				console.log(res)
-//				if(res.success == 'true'){
-//					//接参数
-//					sessionStorage.setItem('loanRate',res.body.data.rate)//借款利率
-//					
-//				}else{
-//					//提示信息
-//					that.tipsstatus = true;
-//			  		that.tips = res.errMsg;
-//			  		setTimeout(function(){
-//			  			that.tipsstatus = false
-//			  			that.tips = ''
-//			  		},1500)
-//				}
-//			}
-//		})
-  	
+
   }
 }
 </script>

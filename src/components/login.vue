@@ -141,12 +141,20 @@
 								that.huanchongStatus = false;
 								if( res.success == true ){
 									sessionStorage.setItem('tokenZylc',xhr.getResponseHeader('x-auth-token'));
+									sessionStorage.setItem('realVerify',JSON.stringify(res.data));
+									sessionStorage.setItem('phoneNum',that.phoneNum);
 									that.tipsstatus = true;
 									that.tips = '登录成功';
 									setTimeout(function() {
 										that.tipsstatus = false;
 									}, 1500);
-									that.$router.push({path: '/'});
+									if(!res.data.realVerifyStatus){
+								    	that.$router.push({path: '/certification'});
+								    }else if(that.$route.params.unregularId){
+								    	that.$router.push({path: '/unregular/' + that.$route.params.unregularId});
+								    }else{
+								    	that.$router.push({path: '/'});
+								    }
 								}else{
 									that.codestatus = true;
 								}
@@ -168,6 +176,8 @@
 							success:function(res,text,xhr){
 								console.log(xhr.getResponseHeader('x-auth-token'))
 								sessionStorage.setItem('tokenZylc',xhr.getResponseHeader('x-auth-token'));
+								sessionStorage.setItem('realVerify',JSON.stringify(res.data));
+								sessionStorage.setItem('phoneNum',that.phoneNum);
 								that.huanchongStatus = false;
 								if( res.success == true ){
 									that.tipsstatus = true;
@@ -175,7 +185,11 @@
 									setTimeout(function() {
 										that.tipsstatus = false;
 									}, 1500);
-									that.$router.push({path: '/'});
+									if(!res.data.realVerifyStatus){
+								    	that.$router.push({path: '/certification'});
+								    }else{
+								    	that.$router.push({path: '/'});
+								    }
 								}else{
 									that.psdstatus = true;
 								}
@@ -198,6 +212,11 @@
 		},
 		mounted() {
 			document.body.style.background = '#FFFFFF';
+			if(sessionStorage.getItem('tokenZylc')){
+				console.log('234')
+				this.$router.push({path: '/'});
+			}
+			console.log(this.$route.params.unregularId)
 		},
 		beforeRouteLeave(to, from, next) {		//路由离开前
 			document.body.style.background = '#F6F6F6';
@@ -295,7 +314,6 @@
 					float: left;
 					padding: 0;
 					font-size: .15rem;
-					line-height: .45rem;
 				}
 				.phoneNum {
 					margin-top: .2rem;

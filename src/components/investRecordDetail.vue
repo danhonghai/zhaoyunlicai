@@ -87,7 +87,27 @@
 			}
 		},
 		mounted() {
-
+			let that = this;
+			mui.ajax(baseURL + '/api/noauth/invest_detail?tenderId=' + that.$route.params.tenderId,{
+				dataType:'json',//服务器返回json格式数据
+				type:'post',//HTTP请求类型
+				headers:{
+					'Content-Type':'application/json',
+					'x-auth-token':sessionStorage.getItem("tokenZylc")
+				},
+				success:function(res){
+					console.log(res);
+					if(res.success){
+						console.log('投资记录详情成功')
+					}else{
+						console.log('投资记录详情失败')
+					}
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					console.log(type);
+				}
+			});
 		}
 	}
 </script>

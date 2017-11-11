@@ -1,29 +1,36 @@
 <template>
   <div class="recharge" v-title data-title="银行卡充值">
     <div class='header'>
-		<img src="../assets/Path 145@2x.png" alt="" @click='goBack' />
-		<p>银行卡充值</p>
-	</div>
-	<div class="content">
-		<div class="bankcard">
-			<div class="cardnum">
-				<img src="../assets/1@2x.png"/>
-				招商银行 尾号0102
+			<img src="../assets/Path 145@2x.png" alt="" @click='goBack' />
+			<p>银行卡充值</p>
+		</div>
+		<div class="content">
+			<!--<div class="bankcard">
+				<div class="cardnum">
+					<img src="../assets/1@2x.png"/>
+					招商银行 尾号0102
+				</div>
+				<p>单笔限额5万,每日限额20万</p>
+			</div>-->
+			<div class="money">
+				<label for="money">充值金额</label>
+				<input v-bind:type="typeinput" v-model="rechargeMoney" @focus="typeinput='text'" @blur="filterNum" id="money" placeholder="10元起充" />
 			</div>
-			<p>单笔限额5万,每日限额20万</p>
 		</div>
-		<div class="money">
-			<label for="money">充值金额</label>
-			<input v-bind:type="typeinput" v-model="rechargeMoney" @focus="typeinput='text'" @blur="filterNum" id="money" placeholder="10元起充" />
+		<button v-bind:class="{disable : disable}" v-bind:disabled="disable" @click="recharge">充值</button>
+		<transition name="fade">
+			<div class='tips' v-if='tipsstatus' v-text='tips'></div>
+		</transition>
+		<div class='haunchong' v-if='huanchongStatus'>
+			<img src="../assets/loading.gif" alt="" />
 		</div>
-	</div>
-	<button v-bind:class="{disable : disable}" v-bind:disabled="disable" @click="recharge">充值</button>
-	<transition name="fade">
-		<div class='tips' v-if='tipsstatus' v-text='tips'></div>
-	</transition>
-	<div class='haunchong' v-if='huanchongStatus'>
-		<img src="../assets/loading.gif" alt="" />
-	</div>
+		<!--<form style="display: none;" name="form1" v-bind:action="postUrl" method="post">
+			<input type="text" name="merchantID" v-bind:value="merchantID" />
+			<input type="text" name="operationType" v-bind:value="operationType" />
+			<input type="text" name="request" v-bind:value="request" />
+			<input type="text" name="sign" v-bind:value="sign" />
+			<input type="submit" value="提交"/>
+		</form>-->
   </div>
 </template>
 
@@ -37,12 +44,17 @@ export default {
       disable: true,							//充值按钮是否禁用
       tipsstatus: false,					//提示框显隐
       tips: '提示框',							//提示框内容
-      huanchongStatus: false			//缓冲框显隐
+      huanchongStatus: false,			//缓冲框显隐
+      postUrl: null,					//三方链接
+      merchantID: null,				//传递三方信息
+      operationType: null,		//传递三方信息
+      request: null,					//传递三方信息
+      sign: null							//传递三方信息
     }
   },
   watch: {
   	rechargeMoney: function(){
-	    this.rechargeMoney = this.moneyType(this.rechargeMoney);
+	    this.rechargeMoney = this.moneyType(this.rechargeMoney);		//moneyType公共方法，变为金钱格式
 	    if(parseFloat(this.rechargeMoney) >= 10){
 	    	this.disable = false;
 	    }else{
@@ -54,8 +66,69 @@ export default {
   	goBack(){
   		this.$router.go(-1)
   	},
+  	postcall( url, params, target){  
+	    var tempform = document.createElement("form");  
+	    tempform.action = url;  
+	    tempform.method = "post";  
+	    tempform.style.display="none";
+	    //tempform.enctype = "multipart/form-data";
+	    if(target) {  
+	      tempform.target = target;
+	    }  
+	  
+	    for (var x in params) {  
+        var opt = document.createElement("input");  
+        opt.name = x;  
+        opt.value = params[x];  
+        tempform.appendChild(opt);  
+	    }  
+	  
+	    var opt = document.createElement("input");  
+	    opt.type = "submit";  
+	    tempform.appendChild(opt);  
+	    document.body.appendChild(tempform);  
+	    tempform.submit();  
+	    document.body.removeChild(tempform);  
+		},  
   	recharge(){
-  		alert('12')
+  		let that = this;
+  		mui.ajax(baseURL + '/api/deposit?trdAmt='+ that.rechargeMoney +'&depositType=1&bankCode=1103&merFee=0&taker=2',{
+				dataType:'json',//服务器返回json格式数据
+				type:'post',//HTTP请求类型
+				headers:{
+					'Content-Type':'application/json',
+					'x-auth-token':sessionStorage.getItem("tokenZylc")
+				},
+				success:function(res){
+					console.log(res);
+					if(res.success){
+						that.postcall( res.data.postUrl, {
+							merchantID: res.data.merchantID,
+							operationType: res.data.operationType,
+							request: res.data.request,
+							sign: res.data.sign
+						});
+						/*that.merchantID = res.data.merchantID;
+						that.operationType = res.data.operationType;
+						that.request = res.data.request;
+						that.sign = res.data.sign;
+						that.postUrl = res.data.postUrl;*/
+						/*setTimeout(function(){
+							document.form1.submit()
+						},100)*/
+					}else{
+						that.tips = res.errMsg;
+						that.tipsstatus = true;
+						setTimeout(function() {
+							that.tipsstatus = false;
+						}, 1500);
+					}
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					console.log(type);
+				}
+			});
   	},
   	filterNum(){
   		this.typeinput = 'number';
@@ -137,8 +210,8 @@ export default {
 			padding: 0 7%;
 			background: #FFFFFF;
 			font-size: .15rem;
-			color: #333333;
 			line-height: .45rem;
+			color: #333333;
 			margin-bottom: .2rem;
 			input{
 				padding: 0;

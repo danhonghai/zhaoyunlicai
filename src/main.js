@@ -18,7 +18,10 @@ Vue.directive('title', {
 })
 
 Vue.filter('number',function(value,num){//四舍五入保留多位小数
-	return value.toFixed(num);
+	return parseFloat(value).toFixed(num);
+})
+Vue.filter('moneyshow',function(value,num){//大于num以万为单位，小于num以元为单位
+	return value<num?value:parseFloat(value/10000).toFixed(1);
 })
 
 new Vue({

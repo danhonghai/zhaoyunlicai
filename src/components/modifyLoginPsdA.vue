@@ -6,7 +6,7 @@
 		</div>
 		<div class='newLoginPsd'>
 			<span>手机号</span>
-			<input type="tel" v-model="phoneNum" maxlength="11" placeholder="输入手机号" />
+			<input type="tel" v-model="phoneNum" maxlength="11" placeholder="输入手机号" disabled="disabled"/>
 		</div>
 		<div class='codeDetail'>
 			<span>验证码</span>
@@ -30,7 +30,7 @@ export default {
       tipsstatus: false,
       tips: '提示框',
       huanchongStatus: false,
-      phoneNum: null,									//手机号码
+      phoneNum: sessionStorage.getItem('phoneNum'),									//手机号码
       codeContent: '获取验证码',				//获取验证码内容
 			wait: 60, 											//获取验证码倒计时
 			getCodeStatus: true, 						//获取验证码状态				
@@ -201,7 +201,6 @@ export default {
 			width: 2.5rem;
 			height: 0.45rem;
 			font-size: 0.14rem;
-			line-height: 0.45rem;
 			color: #333;
 			margin-left: 0.2rem;
 			border: none;
@@ -228,7 +227,6 @@ export default {
 			width: 1.5rem;
 			height: 0.45rem;
 			font-size: 0.14rem;
-			line-height: 0.45rem;
 			color: #333;
 			margin-left: 0.2rem;
 			border: none;

@@ -66,6 +66,7 @@
 								that.tipsstatus = true;
 								setTimeout(function() {
 									that.tipsstatus = false;
+									that.$router.push({path: '/personal'})
 								}, 1500);
 							}else{
 								that.tips = res.errMsg;
