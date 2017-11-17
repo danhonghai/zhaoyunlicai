@@ -15,7 +15,7 @@
 					</div>
 				</div>
 				<dl>
-					<dt class="active">申请提现申请成功,金额100000.00</dt>
+					<dt class="active">申请提现申请成功,金额0.00</dt>
 					<dd>2017-04-01 14:01</dd>
 				</dl>
 				<dl>

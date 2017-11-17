@@ -14,7 +14,7 @@
 				</div>
 				<div class='idcardNum'>
 					<span>身份证</span>
-					<input type="number" v-model="identNo" placeholder="请输入身份证号码" />
+					<input v-bind:type="inputType" v-model="identNo" placeholder="请输入身份证号码" />
 				</div>
 			</div>
 		</div>
@@ -62,8 +62,14 @@ export default {
       merchantID: null,				//传递三方信息
       operationType: null,		//传递三方信息
       request: null,					//传递三方信息
-      sign: null							//传递三方信息
+      sign: null,							//传递三方信息
+      inputType: 'number'				//输入框类型
     }
+  },
+  watch: {
+  	identNo: function(){
+  		this.inputType = 'text';
+  	}
   },
   methods: {
   	postcall( url, params, target){  //模拟form表单提交
@@ -91,7 +97,7 @@ export default {
 	    document.body.removeChild(tempform);  
 		},  
   	goBack(){
-  		this.$router.go(-2);
+  		this.$router.go(-1);
   	},
   	nextStep(){		//点击下一步
   		let that = this;
@@ -147,6 +153,7 @@ export default {
   },
   mounted() {
   	let that = this;
+  	//个人信息
   	mui.ajax(baseURL + '/api/user_info',{
 			dataType:'json',//服务器返回json格式数据
 			type:'get',//HTTP请求类型
@@ -169,6 +176,15 @@ export default {
 			error:function(xhr,type,errorThrown){
 				//异常处理；
 				console.log(type);
+				if(xhr.status == 401){
+					that.tips = '请重新登录';
+					that.tipsstatus = true;
+					sessionStorage.removeItem('tokenZylc');
+					setTimeout(function() {
+						that.tipsstatus = false;
+						that.$router.push({path: '/login'})
+					}, 1500);
+				}
 			}
 		});
   	

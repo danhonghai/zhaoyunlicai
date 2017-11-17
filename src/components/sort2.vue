@@ -1,5 +1,5 @@
 <template>
-	<div class="sort2" v-title data-title="风险控制">
+	<div class="sort2" v-title data-title="三方存管">
 		<div class="content">
 			<img src="../assets/sort2.png"/>
 		</div>

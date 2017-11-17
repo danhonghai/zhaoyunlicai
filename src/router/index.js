@@ -36,6 +36,7 @@ import tender from '@/components/tender'										//自动投标
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
    	{
       path: '/login',
@@ -70,7 +71,10 @@ export default new Router({
     {
       path: '/invest',
       name: 'invest',
-      component: invest
+      component: invest,
+      meta: {
+	      keepAlive: true
+	    }
     },
     {
       path: '/regular',

@@ -41,7 +41,7 @@
 			goBack() { //后退
 				this.$router.go(-1)
 			},
-			submit(){
+			submit(){			//提交
 				let that = this;
 				if(that.wordlength==0){
 					that.tips = '请输入反馈内容';

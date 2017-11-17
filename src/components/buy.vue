@@ -18,6 +18,7 @@
 			</div>
 			<p>预计收益： <span>{{earnings | number(2)}}</span>元</p>
 			<button @click="pay">{{payWord}}</button>
+			<div class="mostAmount" v-if="mostAmount!=0">最高可投 <span>{{mostAmount |　number(2)}} </span>元</div>
 		</div>
 		<div class="bottom">购买即视为同意《赵云理财协议》</div>
 		<transition name="fade">
@@ -46,7 +47,7 @@
 		name: 'setPayPsd',
 		data() {
 			return {
-				balance: 20,				//账户余额
+				balance: 0.001,				//账户余额
 				payWord: '购买',				//购买、充值转换
 				investMoney: null,			//投资金额
 				typeinput: 'number',		//input输入框类型
@@ -59,7 +60,8 @@
 				surplusMoney: null,			//剩余可投
 				apr: null,					//利率
 				numberOfDays: null,			//投资期限
-				earnings: 0					//预计收益
+				earnings: 0,				//预计收益
+				mostAmount: null			//最高可投
 			}
 		},
 		directives: {
@@ -71,7 +73,7 @@
 			}
 		},
 		watch: {
-			sixPsd: function() {
+			sixPsd: function() {				//支付密码输入框改变
 				for(let i = 0; i < this.sixPsdStatus.length; i++) {
 					if(i < this.sixPsd.length) {
 						this.sixPsdStatus[i] = true;
@@ -85,22 +87,22 @@
 					});
 				}
 			},
-			investMoney: function(){
+			investMoney: function(){			//判断余额是否充足，动态改变预计收益
 			   	this.investMoney = this.moneyType(this.investMoney);
 				if(this.investMoney > this.balance) {
+					console.log(this.investMoney)
 					this.payWord = '余额不足,请充值';
 				} else {
 					this.payWord = '购买';
 				}
 				this.earnings = this.investMoney * this.apr * this.numberOfDays / 36000;
-				console.log(this.apr)
 			}
 		},
 		methods: {
 			goBack() {	//后退
 				this.$router.go(-1)
 			},
-			postcall( url, params, target){  
+			postcall( url, params, target){  	//JS模拟提交表单
 			    var tempform = document.createElement("form");  
 			    tempform.action = url;  
 			    tempform.method = "post";  
@@ -145,10 +147,18 @@
 					setTimeout(function() {
 						that.tipsstatus = false;
 					}, 1500);
+				}else if(this.investMoney > this.mostAmount && this.mostAmount != 0){
+					this.tipsstatus = true;
+					this.tips = '超过最高可投金额';
+					let that = this;
+					setTimeout(function() {
+						that.tipsstatus = false;
+					}, 1500);
 				}else if(this.investMoney) {
 					//this.$router.push({path: '/buyResult'});
 					//this.paypsdStatus = true;
 					let that = this;
+					//点击购买，提交表单跳转三方
 					mui.ajax(baseURL + '/api/borrow/tender?borrowId='+ that.$route.params.borrowId +'&money=' + that.investMoney,{
 						dataType:'json',//服务器返回json格式数据
 						type:'post',//HTTP请求类型
@@ -185,7 +195,7 @@
 				this.sixPsd = null;
 				this.sixPsdStatus = [false, false, false, false, false, false];
 			},
-			filterNum(){
+			filterNum(){		//保留两位小数
 		  		this.typeinput = 'number';
 		  		this.investMoney = parseFloat(this.investMoney).toFixed(2);
 		  	}
@@ -206,9 +216,10 @@
 					console.log(res);
 					if(res.success){
 						console.log('散标详情成功');
-						that.surplusMoney = res.data.surplusMoney;
-						that.apr = res.data.apr;
-						that.numberOfDays = res.data.numberOfDays;
+						that.surplusMoney = res.data.borrowDetail.surplusMoney;
+						that.apr = res.data.borrowDetail.apr;
+						that.numberOfDays = res.data.borrowDetail.numberOfDays;
+						that.mostAmount = res.data.borrowDetail.mostAmount;
 					}else{
 						that.tips = res.errMsg;
 						that.tipsstatus = true;
@@ -242,7 +253,19 @@
 				},
 				error:function(xhr,type,errorThrown){
 					//异常处理；
+					console.log(xhr.status);
 					console.log(type);
+					console.log(errorThrown);
+					console.log('失败')
+					if(xhr.status == 401){
+						that.tips = '请重新登录';
+						that.tipsstatus = true;
+						sessionStorage.removeItem('tokenZylc');
+						setTimeout(function() {
+							that.tipsstatus = false;
+							that.$router.push({path: '/login'})
+						}, 1500);
+					}
 				}
 			});
 		}
@@ -360,6 +383,15 @@
 				border: 0;
 				padding: 0;
 				line-height: .45rem;
+			}
+			.mostAmount{
+				font-size: .11rem;
+				line-height: .3rem;
+				color: #999999;
+				span {
+					font-size: .12rem;
+					color: #FF6666;
+				}
 			}
 		}
 		.bottom {

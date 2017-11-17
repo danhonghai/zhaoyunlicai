@@ -26,8 +26,8 @@
   	<div class='changeSum'>
   		<span>可用余额：</span>
   		<span>{{userinfo.moneyUsable.toFixed(2)}}元</span>
-  		<router-link to="recharge"><button :class='{btnBackground:isYellow==0}' @click='yellow(0)'>充值</button></router-link>
-  		<router-link to="cashCommission"><button :class='{btnBackground:isYellow==1}' @click='yellow(1)'>提现</button></router-link>
+  		<button :class='{btnBackground:isYellow==0}' @click="Goto('recharge')">充值</button>
+  		<button :class='{btnBackground:isYellow==1}' @click="Goto('cashCommission')">提现</button>
   	</div>
   	<ul class='record'>
   		<li @click="Goto('investRecord')">
@@ -87,13 +87,13 @@ export default {
       yesIncome: 22,
       allIncome: 25,
       totalMoney: 30,
-      userinfo: {						//用户信息
-      	account:0,
-      	moneyTotal:0,
-      	moneyUsable:0,
-      	profitsTotal:0,
+      userinfo: {								//用户信息
+      	account:0,							//昨日收益
+      	moneyTotal:0,						//总资产
+      	moneyUsable:0,					//可用余额
+      	profitsTotal:0,					//累计收益
       	userInfo: {
-      		mobile:0
+      		mobile:0							//用户手机号
       	}
       }		
     }
@@ -110,8 +110,16 @@ export default {
   			this.$router.push({path: '/personal'})
   		}
   	},
-  	Goto(str){
-  		this.$router.push({path: '/'+str});
+  	Goto(str){			//跳转页面
+  		if(str == 'accountSet' || str == 'recharge' ||　str == 'cashCommission'){
+  			if(this.userinfo.userInfo.realVerifyStatus){
+  				this.$router.push({path: '/'+str});
+  			}else{
+  				this.$router.push({path: '/certification'})
+  			}
+  		}else{
+  			this.$router.push({path: '/'+str});
+  		}
   	},
   	goAccountSet() {//去个人账户设置中心需要判断是否已实名认证，若未实名则不允许进入
   		if('已实名'){//进入账户设置页面
@@ -150,33 +158,37 @@ export default {
 		},  
   	accountLogin(){		//登陆三方账户
   		let that = this;
-  		mui.ajax(baseURL + '/api/account_info',{
-				dataType:'json',
-				type:'get',
-				headers:{
-					'Content-Type':'application/json',
-					'x-auth-token':sessionStorage.getItem("tokenZylc")
-				},
-				success:function(res){
-					console.log(res);
-					that.postcall( res.data.postUrl, {
-						merchantId: res.data.merchantId,
-						userName: res.data.userName
-					},'_blank');
-				},
-				error:function(xhr,type,errorThrown){
-					//异常处理；
-					console.log(type);
-				}
-			});
+  		if(that.userinfo.userInfo.realVerifyStatus){
+  			mui.ajax(baseURL + '/api/account_info',{
+					dataType:'json',
+					type:'get',
+					headers:{
+						'Content-Type':'application/json',
+						'x-auth-token':sessionStorage.getItem("tokenZylc")
+					},
+					success:function(res){
+						console.log(res);
+						that.postcall( res.data.postUrl, {
+							merchantId: res.data.merchantId,
+							userName: res.data.userName
+						});
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						console.log(type);
+					}
+				});
+  		}else{
+  			that.$router.push({path: '/certification'})
+  		}
   	}
   },
   mounted() {
   	let that = this;
-  	if(!sessionStorage.getItem("tokenZylc")){
-    	this.$router.push({path: '/login'});
+  	if(!sessionStorage.getItem("tokenZylc")){		//判断是否登录
+    	this.$router.push({name: 'login',params: { From: 'personal' }});
     }else{
-    	mui.ajax(baseURL + '/api/user_info',{
+    	mui.ajax(baseURL + '/api/user_info',{				//请求个人信息
 				dataType:'json',//服务器返回json格式数据
 				type:'get',//HTTP请求类型
 				headers:{
@@ -196,6 +208,15 @@ export default {
 				error:function(xhr,type,errorThrown){
 					//异常处理；
 					console.log(type);
+					if(xhr.status == 401){
+						that.tips = '请重新登录';
+						that.tipsstatus = true;
+						sessionStorage.removeItem('tokenZylc');
+						setTimeout(function() {
+							that.tipsstatus = false;
+							that.$router.push({path: '/login'})
+						}, 1500);
+					}
 				}
 			});
     }
@@ -213,7 +234,8 @@ export default {
 	.top{
 		width: 100%;
 		height: 1.84rem;
-		background: linear-gradient(left, #FFC266, #FC9800);
+		background: #FC9800;
+		/*background: linear-gradient(left, #FFC266, #FC9800);*/
 		padding-top: 0.3rem;
 		padding-left: 0.26rem;
 		padding-right: 0.26rem;
@@ -318,7 +340,7 @@ export default {
 			height: 0.26rem;
 			margin-top: 0.17rem;
 			font-size: 0.12rem;
-			line-height: 0.24rem;
+			line-height: 0.26rem;
 			color: #FFC266;
 			border: 1px solid #FFC266;
 			border-radius: 0.03rem;

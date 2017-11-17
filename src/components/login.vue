@@ -8,15 +8,18 @@
 			<div class="tabs" v-bind:class="{active:classify==1}" @click="tab(1)">密码登录</div>
 			<div class="codeLogin" v-show="classify==0">
 				<input type="tel" v-model="phoneNum" v-on:focus="changeStyleF('phoneNum')" v-on:blur="changeStyleB('phoneNum')" id="phoneNum" class="phoneNum" maxlength="11" placeholder="手机号" />
-				<img v-show="clearStatus" @click="clear" src="../assets/Combined Shape Copy@2x.png" />
+				<div class="clear" v-show="clearStatus" @click="clear">
+					<img src="../assets/Combined Shape Copy@2x.png" />
+				</div>
 				<input type="tel" v-model="code" v-on:focus="changeStyleF('code')" v-on:blur="changeStyleB('code')" id="code" maxlength="6" placeholder="验证码" />
 				<div class="getCode" @click="getCode">{{codeContent}}</div>
 				<p v-show="codestatus">验证码错误</p>
 			</div>
 			<div class="psdLogin" v-show="classify==1">
 				<input type="tel" v-model="phoneNum" v-on:focus="changeStyleF('phoneNum2')" v-on:blur="changeStyleB('phoneNum2')" id="phoneNum2" class="phoneNum" maxlength="11" placeholder="手机号" />
-				<img v-show="clearStatus" @click="clear" src="../assets/Combined Shape Copy@2x.png" />
-				<input type="password" v-model="psd" v-on:focus="changeStyleF('psd')" v-on:blur="changeStyleB('psd')" id="psd" placeholder="密码" />
+				<div class="clear" v-show="clearStatus" @click="clear">
+					<img src="../assets/Combined Shape Copy@2x.png" />
+				</div><input type="password" v-model="psd" v-on:focus="changeStyleF('psd')" v-on:blur="changeStyleB('psd')" id="psd" placeholder="密码" />
 				<p v-show="psdstatus">登录名或密码错误</p>
 			</div>
 			<button @click="submit">确定</button>
@@ -38,7 +41,7 @@
 			return {
 				classify: 0,					//tab切换
 				codeContent: '获取验证码',		//获取验证码内容
-				wait: 60, 						//获取验证码倒计时
+				wait: 59, 						//获取验证码倒计时
 				getCodeStatus: true, 			//获取验证码状态
 				clearStatus: false,				//清除手机号码X显隐
 				phoneNum: null,					//手机号码
@@ -62,9 +65,14 @@
 		},
 		methods: {
 			goBack() {	//关闭窗口
-				var opened = window.open('about:blank', '_self');
+				/*var opened = window.open('about:blank', '_self');
 				opened.opener = null;
-				opened.close();
+				opened.close();*/
+				if(this.$route.params.From){
+					this.$router.go(-2);
+				}else{
+					this.$router.go(-1);
+				}
 			},
 			tab(index) {	//tab切换
 				this.classify = index;
@@ -94,18 +102,21 @@
 						that.tipsstatus = false;
 					}, 1500);
 				}else if(that.getCodeStatus){
+					that.getCodeStatus = false;
 					ajax({//请求手机验证码
 						type:'POST',
 						url: baseURL + '/api/noauth/send_verify_code?mobile=' + that.phoneNum,
 						success:function(res){
 							console.log(res)
 							if( res.success == true ){
-								that.getCodeStatus = false;
+								that.codeContent = that.wait + "s后重试";
+								that.wait--;
 								let timer = setInterval(function() {
+									console.log('123')
 									if(that.wait == 0) {
 										console.log('重新获取验证码')
 										that.codeContent = '获取验证码'
-										that.wait = 60;
+										that.wait = 59;
 										that.getCodeStatus = true;
 										clearInterval(timer);
 									} else {
@@ -148,12 +159,12 @@
 									setTimeout(function() {
 										that.tipsstatus = false;
 									}, 1500);
-									if(!res.data.realVerifyStatus){
+									/*if(!res.data.realVerifyStatus){
 								    	that.$router.push({path: '/certification'});
-								    }else if(that.$route.params.unregularId){
+								    }else */if(that.$route.params.unregularId){
 								    	that.$router.push({path: '/unregular/' + that.$route.params.unregularId});
 								    }else{
-								    	that.$router.push({path: '/'});
+								    	that.$router.push({path: '/personal'});
 								    }
 								}else{
 									that.codestatus = true;
@@ -328,19 +339,24 @@
 					position: absolute;
 					bottom: 0;
 				}
-				img {
-					width: .1rem;
+				.clear{
 					position: absolute;
-					top: .39rem;
-					right: .23rem;
+					top: .29rem;
+					right: .13rem;
+					padding: .1rem;
+					img {
+						display: block;
+						width: .1rem;
+					}
 				}
 				.getCode {
 					font-size: .15rem;
 					line-height: .15rem;
 					color: #4A77A6;
 					position: absolute;
-					top: .95rem;
-					right: .17rem;
+					top: .85rem;
+					right: .07rem;
+					padding: .1rem;
 				}
 			}
 			button {

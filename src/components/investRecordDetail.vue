@@ -82,12 +82,13 @@
 			goBack() {	//后退
 				this.$router.go(-1)
 			},
-			shows(index){
+			shows(index){			//收起or展示
 				this.$set(this.showStatus, index, !this.showStatus[index]);
 			}
 		},
 		mounted() {
 			let that = this;
+			//请求投资详情数据
 			mui.ajax(baseURL + '/api/noauth/invest_detail?tenderId=' + that.$route.params.tenderId,{
 				dataType:'json',//服务器返回json格式数据
 				type:'post',//HTTP请求类型

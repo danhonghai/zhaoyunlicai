@@ -42,7 +42,7 @@
 			}
 		},
 		watch: {
-			phoneNum: function() {
+			phoneNum: function() {				//X符号显隐
 				if(this.phoneNum) {
 					this.clearStatus = true;
 				} else {
@@ -52,9 +52,10 @@
 		},
 		methods: {
 			goBack() {	//后退
-				var opened = window.open('about:blank', '_self');
+				/*var opened = window.open('about:blank', '_self');
 				opened.opener = null;
-				opened.close();
+				opened.close();*/
+				this.$router.go(-1);
 			},
 			clear() {	//手机号码清除
 				this.phoneNum = null;
@@ -69,13 +70,15 @@
 						that.tipsstatus = false;
 					}, 1500);
 				}else if(that.getCodeStatus){
+					that.getCodeStatus = false;
 					ajax({//请求手机验证码
 						type:'POST',
 						url: baseURL + '/api/noauth/send_verify_code?mobile=' + that.phoneNum,
 						success:function(res){
 							console.log(res)
 							if( res.success == true ){
-								that.getCodeStatus = false;
+								that.codeContent = that.wait + "s后重试";
+								that.wait--;
 								let timer = setInterval(function() {
 									if(that.wait == 0) {
 										console.log('重新获取验证码')
@@ -229,7 +232,6 @@
 					float: left;
 					padding: 0;
 					font-size: .15rem;
-					line-height: .45rem;
 				}
 				.phoneNum {
 					margin-top: .3rem;
@@ -255,8 +257,9 @@
 					line-height: .15rem;
 					color: #4A77A6;
 					position: absolute;
-					top: 1.05rem;
-					right: .17rem;
+					top: .95rem;
+					right: .07rem;
+					padding: .1rem;
 				}
 			}
 			button {

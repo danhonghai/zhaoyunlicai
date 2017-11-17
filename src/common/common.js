@@ -1,7 +1,7 @@
 export default{
   install(Vue,options)
   {
-    Vue.prototype.moneyType = function (num) {
+    Vue.prototype.moneyType = function (num) {				//使输入框输入为金额
       var reg = num.toString().match(/\d+\.?\d{0,2}/);
 	    var txt = '';
 	    if (reg != null) {

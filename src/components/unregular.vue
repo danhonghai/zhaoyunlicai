@@ -111,7 +111,7 @@
 		</div>
 		<div class="buy">
 			<p>1万元收益约<span>{{earnings | number(2)}}元</span></p>
-			<button @click="buy">立即投资</button>
+			<button @click="buy" v-bind:class="{disable: investDetail.status!=2}">{{buyStatus}}</button>
 		</div>
 		<transition name="fade">
 			<div class='tips' v-if='tipsstatus' v-text='tips'></div>
@@ -144,10 +144,30 @@ export default {
 				gender: null,				//借款人年龄
 				sesameCredit: null,			//借款人芝麻信用
 				overdueTimes: null,			//借款人逾期次数
-				loanTimes: null				//借款次数
+				loanTimes: null,			//借款次数
+				status: null				//标的状态
 			},
 			earnings: 0,					//预计收益
-			ranklist:[]						//投资排行
+			ranklist:[],					//投资排行
+			moneyUsable: null,				//用户剩余可用金额
+			realVerifyStatus: null,			//是否实名认证
+			buyStatus: '立即投资',			//购买状态
+			buyStatusList: {
+				0: '待初审',
+				1: '待复审',
+				2: '立即投资',
+				3: '满标待审',
+				4: '终审通过',
+				5: '还款中',
+				6: '已还款',
+				7: '已经过期',
+				11: '完成',
+				41: '初审不通过',
+				42: '复审不通过',
+				43: '终审不通过',
+				44: '流标'
+			},
+			loginStatus:null				//登录状态
 	    }
   	},
   	methods: {
@@ -156,16 +176,17 @@ export default {
 	  	},
 	  	buy(){		//购买
 	  		let realVerify = JSON.parse(sessionStorage.getItem('realVerify'));
-	  		if(!sessionStorage.getItem("tokenZylc")){
+	  		if(!sessionStorage.getItem("tokenZylc") || !this.loginStatus){		//是否登录
+		    	sessionStorage.removeItem("tokenZylc");
 		    	this.$router.push({
 		    		name: 'login',
 		    		params: {
 		    			unregularId:this.$route.params.id
 		    		}
 		    	});
-		    }else if(!realVerify.realVerifyStatus){
+		   }else if(!this.realVerifyStatus){		//是否实名
 		    	this.$router.push({path: '/certification'});
-		    }else{
+		   }else if(this.investDetail.status==2){		//是否为募集中
 	  			this.$router.push({path: '/buy/'+ this.$route.params.id});
 		    }
 	  	},
@@ -174,6 +195,39 @@ export default {
 	  	}
   	},
   	mounted: function(){
+  		setTimeout(function(){
+  			mui.ajax(baseURL + '/api/noauth/investment_detail?borrowId='+investId,{
+				dataType:'json',//服务器返回json格式数据
+				type:'post',//HTTP请求类型
+				headers:{
+					'Content-Type':'application/json',
+					'x-auth-token':sessionStorage.getItem("tokenZylc")
+				},
+				success:function(res){
+					console.log(res);
+					if(res.success){
+						console.log('散标详情成功');
+						that.title = res.data.borrowDetail.borrowName;
+	    				document.title = that.title;
+	    				that.investDetail = res.data.borrowDetail;
+	    				that.earnings = 10000 * res.data.borrowDetail.apr * res.data.borrowDetail.numberOfDays / 36000;
+						that.realVerifyStatus = res.data.realVerifyStatus;
+						that.buyStatus = that.buyStatusList[res.data.borrowDetail.status];
+					}else{
+						that.tips = res.errMsg;
+						that.tipsstatus = true;
+						setTimeout(function() {
+							that.tipsstatus = false;
+						}, 1500);
+					}
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					console.log(type);
+				}
+			});
+  		},200)
+  		console.log('123')
   		let that = this;
   		let investId = that.$route.params.id;
   		//标的详情
@@ -181,16 +235,19 @@ export default {
 			dataType:'json',//服务器返回json格式数据
 			type:'post',//HTTP请求类型
 			headers:{
-				'Content-Type':'application/json'
+				'Content-Type':'application/json',
+				'x-auth-token':sessionStorage.getItem("tokenZylc")
 			},
 			success:function(res){
 				console.log(res);
 				if(res.success){
 					console.log('散标详情成功');
-					that.title = res.data.borrowName;
+					that.title = res.data.borrowDetail.borrowName;
     				document.title = that.title;
-    				that.investDetail = res.data;
-    				that.earnings = 10000 * res.data.apr * res.data.numberOfDays / 36000;
+    				that.investDetail = res.data.borrowDetail;
+    				that.earnings = 10000 * res.data.borrowDetail.apr * res.data.borrowDetail.numberOfDays / 36000;
+					that.realVerifyStatus = res.data.realVerifyStatus;
+					that.loginStatus = res.data.loginStatus;
 				}else{
 					that.tips = res.errMsg;
 					that.tipsstatus = true;
@@ -486,6 +543,10 @@ export default {
 			padding: 0;
 			line-height: .45rem;
 			margin-bottom: .15rem;
+		}
+		.disable{
+			background: #E0E0E0;
+			opacity: 1;
 		}
 	}
 	.tips {

@@ -66,7 +66,7 @@ export default {
   	goBack(){
   		this.$router.go(-1)
   	},
-  	postcall( url, params, target){  
+  	postcall( url, params, target){  		//JS模拟提交表单
 	    var tempform = document.createElement("form");  
 	    tempform.action = url;  
 	    tempform.method = "post";  
@@ -90,7 +90,7 @@ export default {
 	    tempform.submit();  
 	    document.body.removeChild(tempform);  
 		},  
-  	recharge(){
+  	recharge(){				//充值
   		let that = this;
   		mui.ajax(baseURL + '/api/deposit?trdAmt='+ that.rechargeMoney +'&depositType=1&bankCode=1103&merFee=0&taker=2',{
 				dataType:'json',//服务器返回json格式数据

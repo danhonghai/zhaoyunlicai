@@ -38,7 +38,7 @@ export default {
     }
   },
   methods: {
-  	getCode(){
+  	getCode(){			//获取验证码
   		let that = this;
 			let regphone = /^1[34578]\d{9}$/;
 			if(!regphone.test(that.phoneNum)){
@@ -48,13 +48,15 @@ export default {
 					that.tipsstatus = false;
 				}, 1500);
 			}else if(that.getCodeStatus) {
+				that.getCodeStatus = false;
 				ajax({//请求手机验证码
 					type:'POST',
 					url: baseURL + '/api/noauth/send_verify_code?mobile=' + that.phoneNum,
 					success:function(res){
 						console.log(res)
 						if( res.success == true ){
-							that.getCodeStatus = false;
+							that.codeContent = that.wait + "s后重试";
+							that.wait--;
 							let timer = setInterval(function() {
 								if(that.wait == 0) {
 									console.log('重新获取验证码')
@@ -81,7 +83,7 @@ export default {
   	goBack(){
   		this.$router.go(-1)
   	},
-  	nextStep(){
+  	nextStep(){				//点击下一步
   		let that = this;
 			let regphone = /^1[34578]\d{9}$/;
 			let regCode = /^\d{6}$/;
@@ -124,30 +126,6 @@ export default {
 						console.log(type);
 					}
 				});
-				/*ajax({
-					type:'post',
-					url: baseURL + '/auth/get-fee?token='+ Token,
-					success:function(res){
-						that.huanchongStatus = false;
-						var res = res;
-						console.log(res)
-						if(res.success == 'true'){
-							//接参数
-							that.$router.push({path: '/modifyLoginPsdB'});
-							
-						}else{
-							//提示信息
-							that.huanchongStatus = false;
-							that.tipsstatus = true;
-					  		that.tips = res.errMsg;
-					  		setTimeout(function(){
-					  			that.tipsstatus = false
-					  			that.tips = ''
-					  		},1500)
-						}
-					}
-				})*/
-
 			}
   	}
   }

@@ -96,7 +96,7 @@
     				</div>
     				<div class="progress" v-bind:style="{width:info.proportion*100 +'%'}" v-if="info.proportion!=0"></div>
     				<div class="progress" style="width:100%;background:#D7D7D7;" v-else></div>
-    				<b class="cssd0566bb63175d2">{{info.proportion == 100 ? '已满标':parseFloat(info.proportion*100).toFixed(2)+'%'}}</b>
+    				<b class="cssd0566bb63175d2">{{parseFloat(info.proportion*100).toFixed(2)+'%'}}</b>
     			</li>
     		</ul>
 			</div>
@@ -125,11 +125,11 @@ export default {
   name: 'invest',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
       classify: 1,					//tab切换
       mescrollArr: [],			//上拉加载下拉刷新实例化
       //datalist0: [],					//定期标数据
-      datalist1: [] 					//散标数据
+      datalist1: [], 					//散标数据
+      status: true
     }
   },
   methods: {
@@ -157,7 +157,7 @@ export default {
   			//params: { userId: 123 }
   		})
   	},
-  	unregular(borrowNo){
+  	unregular(borrowNo){		//跳转到散标详情
   		this.$router.push({path: '/unregular/' + borrowNo})
   	},
   	initMescroll(mescrollId,clearEmptyId){
@@ -165,7 +165,7 @@ export default {
 			var mescroll = new MeScroll(mescrollId, {
 				//上拉加载的配置项
 				up: {
-					page: {size:10},
+					page: {size:6},
 					callback: this.getListData, //上拉回调,此处可简写; 相当于 callback: function (page) { getListData(page); }
 					noMoreSize: 4, //如果列表已无数据,可设置列表的总数量要大于半页才显示无更多数据;避免列表数据过少(比如只有一条数据),显示无更多数据会不好看; 默认5
 					empty: {
@@ -181,7 +181,7 @@ export default {
 			});
 			return mescroll;
 		},
-		getListData: function(page){
+		getListData: function(page){		//上拉回调
 			console.log(page);
 			var that = this;
 			console.log(page.num + '   ' + page.size);
@@ -216,7 +216,18 @@ export default {
   mounted: function(){
   	this.mescrollArr[this.classify]=this.initMescroll("Tab"+this.classify, "dataList"+this.classify);
   	console.log(this.mescrollArr)
-  }
+  },
+  beforeRouteLeave(to, from, next){
+	  let position = this.mescrollArr[this.classify].getScrollTop()
+	  sessionStorage.setItem('scrollTop', position) //离开路由时把位置存起来
+	  next()
+	},
+	beforeRouteEnter(to, from, next){
+    next(function (vm) {
+		  var position = sessionStorage.getItem('scrollTop'); //返回页面取出来
+		  vm.mescrollArr[vm.classify].scrollTo(position, 0);
+		});
+	}
 }
 /*联网加载列表数据*/
 function getListDataFromNet(pageNum,pageSize,successCallback,errorCallback) {
@@ -262,7 +273,8 @@ h3{
 		z-index: 2;
 		width: 100%;
 		height: .45rem;
-		background: url(../assets/title@2x.png) no-repeat;
+		/*background: url(../assets/title@2x.png) no-repeat;*/
+		background: #FC9800;
 		background-size: 100% 100%;
 		ul{
 			li{

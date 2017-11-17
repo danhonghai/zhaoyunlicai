@@ -15,7 +15,7 @@
 		</div>-->
 		<div class='money'>
 			<span>提现金额</span>
-			<input v-model="cashMoney" @blur="filterNum" @focus="typeinput='text'" v-bind:type="typeinput" placeholder="输入提现金额" />
+			<input v-model="cashMoney" @blur="filterNum" @focus="typeinput='text'" v-bind:type="typeinput" placeholder="输入提现金额，100起提" />
 			<div class='btn' @click="allMoney">全部金额</div>
 		</div>
 		<div class='arriveTime'>预计两小时内到账</div>
@@ -44,7 +44,6 @@ export default {
   name: 'cashCommission',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
       tipsstatus: false,
       tips: '提示框',
       huanchongStatus: false,
@@ -57,10 +56,10 @@ export default {
     }
   },
   watch: {
-  	cashMoney: function(){
+  	cashMoney: function(){		//使输入框输入为金额格式
 	    this.cashMoney = this.moneyType(this.cashMoney);
   	},
-  	sixPsd: function() {
+  	sixPsd: function() {		//支付密码
 			for(let i = 0; i < this.sixPsdStatus.length; i++) {
 				if(i < this.sixPsd.length) {
 					this.sixPsdStatus[i] = true;
@@ -84,13 +83,13 @@ export default {
 		}
 	},
   methods: {
-  	allMoney(){
+  	allMoney(){		//全部金额
   		this.cashMoney = this.sumCashMoney.toFixed(2);
   	},
   	goBack(){
   		this.$router.go(-1);
   	},
-  	filterNum(){
+  	filterNum(){			//保留两位小数
   		this.typeinput = 'number';
   		this.cashMoney = parseFloat(this.cashMoney).toFixed(2);
   	},
@@ -99,7 +98,7 @@ export default {
 			this.sixPsd = null;
 			this.sixPsdStatus = [false, false, false, false, false, false];
 		},
-		postcall( url, params, target){  
+		postcall( url, params, target){  		//JS模拟提交表单
 	    var tempform = document.createElement("form");  
 	    tempform.action = url;  
 	    tempform.method = "post";  
@@ -123,41 +122,50 @@ export default {
 	    tempform.submit();  
 	    document.body.removeChild(tempform);  
 		},  
-		withDraw(){
+		withDraw(){				//提现
 			let that = this;
-  		mui.ajax(baseURL + '/api/withdraw?trdAmt='+ that.cashMoney +'&userType=1',{
-				dataType:'json',//服务器返回json格式数据
-				type:'post',//HTTP请求类型
-				headers:{
-					'Content-Type':'application/json',
-					'x-auth-token':sessionStorage.getItem("tokenZylc")
-				},
-				success:function(res){
-					console.log(res);
-					if(res.success){
-						that.postcall( res.data.postUrl, {
-							merchantID: res.data.merchantID,
-							operationType: res.data.operationType,
-							request: res.data.request,
-							sign: res.data.sign
-						});
-					}else{
-						that.tips = res.errMsg;
-						that.tipsstatus = true;
-						setTimeout(function() {
-							that.tipsstatus = false;
-						}, 1500);
+			if(that.cashMoney >= 100){
+				mui.ajax(baseURL + '/api/withdraw?trdAmt='+ that.cashMoney +'&userType=1',{
+					dataType:'json',//服务器返回json格式数据
+					type:'post',//HTTP请求类型
+					headers:{
+						'Content-Type':'application/json',
+						'x-auth-token':sessionStorage.getItem("tokenZylc")
+					},
+					success:function(res){
+						console.log(res);
+						if(res.success){
+							that.postcall( res.data.postUrl, {
+								merchantID: res.data.merchantID,
+								operationType: res.data.operationType,
+								request: res.data.request,
+								sign: res.data.sign
+							});
+						}else{
+							that.tips = res.errMsg;
+							that.tipsstatus = true;
+							setTimeout(function() {
+								that.tipsstatus = false;
+							}, 1500);
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						console.log(type);
 					}
-				},
-				error:function(xhr,type,errorThrown){
-					//异常处理；
-					console.log(type);
-				}
-			});
+				});
+			}else{
+				that.tips = '提现金额不能低于100元';
+				that.tipsstatus = true;
+				setTimeout(function() {
+					that.tipsstatus = false;
+				}, 1500);
+			}
 		}
   },
   mounted() {
   	let that = this;
+  	//个人信息
   	mui.ajax(baseURL + '/api/user_info',{
 			dataType:'json',//服务器返回json格式数据
 			type:'get',//HTTP请求类型
@@ -172,6 +180,15 @@ export default {
 			error:function(xhr,type,errorThrown){
 				//异常处理；
 				console.log(type);
+				if(xhr.status == 401){
+					that.tips = '请重新登录';
+					that.tipsstatus = true;
+					sessionStorage.removeItem('tokenZylc');
+					setTimeout(function() {
+						that.tipsstatus = false;
+						that.$router.push({path: '/login'})
+					}, 1500);
+				}
 			}
 		});
   }

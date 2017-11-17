@@ -116,13 +116,13 @@ export default {
     this.telNum = (this.telNum).replace(/^(\d{3})\d+(\d{4})$/, "$1****$2");//手机号
     //this.bankCard = (this.bankCard).replace(/^(\d{4})\d+(\d{4})$/, "$1********$2");//银行卡号
     
-		console.log(JSON.parse(sessionStorage.getItem('realVerify')) )
+		/*console.log(JSON.parse(sessionStorage.getItem('realVerify')) )
 		let realVerify = JSON.parse(sessionStorage.getItem('realVerify'));
 		if(!realVerify.realVerifyStatus){
 			this.$router.push({path: '/certification'});
-		}else{
+		}else{*/
 			let that = this;
-			mui.ajax(baseURL + '/api/user_info',{
+			mui.ajax(baseURL + '/api/user_info',{					//个人信息
 				dataType:'json',//服务器返回json格式数据
 				type:'get',//HTTP请求类型
 				headers:{
@@ -138,9 +138,18 @@ export default {
 				error:function(xhr,type,errorThrown){
 					//异常处理；
 					console.log(type);
+					if(xhr.status == 401){
+						that.tips = '请重新登录';
+						that.tipsstatus = true;
+						sessionStorage.removeItem('tokenZylc');
+						setTimeout(function() {
+							that.tipsstatus = false;
+							that.$router.push({path: '/login'})
+						}, 1500);
+					}
 				}
 			});
-		}
+		/*}*/
   }
 }
 </script>

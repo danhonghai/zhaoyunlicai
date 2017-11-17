@@ -38,7 +38,7 @@ export default {
     }
   },
   methods: {
-  	getCode(){
+  	getCode(){			//获取验证码
   		let that = this;
 			let regphone = /^1[34578]\d{9}$/;
 			if(!regphone.test(that.phoneNum)){
@@ -49,6 +49,8 @@ export default {
 				}, 1500);
 			}else if(that.getCodeStatus) {
 				that.getCodeStatus = false;
+				that.codeContent = that.wait + "s后重试";
+				that.wait--;
 				let timer = setInterval(function() {
 					if(that.wait == 0) {
 						console.log('重新获取验证码')
@@ -66,7 +68,7 @@ export default {
   	goBack(){
   		this.$router.go(-1)
   	},
-  	nextStep(){
+  	nextStep(){		//下一步
   		let that = this;
 			let regphone = /^1[34578]\d{9}$/;
 			let regCode = /^\d{6}$/;

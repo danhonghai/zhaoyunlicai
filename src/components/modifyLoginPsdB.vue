@@ -6,7 +6,7 @@
 		</div>
 		<div class='newLoginPsd'>
 			<span>新密码</span>
-			<input type="text" placeholder="输入密码" v-model='newPsd' maxlength="16" />
+			<input type="password" placeholder="输入密码" v-model='newPsd' maxlength="16" />
 		</div>
 		<span id="btn" @click="modyfyPsd">确定</span>
 		<div class='tips' v-if='tipsstatus' v-text='tips'></div>
@@ -28,36 +28,44 @@ export default {
     }
   },
   methods: {
-  	modyfyPsd() {
-	    this.huanchongStatus = true;
+  	modyfyPsd() {				//修改新密码
 			var that = this;
-			mui.ajax(baseURL + '/api/change_password?password='+ that.newPsd +'&authToken='+ that.$route.params.authToken,{
-				dataType:'json',//服务器返回json格式数据
-				type:'post',//HTTP请求类型
-				headers:{
-					'Content-Type':'application/json',
-					'x-auth-token':sessionStorage.getItem("tokenZylc")
-				},
-				success:function(res){
-					that.huanchongStatus = false;
-					console.log(res);
-					if(res.success){
-						sessionStorage.removeItem("tokenZylc");
-						that.$router.push({path: '/login'});
-					}else{
-						that.tips = res.errMsg;
-						that.tipsstatus = true;
-						setTimeout(function() {
-							that.tipsstatus = false;
-							that.$router.push({path: '/modifyLoginPsdA'});
-						}, 1500);
+  		if(!(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/).test(this.newPsd)){
+  			that.tips = '密码必须是6~16位数字和字母组合';
+				that.tipsstatus = true;
+				setTimeout(function() {
+					that.tipsstatus = false;
+				}, 1500);
+  		}else{
+		    this.huanchongStatus = true;
+				mui.ajax(baseURL + '/api/change_password?password='+ that.newPsd +'&authToken='+ that.$route.params.authToken,{
+					dataType:'json',//服务器返回json格式数据
+					type:'post',//HTTP请求类型
+					headers:{
+						'Content-Type':'application/json',
+						'x-auth-token':sessionStorage.getItem("tokenZylc")
+					},
+					success:function(res){
+						that.huanchongStatus = false;
+						console.log(res);
+						if(res.success){
+							sessionStorage.removeItem("tokenZylc");
+							that.$router.push({path: '/login'});
+						}else{
+							that.tips = res.errMsg;
+							that.tipsstatus = true;
+							setTimeout(function() {
+								that.tipsstatus = false;
+								that.$router.push({path: '/modifyLoginPsdA'});
+							}, 1500);
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						console.log(type);
 					}
-				},
-				error:function(xhr,type,errorThrown){
-					//异常处理；
-					console.log(type);
-				}
-			});
+				});
+			}
   	},
   	goBack(){
   		this.$router.go(-1)

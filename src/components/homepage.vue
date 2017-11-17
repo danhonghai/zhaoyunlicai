@@ -20,13 +20,20 @@
 		</div>
    	<div class="sort">
    		<ul>
-   			<li>
+   			<li v-for="(list,index) in articles">
    				<dl>
-   					<dt><a href="#"><img src="../assets/4@2x.png"/></a></dt>
-   					<dd><router-link to='login'>团队介绍</router-link></dd>
+   					<dt>
+   						<a v-bind:href="list.jumpUrl">
+   						<img v-if="index==0" src="../assets/4@2x.png"/>
+   						<img v-if="index==1" src="../assets/2@2x.png"/>
+   						<img v-if="index==2" src="../assets/3@2x.png"/>
+   						<img v-if="index==3" src="../assets/1@2x.png"/>
+   						</a>
+   					</dt>
+   					<dd>{{list.name}}</dd>
    				</dl>
-   			</li>
-   			<li>
+   			</li> 
+   			<!--<li>
    				<dl>
    					<dt><router-link to='sort2'><img src="../assets/2@2x.png"/></router-link></dt>
    					<dd>三方存管</dd>
@@ -43,53 +50,42 @@
    					<dt><router-link to='sort4'><img src="../assets/1@2x.png"/></router-link></dt>
    					<dd>技术保障</dd>
    				</dl>
-   			</li>
+   			</li>-->
    		</ul>
    	</div>
    	<div class="recommend">
-   		<div class="novice">
+   		<div class="novice" @click="unregular(investList[0].id)" v-if="investList.length">
    			<div class="goodsInfo">
    				<dl>
-   					<dt class="cssd0566bb63175d2">10.0 <span>%</span></dt>
+   					<dt class="cssd0566bb63175d2">{{investList[0].apr | number(1)}} <span>%</span></dt>
    					<dd> 预计年化率</dd>
    				</dl>
    				<dl>
-   					<dt class="cssd0566bb63175d2">30 <span>天</span></dt>
+   					<dt class="cssd0566bb63175d2">{{investList[0].timeLimit}} <span>天</span></dt>
    					<dd>理财期限</dd>
    				</dl>
    				<!--进度条-->
    				<div class="progress">
-   					<span></span>
+   					<span v-bind:style="{width: investList[0].proportion*100 + '%'}"></span>
    				</div>
    				<div class="money">
-	   				<p>项目总额<span>20.00万</span></p>
-	   				<p>剩余可投<span>20.00万</span></p>
+	   				<p>项目总额<span>{{investList[0].account | moneyshow(100000)}}{{investList[0].account<100000?'元':'万'}}</span></p>
+	   				<p>剩余可投<span>{{investList[0].surplusMoney | moneyshow(100000)}}{{investList[0].surplusMoney<100000?'元':'万'}}</span></p>
    				</div>
    			</div>
    			<div class="buy">立即购买</div>
-   			<div class="newUser"><img src="../assets/xin@2x.png"/></div>
+   			<div class="newUser" v-if="investList[0].isNovice==1"><img src="../assets/xin@2x.png"/></div>
    		</div>
    		<ul>
-   			<li>
-   				<p>超高收益</p>
+   			<li v-for="(list,index) in investList" v-if="index>0" @click="unregular(list.id)">
+   				<p>{{list.borrowName}}</p>
    				<dl>
    					<dt>预计年化利率</dt>
-   					<dd class="cssd0566bb63175d2 shibor">10.0 <span>%</span></dd>
+   					<dd class="cssd0566bb63175d2 shibor">{{list.apr | number(1)}}<span>%</span></dd>
    				</dl>
    				<dl>
-   					<dt>信用贷款计划</dt>
-   					<dd>散标投资</dd>
-   				</dl>
-   			</li>
-   			<li>
-   				<p>超高收益</p>
-   				<dl>
-   					<dt>预计年化利率</dt>
-   					<dd class="cssd0566bb63175d2 shibor">10.0 <span>%</span></dd>
-   				</dl>
-   				<dl>
-   					<dt>信用贷款计划</dt>
-   					<dd>散标投资</dd>
+   					<dt>散标投资</dt>
+   					<dd style="margin-top: .09rem;">超高收益</dd>
    				</dl>
    			</li>
    		</ul>
@@ -118,8 +114,14 @@ export default {
   name: 'homepage',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
-      banner: null
+      banner: null,						//banner图
+      articles: null,					//分类标签
+      investList: [{
+      	apr: null,						//利率
+      	timeLimit: null,			//投资期限
+      	account: null,				//项目总额
+      	surplusMoney: null		//剩余可投
+      }]			//首页标列表
     }
   },
   methods: {
@@ -133,6 +135,9 @@ export default {
   		}else if(this.isLight == 3){
   			this.$router.push({path: '/personal'})
   		}
+  	},
+  	unregular(borrowNo){		//跳转到散标详情
+  		this.$router.push({path: '/unregular/' + borrowNo})
   	}
   },
   mounted() {
@@ -149,6 +154,8 @@ export default {
 				console.log(res);
 				if(res.success){
 					that.banner = res.data.banners;
+					that.articles = res.data.articles;
+					that.investList = res.data.productDetails;
 			  	setTimeout(function(){
 			  		//轮播图
 				  	var gallery = mui('.mui-slider');
@@ -363,9 +370,9 @@ export default {
 				background: #FFFFFF;
 				p{
 					font-size: .15rem;
-					line-height: .15rem;
+					line-height: .25rem;
 					color: #999;
-					margin-top: .1rem;
+					margin-top: .15rem;
 					margin-bottom: .1rem;
 				}
 				dl{
@@ -377,11 +384,12 @@ export default {
 						color: #333;
 					}
 					dd{
-						font-size: .13rem;
-						color: #999;
+						font-size: .15rem;
 						height: .25rem;
 						line-height: .25rem;
 						margin-top: .07rem;
+						color: #FC9800;
+						font-weight: 700;
 					}
 					.shibor{
 						font-size: .25rem;

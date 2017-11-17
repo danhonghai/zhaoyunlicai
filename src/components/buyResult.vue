@@ -11,11 +11,11 @@
 					<img src="../assets/Oval 2@2x.png" />
 					<img src="../assets/Oval 2@2x.png" />
 					<div class="line">
-						<p></p>
+					<p></p>
 					</div>
 				</div>
 				<dl>
-					<dt class="active">申购产品成功,申购金额100000.00</dt>
+					<dt class="active">申购产品成功,申购金额0.00</dt>
 					<dd>2017-04-01 14:01</dd>
 				</dl>
 				<dl>
@@ -46,11 +46,14 @@
 		},
 		methods: {
 			goBack() {		//后退
-				this.$router.go(-1)
+//				this.$router.go(-1)
+				this.$router.push({
+					path: '/invest'
+				});
 			},
 			finish() {		//点击完成
 				this.$router.push({
-					path: '/regular'
+					path: '/invest'
 				});
 			}
 		},

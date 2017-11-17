@@ -14,7 +14,8 @@
 					<img src="../assets/empy@2x.png"/>
 				</div>
 				<ul class='ing' id="dataList0">
-				 <li @click="Goto(info.tenderId)" v-for="info in datalist0">
+				 <!--<li @click="Goto(info.tenderId)" v-for="info in datalist0">-->
+				 <li v-for="info in datalist0">
 				 	<div class='top'>
 				 		<span>{{info.borrowName}}</span>
 				 		<span>预计年化利率：{{info.apr}}%</span>
@@ -22,7 +23,7 @@
 				 	<div class='center'>
 				 		<span class='cssd0566bb63175d2'>{{info.money|number(2)}}</span>
 				 		<span>元</span>
-				 		<span>计息天数：{{info.numberOfDays}}天</span>
+				 		<span>预计收益：{{info.repaymentAccount | number(2)}}元</span>
 				 	</div>
 				 	<div class='bottom'>
 				 		<span>起息日：{{info.interestTime}}</span>
@@ -36,21 +37,22 @@
 					<img src="../assets/empy@2x.png"/>
 				</div>
 				<ul class='already' id="dataList1">
-				 <li @click="Goto(info.tenderId)" v-for="info in datalist1">
+				 <li v-for="info in datalist1">
+				 <!--<li @click="Goto(info.tenderId)" v-for="info in datalist1">-->
 				 	<div class='titles'>
-				 		信用贷款计划2
+				 		{{info.borrowName}}
 				 	</div>
 				 	<div class='left'>
 				 		<span>投资金额</span>
-				 		<span class='cssd0566bb63175d2'>1000.00<p>元</p></span>
-				 		<span>计息天数：7天</span>
-				 	  <span>起息日：2017-04-01</span>
+				 		<span class='cssd0566bb63175d2'>{{info.money |　number(2)}}<p>元</p></span>
+				 		<span>计息天数：{{info.timeLimit}}天</span>
+				 	  <span>起息日：{{info.interestTime}}</span>
 				 	</div>
 				 	<div class='right'>
 				 		<span>到期收益</span>
-				 		<span class='cssd0566bb63175d2'>50.00<p>元</p></span>
-				 		<span>预计年化利率:10%</span>
-				 	  <span>回款日：2017-04-02</span>
+				 		<span class='cssd0566bb63175d2'>{{info.repaymentAccount | number(2)}}<p>元</p></span>
+				 		<span>预计年化利率:{{info.apr}}%</span>
+				 	  <span>回款日：{{info.backAccountTime}}</span>
 				 	</div>
 				 </li>
 				</ul>
@@ -87,7 +89,7 @@ export default {
   	goBack(){
   		this.$router.go(-1)
   	},
-  	Goto(tenderId){
+  	Goto(tenderId){				//跳转到投资详情
   		this.$router.push({path: '/investRecordDetail/' + tenderId})
   	},
   	select(index){//tab切换
@@ -117,7 +119,7 @@ export default {
 			});
 			return mescroll;
 		},
-		getListData: function(page){
+		getListData: function(page){			//上拉回调
 			console.log(page);
 			var that = this;
 			console.log(page.num + '   ' + page.size);
@@ -157,7 +159,8 @@ export default {
 }
 /*联网加载列表数据*/
 function getListDataFromNet(statusType,pageNum,pageSize,successCallback,errorCallback) {
-	mui.ajax(baseURL + '/api/noauth/invest_list?type=' + statusType,{
+	let page = pageNum-1;
+	mui.ajax(baseURL + '/api/noauth/invest_list?type=' + statusType + '&page=' + page + '&size=' + pageSize,{
 		dataType:'json',//服务器返回json格式数据
 		type:'post',//HTTP请求类型
 		headers:{
