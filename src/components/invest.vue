@@ -273,8 +273,8 @@ h3{
 		z-index: 2;
 		width: 100%;
 		height: .45rem;
-		/*background: url(../assets/title@2x.png) no-repeat;*/
-		background: #FC9800;
+		background: url(../assets/title@2x.png) no-repeat;
+		/*background: #FC9800;*/
 		background-size: 100% 100%;
 		ul{
 			li{
