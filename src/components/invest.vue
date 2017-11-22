@@ -1,6 +1,18 @@
 <template>
   <div class="invest" v-title data-title="投资">
-  	<div class="top">
+  	<div class="download" v-if="downCloseStatus">
+  		<div class="close" @click="downClose">
+  			<img src="../assets/close2.png"/>
+  		</div>
+  		<div class="logo">
+  			<img src="../assets/zylcLOGO.png"/>
+  		</div>
+  		<h1>赵云理财</h1>
+  		<div class="down">
+  			下载APP
+  		</div>
+  	</div>
+  	<div class="top" v-bind:style="{top: titleTop+'rem'}">
   		<ul>
   			<!--<li v-bind:class="{active:classify==0}" @click="tab(0)">自动投标</li>-->
   			<li v-bind:class="{active:classify==1}" @click="tab(1)">散标计划</li>
@@ -74,7 +86,7 @@
     			</li>
     		</ul>
     	</div>-->
-			<div id="Tab1" class="unregular mescroll" v-show="classify==1">
+			<div id="Tab1" class="unregular mescroll" v-show="classify==1" v-bind:style="{top: contentTop+'rem'}">
 				<ul id="dataList1">
     			<li @click="unregular(info.id)" v-bind:class="{saling: info.status==2,saled: info.status!=2}" v-for="info in datalist1">
     				<div class="item-title">
@@ -129,7 +141,10 @@ export default {
       mescrollArr: [],			//上拉加载下拉刷新实例化
       //datalist0: [],					//定期标数据
       datalist1: [], 					//散标数据
-      status: true
+      status: true,
+      downCloseStatus: true,		//下载广告状态
+      titleTop: 0.5,						//头部距离顶部距离
+      contentTop: .95						//内容距离顶部距离
     }
   },
   methods: {
@@ -159,6 +174,11 @@ export default {
   	},
   	unregular(borrowNo){		//跳转到散标详情
   		this.$router.push({path: '/unregular/' + borrowNo})
+  	},
+  	downClose(){
+  		this.downCloseStatus = false;
+  		this.titleTop = 0;
+  		this.contentTop = 0.45;
   	},
   	initMescroll(mescrollId,clearEmptyId){
 			//创建MeScroll对象,内部已默认开启下拉刷新,自动执行up.callback,刷新列表数据;
@@ -267,9 +287,54 @@ h3{
 	width: 100%;
 	height: 100%;
 	position: relative;
-	.top{
+	.download{
+		width: 100%;
+		height: .5rem;
+		color: #FC9800;
 		position: fixed;
 		top: 0;
+		left: 0;
+		z-index: 11;
+		background: #FFFFFF;
+		.close{
+			overflow: hidden;
+			float: left;
+			margin: .15rem 0 0 .18rem;
+			img{
+				width: .2rem;
+				float: left;
+			}
+		}
+		.logo{
+			overflow: hidden;
+			float: left;
+			margin: .125rem .13rem 0 .24rem;
+			img{
+				width: .25rem;
+				float: left;
+			}
+		}
+		h1{
+			margin: 0;
+			font-size: .18rem;
+			float: left;
+			line-height: .52rem;
+			font-weight: normal;
+		}
+		.down{
+			width: .86rem;
+			height: .25rem;
+			font-size: .14rem;
+			border: 1px solid #FC9800;
+			float: right;
+			line-height: .25rem;
+			margin: .13rem .3rem 0 0;
+			border-radius: .15rem;
+		}
+	}
+	.top{
+		position: fixed;
+		/*top: .5rem;*/
 		z-index: 2;
 		width: 100%;
 		height: .45rem;
@@ -293,7 +358,7 @@ h3{
 		}
 	}
 	.content{
-		padding-top: .45rem;
+		/*padding-top: .95rem;*/
 		.mescroll{
 			position: fixed;
 			top: .5rem;

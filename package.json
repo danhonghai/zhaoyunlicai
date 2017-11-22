@@ -2,7 +2,7 @@
   "name": "zhaoyunlicai",
   "version": "1.0.0",
   "description": "licaiproject",
-  "author": "zhaiyuanyuan",
+  "author": "liuxiang",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",

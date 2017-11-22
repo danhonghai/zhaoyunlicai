@@ -1,5 +1,17 @@
 <template>
   <div class="homepage" v-title data-title="首页">
+  	<div class="download" v-if="downCloseStatus==1">
+  		<div class="close" @click="downClose">
+  			<img src="../assets/close.png"/>
+  		</div>
+  		<div class="logo">
+  			<img src="../assets/zylcLOGO.png"/>
+  		</div>
+  		<h1>赵云理财</h1>
+  		<div class="down">
+  			下载APP
+  		</div>
+  	</div>
   	<div class="mui-slider">
 		  <div class="mui-slider-group mui-slider-loop">
 		    <!--支持循环，需要重复图片节点-->
@@ -121,7 +133,8 @@ export default {
       	timeLimit: null,			//投资期限
       	account: null,				//项目总额
       	surplusMoney: null		//剩余可投
-      }]			//首页标列表
+      }],			//首页标列表
+      downCloseStatus: 1					//关闭下载广告
     }
   },
   methods: {
@@ -138,10 +151,19 @@ export default {
   	},
   	unregular(borrowNo){		//跳转到散标详情
   		this.$router.push({path: '/unregular/' + borrowNo})
+  	},
+  	downClose(){
+  		this.downCloseStatus = false;
+  		sessionStorage.setItem('downCloseStatus',2);
   	}
   },
   mounted() {
   	let that = this;
+  	if(sessionStorage.getItem('downCloseStatus')){
+  		that.downCloseStatus = sessionStorage.getItem('downCloseStatus');
+  		console.log('that.downCloseStatus='+that.downCloseStatus)
+  	}
+  	console.log('down='+sessionStorage.getItem('downCloseStatus'))
 		//请求首页数据
 		mui.ajax(baseURL + '/api/noauth/index?type=1&count1=2&count2=2',{
 			dataType:'json',//服务器返回json格式数据
@@ -170,7 +192,15 @@ export default {
 				console.log(type);
 			}
 		});
-  }
+  }/*,
+  beforeRouteEnter(to, from, next){
+    next(function (vm) {
+    	if(sessionStorage.getItem('downCloseStatus')){
+    		console.log('345')
+		  	vm.downCloseStatus = sessionStorage.getItem('downCloseStatus');
+    	}
+		});
+	}*/
 }
 </script>
 
@@ -181,21 +211,67 @@ export default {
 	height: 100%;
 	position: relative;
 	padding-bottom: .5rem;
-	#bannerDot{
-		width: auto;
-		right: 4%;
-		bottom: .09rem;
-		.mui-indicator{
-			width: .06rem;
-			height: .06rem;
-			background: #FFFFFF;
-			border-radius: .06rem;
-			display: block;
+	.download{
+		width: 100%;
+		height: .5rem;
+		color: #FFFFFF;
+		background: #FC9800;
+		.close{
+			overflow: hidden;
 			float: left;
-			transition: width 500ms ease;		/*	动画*/
+			margin: .15rem 0 0 .18rem;
+			img{
+				width: .2rem;
+				float: left;
+			}
 		}
-		.mui-indicator.mui-active{
-			width: .17rem;
+		.logo{
+			overflow: hidden;
+			float: left;
+			margin: .125rem .13rem 0 .24rem;
+			img{
+				width: .25rem;
+				float: left;
+			}
+		}
+		h1{
+			margin: 0;
+			font-size: .18rem;
+			float: left;
+			line-height: .52rem;
+			font-weight: normal;
+		}
+		.down{
+			width: .86rem;
+			height: .25rem;
+			font-size: .14rem;
+			border: 1px solid #FFFFFF;
+			float: right;
+			line-height: .25rem;
+			margin: .13rem .3rem 0 0;
+			border-radius: .15rem;
+		}
+	}
+	.mui-slider{
+		img{
+			display: block;
+		}
+		#bannerDot{
+			width: auto;
+			right: 4%;
+			bottom: .09rem;
+			.mui-indicator{
+				width: .06rem;
+				height: .06rem;
+				background: #FFFFFF;
+				border-radius: .06rem;
+				display: block;
+				float: left;
+				transition: width 500ms ease;		/*	动画*/
+			}
+			.mui-indicator.mui-active{
+				width: .17rem;
+			}
 		}
 	}
 	.bottom{

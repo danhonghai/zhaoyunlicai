@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="personal" v-title data-title="我的">
   	<div class='top'>
   		<div class='personInfo'>
@@ -14,18 +14,18 @@
 	  		<div class='right'>
 	  			<div class='rightT'>
 	  				<span>累计收益(元)</span>
-	  				<span class='cssd0566bb63175d2'>{{userinfo.profitsTotal.toFixed(2)}}</span>
+	  				<span class='cssd0566bb63175d2'>{{userinfo.profitsTotal | number(2)}}</span>
 	  			</div>
 	  			<div class='rightB'>
 	  				<span>总资产(元)</span>
-	  				<span class='cssd0566bb63175d2'>{{userinfo.moneyTotal.toFixed(2)}}</span>
+	  				<span class='cssd0566bb63175d2'>{{userinfo.moneyTotal | number(2)}}</span>
 	  			</div>
 	  		</div>
 	  	</div>
     </div>
   	<div class='changeSum'>
   		<span>可用余额：</span>
-  		<span>{{userinfo.moneyUsable.toFixed(2)}}元</span>
+  		<span>{{userinfo.moneyUsable | number(2)}}元</span>
   		<button :class='{btnBackground:isYellow==0}' @click="Goto('recharge')">充值</button>
   		<button :class='{btnBackground:isYellow==1}' @click="Goto('cashCommission')">提现</button>
   	</div>
@@ -189,38 +189,37 @@ export default {
     	this.$router.push({name: 'login',params: { From: 'personal' }});
     }else{
     	mui.ajax(baseURL + '/api/user_info',{				//请求个人信息
-				dataType:'json',//服务器返回json格式数据
-				type:'get',//HTTP请求类型
-				headers:{
-					'Content-Type':'application/json',
-					'x-auth-token':sessionStorage.getItem("tokenZylc")
-				},
-				success:function(res){
-					that.userinfo = res.data;
-					//更新本地实名信息
-					let realVerify = JSON.parse(sessionStorage.getItem('realVerify'));
-					realVerify.realVerifyStatus = res.data.userInfo.realVerifyStatus;
-					realVerify.emailBindingStatus = res.data.userInfo.emailBindingStatus;
-					realVerify.cardBindingStatus = res.data.userInfo.cardBindingStatus;
-					sessionStorage.setItem('realVerify',JSON.stringify(realVerify));
-					console.log(res);
-				},
-				error:function(xhr,type,errorThrown){
-					//异常处理；
-					console.log(type);
-					if(xhr.status == 401){
-						that.tips = '请重新登录';
-						that.tipsstatus = true;
-						sessionStorage.removeItem('tokenZylc');
-						setTimeout(function() {
-							that.tipsstatus = false;
-							that.$router.push({path: '/login'})
-						}, 1500);
-					}
+			dataType:'json',//服务器返回json格式数据
+			type:'get',//HTTP请求类型
+			headers:{
+				'Content-Type':'application/json',
+				'x-auth-token':sessionStorage.getItem("tokenZylc")
+			},
+			success:function(res){
+				that.userinfo = res.data;
+				//更新本地实名信息
+				let realVerify = JSON.parse(sessionStorage.getItem('realVerify'));
+				realVerify.realVerifyStatus = res.data.userInfo.realVerifyStatus;
+				realVerify.emailBindingStatus = res.data.userInfo.emailBindingStatus;
+				realVerify.cardBindingStatus = res.data.userInfo.cardBindingStatus;
+				sessionStorage.setItem('realVerify',JSON.stringify(realVerify));
+				console.log(res);
+			},
+			error:function(xhr,type,errorThrown){
+				//异常处理；
+				console.log(type);
+				if(xhr.status == 401){
+					that.tips = '请重新登录';
+					that.tipsstatus = true;
+					sessionStorage.removeItem('tokenZylc');
+					setTimeout(function() {
+						that.tipsstatus = false;
+						that.$router.push({path: '/login'})
+					}, 1500);
 				}
-			});
+			}
+		});
     }
-
   }
 }
 </script>

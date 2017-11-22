@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import login from '@/components/login'											//登录
 import register from '@/components/register'								//注册
 import homepage from '@/components/homepage'								//首页
+import sort1 from '@/components/sort1'											//新手指引
 import sort2 from '@/components/sort2'											//风险控制
 import sort3 from '@/components/sort3'											//风险控制
 import sort4 from '@/components/sort4'											//技术保障
@@ -52,6 +53,11 @@ export default new Router({
       path: '/',
       name: 'homepage',
       component: homepage
+    },
+    {
+      path: '/sort1',
+      name: 'sort1',
+      component: sort1
     },
     {
       path: '/sort2',
