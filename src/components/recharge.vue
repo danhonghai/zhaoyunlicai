@@ -97,7 +97,8 @@ export default {
 				type:'post',//HTTP请求类型
 				headers:{
 					'Content-Type':'application/json',
-					'x-auth-token':sessionStorage.getItem("tokenZylc")
+					'x-auth-token':that.getCookie("tokenZylc")
+					/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 				},
 				success:function(res){
 					console.log(res);

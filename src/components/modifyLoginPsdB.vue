@@ -43,13 +43,15 @@ export default {
 					type:'post',//HTTP请求类型
 					headers:{
 						'Content-Type':'application/json',
-						'x-auth-token':sessionStorage.getItem("tokenZylc")
+						'x-auth-token':that.getCookie("tokenZylc")
+						/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 					},
 					success:function(res){
 						that.huanchongStatus = false;
 						console.log(res);
 						if(res.success){
-							sessionStorage.removeItem("tokenZylc");
+							/*sessionStorage.removeItem("tokenZylc");*/
+							that.delCookie("tokenZylc");
 							that.$router.push({path: '/login'});
 						}else{
 							that.tips = res.errMsg;

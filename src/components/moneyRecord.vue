@@ -54,7 +54,7 @@
 				console.log(page)
 				var that = this;
 				console.log(page.num + '   ' + page.size);
-				getListDataFromNet(page.num, page.size, function(curPageData) {
+				getListDataFromNet(that,page.num, page.size, function(curPageData) {
 					//curPageData=[]; //打开本行注释,可演示列表无任何数据empty的配置
 					//如果是第一页需手动制空列表
 					if(page.num == 1) that.pdlist = [];
@@ -107,14 +107,15 @@
 		}
 	}
 	/*联网加载列表数据*/
-	function getListDataFromNet(pageNum,pageSize,successCallback,errorCallback) {
+	function getListDataFromNet(that,pageNum,pageSize,successCallback,errorCallback) {
 		let page = pageNum-1;
 		mui.ajax(baseURL + '/api/money_flow?page=' + page + '&size=' + pageSize,{
 			dataType:'json',//服务器返回json格式数据
 			type:'get',//HTTP请求类型
 			headers:{
 				'Content-Type':'application/json',
-				'x-auth-token':sessionStorage.getItem("tokenZylc")
+				'x-auth-token':that.getCookie("tokenZylc")
+				/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 			},
 			success:function(res){
 				console.log(res);

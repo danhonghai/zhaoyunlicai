@@ -30,7 +30,7 @@ export default {
       tipsstatus: false,
       tips: '提示框',
       huanchongStatus: false,
-      phoneNum: sessionStorage.getItem('phoneNum'),									//手机号码
+      phoneNum: /*sessionStorage.getItem('phoneNum')*/this.getCookie('phoneNum'),									//手机号码
       codeContent: '获取验证码',				//获取验证码内容
 			wait: 60, 											//获取验证码倒计时
 			getCodeStatus: true, 						//获取验证码状态				
@@ -106,7 +106,8 @@ export default {
 					type:'post',//HTTP请求类型
 					headers:{
 						'Content-Type':'application/json',
-						'x-auth-token':sessionStorage.getItem("tokenZylc")
+						'x-auth-token':that.getCookie("tokenZylc")
+						/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 					},
 					success:function(res){
 						that.huanchongStatus = false;

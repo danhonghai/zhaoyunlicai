@@ -175,9 +175,11 @@ export default {
 	  		this.$router.go(-1)
 	  	},
 	  	buy(){		//购买
-	  		let realVerify = JSON.parse(sessionStorage.getItem('realVerify'));
-	  		if(!sessionStorage.getItem("tokenZylc") || !this.loginStatus){		//是否登录
-		    	sessionStorage.removeItem("tokenZylc");
+	  		/*let realVerify = JSON.parse(sessionStorage.getItem('realVerify'));*/
+	  		/*if(!sessionStorage.getItem("tokenZylc") || !this.loginStatus){		//是否登录
+		    	sessionStorage.removeItem("tokenZylc");*/
+	  		if(!this.getCookie("tokenZylc") || !this.loginStatus){		//是否登录
+		    	this.delCookie("tokenZylc");
 		    	this.$router.push({
 		    		name: 'login',
 		    		params: {
@@ -201,7 +203,8 @@ export default {
 				type:'post',//HTTP请求类型
 				headers:{
 					'Content-Type':'application/json',
-					'x-auth-token':sessionStorage.getItem("tokenZylc")
+					'x-auth-token':that.getCookie("tokenZylc")
+					/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 				},
 				success:function(res){
 					console.log(res);
@@ -236,7 +239,8 @@ export default {
 			type:'post',//HTTP请求类型
 			headers:{
 				'Content-Type':'application/json',
-				'x-auth-token':sessionStorage.getItem("tokenZylc")
+				'x-auth-token':that.getCookie("tokenZylc")
+				/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 			},
 			success:function(res){
 				console.log(res);

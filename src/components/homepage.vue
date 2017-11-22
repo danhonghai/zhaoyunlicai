@@ -8,7 +8,7 @@
   			<img src="../assets/zylcLOGO.png"/>
   		</div>
   		<h1>赵云理财</h1>
-  		<div class="down">
+		<div class="down" @click="download">
   			下载APP
   		</div>
   	</div>
@@ -139,6 +139,11 @@ export default {
   },
   methods: {
   	dianji(index){
+  		/*var u = navigator.userAgent, app = navigator.appVersion;
+			var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端或者uc浏览器
+			var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+			alert('是否是Android：'+isAndroid);
+			alert('是否是iOS：'+isiOS);*/
   		this.isLight = index;
   		console.log(this.isLight)
   		if(this.isLight == 1){
@@ -155,6 +160,17 @@ export default {
   	downClose(){
   		this.downCloseStatus = false;
   		sessionStorage.setItem('downCloseStatus',2);
+  	},
+  	download(){
+  		var u = navigator.userAgent, app = navigator.appVersion;
+			var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端或者uc浏览器
+			var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+			if(isAndroid){
+				window.location = "http://www.zhaoyunlicai.com/app/ZhaoYun_huawei_1.0.0.apk";
+			}
+			if(isiOS){
+				alert("暂无相关资源");
+			}
   	}
   },
   mounted() {
@@ -170,7 +186,8 @@ export default {
 			type:'post',//HTTP请求类型
 			headers:{
 				'Content-Type':'application/json',
-				'x-auth-token':sessionStorage.getItem("tokenZylc")
+				'x-auth-token':that.getCookie("tokenZylc")
+				/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 			},
 			success:function(res){
 				console.log(res);
@@ -238,7 +255,7 @@ export default {
 			margin: 0;
 			font-size: .18rem;
 			float: left;
-			line-height: .52rem;
+			line-height: .5rem;
 			font-weight: normal;
 		}
 		.down{
@@ -250,6 +267,7 @@ export default {
 			line-height: .25rem;
 			margin: .13rem .3rem 0 0;
 			border-radius: .15rem;
+			color: #FFFFFF;
 		}
 	}
 	.mui-slider{

@@ -164,7 +164,8 @@
 						type:'post',//HTTP请求类型
 						headers:{
 							'Content-Type':'application/json',
-							'x-auth-token':sessionStorage.getItem("tokenZylc")
+							'x-auth-token':that.getCookie("tokenZylc")
+							/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 						},
 						success:function(res){
 							console.log(res);
@@ -239,15 +240,18 @@
 				type:'get',//HTTP请求类型
 				headers:{
 					'Content-Type':'application/json',
-					'x-auth-token':sessionStorage.getItem("tokenZylc")
+					'x-auth-token':that.getCookie("tokenZylc")
+					/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 				},
 				success:function(res){
 					//更新本地实名信息
-					let realVerify = JSON.parse(sessionStorage.getItem('realVerify'));
+					let realVerify = JSON.parse(that.getCookie('realVerify'));
+					/*let realVerify = JSON.parse(sessionStorage.getItem('realVerify'));*/
 					realVerify.realVerifyStatus = res.data.userInfo.realVerifyStatus;
 					realVerify.emailBindingStatus = res.data.userInfo.emailBindingStatus;
 					realVerify.cardBindingStatus = res.data.userInfo.cardBindingStatus;
-					sessionStorage.setItem('realVerify',JSON.stringify(realVerify));
+					that.setCookie('realVerify',JSON.stringify(realVerify),15);
+					/*sessionStorage.setItem('realVerify',JSON.stringify(realVerify));*/
 					console.log(res);
 					that.balance = res.data.moneyUsable;
 				},
@@ -260,7 +264,8 @@
 					if(xhr.status == 401){
 						that.tips = '请重新登录';
 						that.tipsstatus = true;
-						sessionStorage.removeItem('tokenZylc');
+						that.delCookie("tokenZylc");
+						/*sessionStorage.removeItem('tokenZylc');*/
 						setTimeout(function() {
 							that.tipsstatus = false;
 							that.$router.push({path: '/login'})

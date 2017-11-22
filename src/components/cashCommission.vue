@@ -130,7 +130,8 @@ export default {
 					type:'post',//HTTP请求类型
 					headers:{
 						'Content-Type':'application/json',
-						'x-auth-token':sessionStorage.getItem("tokenZylc")
+						'x-auth-token':that.getCookie("tokenZylc")
+						/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 					},
 					success:function(res){
 						console.log(res);
@@ -171,7 +172,8 @@ export default {
 			type:'get',//HTTP请求类型
 			headers:{
 				'Content-Type':'application/json',
-				'x-auth-token':sessionStorage.getItem("tokenZylc")
+				'x-auth-token':that.getCookie("tokenZylc")
+				/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 			},
 			success:function(res){
 				console.log(res);
@@ -183,7 +185,8 @@ export default {
 				if(xhr.status == 401){
 					that.tips = '请重新登录';
 					that.tipsstatus = true;
-					sessionStorage.removeItem('tokenZylc');
+					that.delCookie("tokenZylc");
+					/*sessionStorage.removeItem('tokenZylc');*/
 					setTimeout(function() {
 						that.tipsstatus = false;
 						that.$router.push({path: '/login'})

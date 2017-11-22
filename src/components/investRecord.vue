@@ -45,12 +45,12 @@
 				 	<div class='left'>
 				 		<span>投资金额</span>
 				 		<span class='cssd0566bb63175d2'>{{info.money |　number(2)}}<p>元</p></span>
-				 		<span>计息天数：{{info.timeLimit}}天</span>
+				 		<span>计息天数：{{info.numberOfDays}}天</span>
 				 	  <span>起息日：{{info.interestTime}}</span>
 				 	</div>
 				 	<div class='right'>
 				 		<span>到期收益</span>
-				 		<span class='cssd0566bb63175d2'>{{info.repaymentAccount | number(2)}}<p>元</p></span>
+				 		<span class='cssd0566bb63175d2'>{{info.income | number(2)}}<p>元</p></span>
 				 		<span>预计年化利率:{{info.apr}}%</span>
 				 	  <span>回款日：{{info.backAccountTime}}</span>
 				 	</div>
@@ -123,7 +123,7 @@ export default {
 			console.log(page);
 			var that = this;
 			console.log(page.num + '   ' + page.size);
-			getListDataFromNet(that.isSelect+1,page.num, page.size, function(curPageData) {
+			getListDataFromNet(that,that.isSelect+1,page.num, page.size, function(curPageData) {
 				if(that.isSelect == 0){
 					//如果是第一页需手动制空列表
 					if(page.num == 1){
@@ -158,14 +158,15 @@ export default {
   }
 }
 /*联网加载列表数据*/
-function getListDataFromNet(statusType,pageNum,pageSize,successCallback,errorCallback) {
+function getListDataFromNet(that,statusType,pageNum,pageSize,successCallback,errorCallback) {
 	let page = pageNum-1;
 	mui.ajax(baseURL + '/api/noauth/invest_list?type=' + statusType + '&page=' + page + '&size=' + pageSize,{
 		dataType:'json',//服务器返回json格式数据
 		type:'post',//HTTP请求类型
 		headers:{
 			'Content-Type':'application/json',
-			'x-auth-token':sessionStorage.getItem("tokenZylc")
+			'x-auth-token':that.getCookie("tokenZylc")
+			/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 		},
 		success:function(res){
 			console.log(res);

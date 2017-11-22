@@ -80,7 +80,8 @@ export default {
 				//timeout:10000,//超时时间设置为10秒；
 				headers:{
 					'Content-Type':'application/json',
-					'x-auth-token':sessionStorage.getItem("tokenZylc")
+					'x-auth-token':that.getCookie("tokenZylc")
+					/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 				},
 				success:function(res){
 					//服务器返回响应，根据响应结果，分析是否登录成功；
@@ -89,7 +90,8 @@ export default {
 					if( res.success == true ){
 						that.tipsstatus = true;
 						that.tips = res.data;
-						sessionStorage.removeItem("tokenZylc");
+						that.delCookie("tokenZylc");
+						/*sessionStorage.removeItem("tokenZylc");*/
 						setTimeout(function() {
 							that.tipsstatus = false;
 						}, 1500);
@@ -100,7 +102,8 @@ export default {
 						setTimeout(function() {
 							that.tipsstatus = false;
 						}, 1500);
-						sessionStorage.removeItem("tokenZylc");
+						that.delCookie("tokenZylc");
+						/*sessionStorage.removeItem("tokenZylc");*/
 						that.$router.push({path: '/'});
 					}
 				},
@@ -127,7 +130,8 @@ export default {
 				type:'get',//HTTP请求类型
 				headers:{
 					'Content-Type':'application/json',
-					'x-auth-token':sessionStorage.getItem("tokenZylc")
+					'x-auth-token':that.getCookie("tokenZylc")
+					/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 				},
 				success:function(res){
 					console.log(res);
@@ -141,7 +145,8 @@ export default {
 					if(xhr.status == 401){
 						that.tips = '请重新登录';
 						that.tipsstatus = true;
-						sessionStorage.removeItem('tokenZylc');
+						that.delCookie("tokenZylc");
+						/*sessionStorage.removeItem('tokenZylc');*/
 						setTimeout(function() {
 							that.tipsstatus = false;
 							that.$router.push({path: '/login'})

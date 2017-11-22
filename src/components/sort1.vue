@@ -1,11 +1,11 @@
 <template>
 	<div class="sort1" v-title data-title="新手指引">
-		<div class='header'>
+		<!--<div class='header'>
 			<img src="../assets/Path 145@2x.png" alt="" @click='goBack' />
     		<p>新手指引</p>
-		</div>
+		</div>-->
 		<div class="content">
-			<img src="../assets/sort1.png"/>
+			<img src="../assets/sort.png"/>
 		</div>
 	</div>
 </template>
@@ -55,10 +55,11 @@
 			}
 		}
 		.content {
-			padding-top: .5rem;
+			/*padding-top: .5rem;*/
 			img{
 				display: block;
-				width: 100%;
+				width: 90%;
+				margin: 0 auto;
 			}
 		}
 	}

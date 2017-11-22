@@ -8,7 +8,7 @@
   			<img src="../assets/zylcLOGO.png"/>
   		</div>
   		<h1>赵云理财</h1>
-  		<div class="down">
+  		<div class="down" @click="download">
   			下载APP
   		</div>
   	</div>
@@ -179,6 +179,17 @@ export default {
   		this.downCloseStatus = false;
   		this.titleTop = 0;
   		this.contentTop = 0.45;
+  	},
+  	download(){
+  		var u = navigator.userAgent, app = navigator.appVersion;
+			var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端或者uc浏览器
+			var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+			if(isAndroid){
+				window.location = "http://www.zhaoyunlicai.com/app/ZhaoYun_huawei_1.0.0.apk";
+			}
+			if(isiOS){
+				alert("暂无相关资源");
+			}
   	},
   	initMescroll(mescrollId,clearEmptyId){
 			//创建MeScroll对象,内部已默认开启下拉刷新,自动执行up.callback,刷新列表数据;

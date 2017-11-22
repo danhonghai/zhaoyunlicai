@@ -45,10 +45,10 @@
   		</li>
   	</ul>
   	<ul class='service'>
-  		<li>
+  		<!--<li>
   			<img src="../assets/security@2x.png" alt="" />
   			<span>安全保障</span>
-  		</li>
+  		</li>-->
   		<li>
   			<img src="../assets/phone@2x.png" alt="" />
   			<span>客服电话</span>
@@ -164,7 +164,8 @@ export default {
 					type:'get',
 					headers:{
 						'Content-Type':'application/json',
-						'x-auth-token':sessionStorage.getItem("tokenZylc")
+						'x-auth-token':that.getCookie("tokenZylc")
+						/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 					},
 					success:function(res){
 						console.log(res);
@@ -185,7 +186,8 @@ export default {
   },
   mounted() {
   	let that = this;
-  	if(!sessionStorage.getItem("tokenZylc")){		//判断是否登录
+  	/*if(!sessionStorage.getItem("tokenZylc")){*/
+  	if(!that.getCookie("tokenZylc")){	//判断是否登录
     	this.$router.push({name: 'login',params: { From: 'personal' }});
     }else{
     	mui.ajax(baseURL + '/api/user_info',{				//请求个人信息
@@ -193,16 +195,19 @@ export default {
 			type:'get',//HTTP请求类型
 			headers:{
 				'Content-Type':'application/json',
-				'x-auth-token':sessionStorage.getItem("tokenZylc")
+				'x-auth-token':that.getCookie("tokenZylc")
+				/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 			},
 			success:function(res){
 				that.userinfo = res.data;
 				//更新本地实名信息
-				let realVerify = JSON.parse(sessionStorage.getItem('realVerify'));
+				let realVerify = JSON.parse(that.getCookie('realVerify'));
+				/*let realVerify = JSON.parse(sessionStorage.getItem('realVerify'));*/
 				realVerify.realVerifyStatus = res.data.userInfo.realVerifyStatus;
 				realVerify.emailBindingStatus = res.data.userInfo.emailBindingStatus;
 				realVerify.cardBindingStatus = res.data.userInfo.cardBindingStatus;
-				sessionStorage.setItem('realVerify',JSON.stringify(realVerify));
+				that.setCookie('realVerify',JSON.stringify(realVerify),15);
+				/*sessionStorage.setItem('realVerify',JSON.stringify(realVerify));*/
 				console.log(res);
 			},
 			error:function(xhr,type,errorThrown){
@@ -211,7 +216,8 @@ export default {
 				if(xhr.status == 401){
 					that.tips = '请重新登录';
 					that.tipsstatus = true;
-					sessionStorage.removeItem('tokenZylc');
+					that.delCookie("tokenZylc");
+					/*sessionStorage.removeItem('tokenZylc');*/
 					setTimeout(function() {
 						that.tipsstatus = false;
 						that.$router.push({path: '/login'})
@@ -353,7 +359,7 @@ export default {
 	}
 	.record,.service{
 		width: 100%;
-		height: 1.2rem;
+		/*height: 1.2rem;*/
 		background: #fff;
 		padding-left: 0.26rem;
 		margin-top: 0.1rem;
@@ -382,13 +388,20 @@ export default {
 		}
 	}
 	.service{
-		li:nth-child(2){
+		li:nth-child(1){
 			background: none;
 			span:last-child{
 				float: left;
 				margin-left: 1.45rem;
 			}
 		}
+		/*li:nth-child(2){
+			background: none;
+			span:last-child{
+				float: left;
+				margin-left: 1.45rem;
+			}
+		}*/
 	}
 	.bottom{
 		position: fixed;

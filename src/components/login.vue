@@ -112,7 +112,6 @@
 								that.codeContent = that.wait + "s后重试";
 								that.wait--;
 								let timer = setInterval(function() {
-									console.log('123')
 									if(that.wait == 0) {
 										console.log('重新获取验证码')
 										that.codeContent = '获取验证码'
@@ -151,9 +150,12 @@
 								console.log(xhr.getResponseHeader('x-auth-token'))
 								that.huanchongStatus = false;
 								if( res.success == true ){
-									sessionStorage.setItem('tokenZylc',xhr.getResponseHeader('x-auth-token'));
+									/*sessionStorage.setItem('tokenZylc',xhr.getResponseHeader('x-auth-token'));
 									sessionStorage.setItem('realVerify',JSON.stringify(res.data));
-									sessionStorage.setItem('phoneNum',that.phoneNum);
+									sessionStorage.setItem('phoneNum',that.phoneNum);*/
+									that.setCookie('tokenZylc',xhr.getResponseHeader('x-auth-token'),15);
+									that.setCookie('realVerify',JSON.stringify(res.data),15);
+									that.setCookie('phoneNum',that.phoneNum,15);
 									that.tipsstatus = true;
 									that.tips = '登录成功';
 									setTimeout(function() {
@@ -186,9 +188,12 @@
 							headers:{'Content-Type':'application/json'},	              
 							success:function(res,text,xhr){
 								console.log(xhr.getResponseHeader('x-auth-token'))
-								sessionStorage.setItem('tokenZylc',xhr.getResponseHeader('x-auth-token'));
+								/*sessionStorage.setItem('tokenZylc',xhr.getResponseHeader('x-auth-token'));
 								sessionStorage.setItem('realVerify',JSON.stringify(res.data));
-								sessionStorage.setItem('phoneNum',that.phoneNum);
+								sessionStorage.setItem('phoneNum',that.phoneNum);*/
+								that.setCookie('tokenZylc',xhr.getResponseHeader('x-auth-token'),15);
+								that.setCookie('realVerify',JSON.stringify(res.data),15);
+								that.setCookie('phoneNum',that.phoneNum,15);
 								that.huanchongStatus = false;
 								if( res.success == true ){
 									that.tipsstatus = true;
@@ -223,7 +228,7 @@
 		},
 		mounted() {
 			document.body.style.background = '#FFFFFF';
-			if(sessionStorage.getItem('tokenZylc')){
+			if(/*sessionStorage.getItem('tokenZylc')*/this.getCookie('tokenZylc')){
 				console.log('234')
 				this.$router.push({path: '/'});
 			}
