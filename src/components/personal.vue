@@ -239,8 +239,8 @@ export default {
 	.top{
 		width: 100%;
 		height: 1.84rem;
-		/*background: #FC9800;*/
-		background: linear-gradient(left, #FFC266, #FC9800);
+		background: #FC9800;
+		/*background: linear-gradient(left, #FFC266, #FC9800);*/
 		padding-top: 0.3rem;
 		padding-left: 0.26rem;
 		padding-right: 0.26rem;
