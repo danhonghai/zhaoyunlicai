@@ -229,8 +229,7 @@
 		mounted() {
 			document.body.style.background = '#FFFFFF';
 			if(/*sessionStorage.getItem('tokenZylc')*/this.getCookie('tokenZylc')){
-				console.log('234')
-				this.$router.push({path: '/'});
+				this.$router.push({path: '/personal'});
 			}
 			console.log(this.$route.params.unregularId)
 		},

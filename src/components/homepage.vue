@@ -8,7 +8,7 @@
   			<img src="../assets/zylcLOGO.png"/>
   		</div>
   		<h1>赵云理财</h1>
-		<div class="down" @click="download">
+			<div class="down" @click="download">
   			下载APP
   		</div>
   	</div>
@@ -16,14 +16,14 @@
 		  <div class="mui-slider-group mui-slider-loop">
 		    <!--支持循环，需要重复图片节点-->
 		    <div class="mui-slider-item mui-slider-item-duplicate" v-for="(info,index) in banner" v-if="index == banner.length-1">
-		    	<a v-bind:href="info.linkUrl"><img style="height: 1.55rem;" v-bind:src="info.imgUrl" /></a>
+		    	<a v-bind:href="info.linkUrl == '' ? 'javascript:void(0)' : info.linkUrl"><img style="height: 1.55rem;" v-bind:src="info.imgUrl" /></a>
 		    </div>
 		    <div class="mui-slider-item" v-for="info in banner">
-		    	<a v-bind:href="info.linkUrl"><img style="height: 1.55rem;" v-bind:src="info.imgUrl" /></a>
+		    	<a v-bind:href="info.linkUrl == '' ? 'javascript:void(0)' : info.linkUrl"><img style="height: 1.55rem;" v-bind:src="info.imgUrl" /></a>
 		    </div>
 		    <!--支持循环，需要重复图片节点-->
 		    <div class="mui-slider-item mui-slider-item-duplicate" v-for="(info,index) in banner" v-if="index == 0">
-		    	<a v-bind:href="info.linkUrl"><img style="height: 1.55rem;" v-bind:src="info.imgUrl" /></a>
+		    	<a v-bind:href="info.linkUrl == '' ? 'javascript:void(0)' : info.linkUrl"><img style="height: 1.55rem;" v-bind:src="info.imgUrl" /></a>
 		    </div>
 		  </div>
 		  <div class="mui-slider-indicator" id="bannerDot">
@@ -42,7 +42,7 @@
    						<img v-if="index==3" src="../assets/1@2x.png"/>
    						</a>
    					</dt>
-   					<dd>{{list.name}}</dd>
+   					<dd>{{list.title}}</dd>
    				</dl>
    			</li> 
    			<!--<li>
@@ -165,11 +165,10 @@ export default {
   		var u = navigator.userAgent, app = navigator.appVersion;
 			var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端或者uc浏览器
 			var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-			if(isAndroid){
-				window.location = "http://www.zhaoyunlicai.com/app/ZhaoYun_huawei_1.0.0.apk";
-			}
 			if(isiOS){
-				alert("暂无相关资源");
+				alert("iOS版本即将上线，敬请期待！");
+			}else{
+				window.location = "http://www.zhaoyunlicai.com/app/ZhaoYun_huawei_1.0.0.apk";
 			}
   	}
   },

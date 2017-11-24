@@ -15,7 +15,7 @@
 				</div>
 				<ul class='ing' id="dataList0">
 				 <!--<li @click="Goto(info.tenderId)" v-for="info in datalist0">-->
-				 <li v-for="info in datalist0">
+				 <li @click="GotoInvestDetail(info.borrowId)" v-for="info in datalist0">
 				 	<div class='top'>
 				 		<span>{{info.borrowName}}</span>
 				 		<span>预计年化利率：{{info.apr}}%</span>
@@ -37,7 +37,7 @@
 					<img src="../assets/empy@2x.png"/>
 				</div>
 				<ul class='already' id="dataList1">
-				 <li v-for="info in datalist1">
+				 <li @click="GotoInvestDetail(info.borrowId)" v-for="info in datalist1">
 				 <!--<li @click="Goto(info.tenderId)" v-for="info in datalist1">-->
 				 	<div class='titles'>
 				 		{{info.borrowName}}
@@ -91,6 +91,9 @@ export default {
   	},
   	Goto(tenderId){				//跳转到投资详情
   		this.$router.push({path: '/investRecordDetail/' + tenderId})
+  	},
+  	GotoInvestDetail(borrowId){
+  		this.$router.push({path: '/unregular/' + borrowId})
   	},
   	select(index){//tab切换
   		this.isSelect = index;

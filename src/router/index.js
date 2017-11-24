@@ -30,6 +30,7 @@ import myBankcard from '@/components/myBankcard'						//我的银行卡
 import suggestion from '@/components/suggestion'						//问题反馈
 import investRecordDetail from '@/components/investRecordDetail'						//投资详情
 import tender from '@/components/tender'										//自动投标
+import downloadApp from '@/components/downloadApp'					//下载APP
 
 
 
@@ -191,6 +192,11 @@ export default new Router({
       path: '/tender',
       name: 'tender',
       component: tender
+    },
+    {
+      path: '/downloadApp',
+      name: 'downloadApp',
+      component: downloadApp
     }
   ]
 })

@@ -184,11 +184,10 @@ export default {
   		var u = navigator.userAgent, app = navigator.appVersion;
 			var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端或者uc浏览器
 			var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-			if(isAndroid){
-				window.location = "http://www.zhaoyunlicai.com/app/ZhaoYun_huawei_1.0.0.apk";
-			}
 			if(isiOS){
-				alert("暂无相关资源");
+				alert("iOS版本即将上线，敬请期待！");
+			}else{
+				window.location = "http://www.zhaoyunlicai.com/app/ZhaoYun_huawei_1.0.0.apk";
 			}
   	},
   	initMescroll(mescrollId,clearEmptyId){
@@ -310,16 +309,16 @@ h3{
 		.close{
 			overflow: hidden;
 			float: left;
-			margin: .15rem 0 0 .18rem;
+			margin: .18rem 0 0 .22rem;
 			img{
-				width: .2rem;
+				width: .14rem;
 				float: left;
 			}
 		}
 		.logo{
 			overflow: hidden;
 			float: left;
-			margin: .125rem .13rem 0 .24rem;
+			margin: .125rem .13rem 0 .26rem;
 			img{
 				width: .25rem;
 				float: left;
