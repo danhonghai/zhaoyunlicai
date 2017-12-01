@@ -39,9 +39,8 @@
 					/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 				},
 				success:function(res){
-					console.log(res);
 					if(res.success){
-						console.log('我的银行卡成功')
+						
 					}else{
 						that.tips = res.errMsg;
 						that.tipsstatus = true;
@@ -52,7 +51,6 @@
 				},
 				error:function(xhr,type,errorThrown){
 					//异常处理；
-					console.log(type);
 				}
 			});
 		 }

@@ -31,7 +31,9 @@ import suggestion from '@/components/suggestion'						//问题反馈
 import investRecordDetail from '@/components/investRecordDetail'						//投资详情
 import tender from '@/components/tender'										//自动投标
 import downloadApp from '@/components/downloadApp'					//下载APP
-
+import myCoupon from '@/components/myCoupon'								//我的优惠券
+import receiveCoupon from '@/components/receiveCoupon'			//领取优惠券
+import inviteFriends from '@/components/inviteFriends'			//邀请好友
 
 
 
@@ -197,6 +199,21 @@ export default new Router({
       path: '/downloadApp',
       name: 'downloadApp',
       component: downloadApp
+    },
+    {
+      path: '/myCoupon',
+      name: 'myCoupon',
+      component: myCoupon
+    },
+    {
+      path: '/receiveCoupon',
+      name: 'receiveCoupon',
+      component: receiveCoupon
+    },
+    {
+      path: '/inviteFriends',
+      name: 'inviteFriends',
+      component: inviteFriends
     }
   ]
 })

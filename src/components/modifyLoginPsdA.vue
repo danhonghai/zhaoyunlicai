@@ -53,13 +53,11 @@ export default {
 					type:'POST',
 					url: baseURL + '/api/noauth/send_verify_code?mobile=' + that.phoneNum,
 					success:function(res){
-						console.log(res)
 						if( res.success == true ){
 							that.codeContent = that.wait + "s后重试";
 							that.wait--;
 							let timer = setInterval(function() {
 								if(that.wait == 0) {
-									console.log('重新获取验证码')
 									that.codeContent = '获取验证码'
 									that.wait = 60;
 									that.getCodeStatus = true;
@@ -111,7 +109,6 @@ export default {
 					},
 					success:function(res){
 						that.huanchongStatus = false;
-						console.log(res);
 						if(res.success){
 							that.$router.push({path: '/modifyLoginPsdB/' + res.data.authToken});
 						}else{
@@ -124,7 +121,6 @@ export default {
 					},
 					error:function(xhr,type,errorThrown){
 						//异常处理；
-						console.log(type);
 					}
 				});
 			}

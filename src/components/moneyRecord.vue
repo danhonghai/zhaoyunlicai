@@ -51,9 +51,7 @@
 				this.$router.go(-1)
 			},
 			upCallback: function(page) {		//下拉回调
-				console.log(page)
 				var that = this;
-				console.log(page.num + '   ' + page.size);
 				getListDataFromNet(that,page.num, page.size, function(curPageData) {
 					//curPageData=[]; //打开本行注释,可演示列表无任何数据empty的配置
 					//如果是第一页需手动制空列表
@@ -61,7 +59,6 @@
 					
 					//更新列表数据
 					that.pdlist = that.pdlist.concat(curPageData.RechargeAndWithdrawList.content);
-					console.log(that.pdlist);
 					that.allRechargeMoney = curPageData.allRechargeMoney;
 					that.allWithdrawMoney = curPageData.allWithdrawMoney;
 					//联网成功的回调,隐藏下拉刷新和上拉加载的状态;
@@ -118,17 +115,14 @@
 				/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 			},
 			success:function(res){
-				console.log(res);
 				if(res.success){
-					console.log('资金流水成功');
 					successCallback&&successCallback(res.data);//成功回调
 				}else{
-					console.log('资金流水失败')
+					
 				}
 			},
 			error:function(xhr,type,errorThrown){
 				//异常处理；
-				console.log(type);
 				errorCallback&&errorCallback()//失败回调
 			}
 		});

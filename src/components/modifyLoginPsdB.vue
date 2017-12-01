@@ -48,7 +48,6 @@ export default {
 					},
 					success:function(res){
 						that.huanchongStatus = false;
-						console.log(res);
 						if(res.success){
 							/*sessionStorage.removeItem("tokenZylc");*/
 							that.delCookie("tokenZylc");
@@ -64,7 +63,6 @@ export default {
 					},
 					error:function(xhr,type,errorThrown){
 						//异常处理；
-						console.log(type);
 					}
 				});
 			}

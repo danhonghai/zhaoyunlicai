@@ -22,7 +22,7 @@
 			if(isiOS){
 				alert("iOS版本即将上线，敬请期待！");
 			}else{
-				window.location = "http://www.zhaoyunlicai.com/app/ZhaoYun_huawei_1.0.0.apk";
+				window.location = "http://m.zhaoyunlicai.com/app/ZhaoYun_huawei_1.0.0.apk";
 			}
 		}
 	}

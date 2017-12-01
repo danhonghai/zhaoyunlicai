@@ -101,7 +101,6 @@ export default {
 					/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 				},
 				success:function(res){
-					console.log(res);
 					if(res.success){
 						that.postcall( res.data.postUrl, {
 							merchantID: res.data.merchantID,
@@ -127,7 +126,6 @@ export default {
 				},
 				error:function(xhr,type,errorThrown){
 					//异常处理；
-					console.log(type);
 				}
 			});
   	},

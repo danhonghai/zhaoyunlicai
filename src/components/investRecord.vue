@@ -100,7 +100,6 @@ export default {
   		if(this.mescrollArr[index]==null){
   			this.mescrollArr[index]=this.initMescroll("Tab"+index, "dataList"+index);
   		}
-  		console.log(this.mescrollArr[1])
   		if(this.isSelect == 0){
   			this.selectStatus1 = true;
       	this.selectStatus2 = false;
@@ -111,7 +110,6 @@ export default {
   	},
   	initMescroll(mescrollId,clearEmptyId){
 			//创建MeScroll对象,内部已默认开启下拉刷新,自动执行up.callback,刷新列表数据;
-			console.log(mescrollId+ '  ' +clearEmptyId)
 			var mescroll = new MeScroll(mescrollId, {
 				//上拉加载的配置项
 				up: {
@@ -123,9 +121,7 @@ export default {
 			return mescroll;
 		},
 		getListData: function(page){			//上拉回调
-			console.log(page);
 			var that = this;
-			console.log(page.num + '   ' + page.size);
 			getListDataFromNet(that,that.isSelect+1,page.num, page.size, function(curPageData) {
 				if(that.isSelect == 0){
 					//如果是第一页需手动制空列表
@@ -157,7 +153,6 @@ export default {
   },
   mounted: function(){
   	this.mescrollArr[this.isSelect]=this.initMescroll("Tab"+this.isSelect, "dataList"+this.isSelect);
-  	console.log(this.mescrollArr)
   }
 }
 /*联网加载列表数据*/
@@ -172,18 +167,14 @@ function getListDataFromNet(that,statusType,pageNum,pageSize,successCallback,err
 			/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 		},
 		success:function(res){
-			console.log(res);
 			if(res.success){
-				console.log('投资记录成功')
 				successCallback(res.data);//成功回调
 			}else{
-				console.log('投资记录失败')
 				errorCallback&&errorCallback()//失败回调
 			}
 		},
 		error:function(xhr,type,errorThrown){
 			//异常处理；
-			console.log(type);
 		}
 	});
 }

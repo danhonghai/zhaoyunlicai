@@ -52,9 +52,7 @@
 				this.$router.go(-1)
 			},
 			upCallback: function(page) {
-				console.log(page)
 				var that = this;
-				console.log(page.num + '   ' + page.size);
 				getListDataFromNet(this.$route.params.pushBorrowId,page.num, page.size, function(curPageData) {
 					//curPageData=[]; //打开本行注释,可演示列表无任何数据empty的配置
 					//如果是第一页需手动制空列表
@@ -62,7 +60,6 @@
 					
 					//更新列表数据
 					that.pdlist = that.pdlist.concat(curPageData.content);
-					console.log(that.pdlist)
 					//联网成功的回调,隐藏下拉刷新和上拉加载的状态;
 					//mescroll会根据传的参数,自动判断列表如果无任何数据,则提示空;列表无下一页数据,则提示无更多数据;
 					
@@ -87,12 +84,9 @@
 				'Content-Type':'application/json'
 			},
 			success:function(res){
-				console.log(res);
 				if(res.success){
-					console.log('散标投资排行成功')
 					successCallback(res.data);//成功回调
 				}else{
-					console.log('散标投资排行失败')
 					errorCallback&&errorCallback()//失败回调
 					/*that.tips = res.errMsg;
 					that.tipsstatus = true;
@@ -103,7 +97,6 @@
 			},
 			error:function(xhr,type,errorThrown){
 				//异常处理；
-				console.log(type);
 			}
 		});
 	}

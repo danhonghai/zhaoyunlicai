@@ -61,7 +61,6 @@
 						},
 						success:function(res){
 							that.huanchongStatus = false;
-							console.log(res);
 							if(res.success){
 								that.tips = "提交成功";
 								that.tipsstatus = true;
@@ -79,7 +78,6 @@
 						},
 						error:function(xhr,type,errorThrown){
 							//异常处理；
-							console.log(type);
 						}
 					});
 				}

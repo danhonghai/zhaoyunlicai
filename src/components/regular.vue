@@ -128,7 +128,6 @@ export default {
   	}
   },
   mounted: function(){
-  	console.log(this.$route.params.userId)
   	//console.log('123')
   }
 }

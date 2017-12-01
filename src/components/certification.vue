@@ -56,6 +56,7 @@ export default {
       tipsstatus: false,
       tips: '提示框',
       huanchongStatus: false,
+      mobile: null,						//用户手机号
       name: null,							//姓名
       identNo: null,					//身份证信息
       postUrl: null,					//三方链接
@@ -104,7 +105,7 @@ export default {
   		if(that.name && that.identNo){
   			that.huanchongStatus = true;
   			//实名认证
-	  		mui.ajax(baseURL + '/api/realname_verify?mobileNo='+ /*sessionStorage.getItem('phoneNum')*/that.getCookie('phoneNum') +'&identNo='+ that.identNo +'&realName='+ that.name +'&userType=1',{
+	  		mui.ajax(baseURL + '/api/realname_verify?mobileNo='+that.mobile +'&identNo='+ that.identNo +'&realName='+ that.name +'&userType=1',{
 					dataType:'json',//服务器返回json格式数据
 					type:'post',//HTTP请求类型
 					headers:{
@@ -139,7 +140,6 @@ export default {
 					},
 					error:function(xhr,type,errorThrown){
 						//异常处理；
-						console.log(type);
 					}
 				});
   		}else{
@@ -153,7 +153,6 @@ export default {
   	}
   },
   mounted() {
-  	console.log('我来啦')
   	let that = this;
   	//个人信息
   	mui.ajax(baseURL + '/api/user_info',{
@@ -176,11 +175,10 @@ export default {
 				if(res.data.userInfo.realVerifyStatus){
 					that.$router.push({path: '/personal'})
 				}
-				console.log(res);
+				that.mobile = res.data.userInfo.mobile;
 			},
 			error:function(xhr,type,errorThrown){
 				//异常处理；
-				console.log(type);
 				if(xhr.status == 401){
 					that.tips = '请重新登录';
 					that.tipsstatus = true;

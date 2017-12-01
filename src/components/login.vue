@@ -40,7 +40,7 @@
 		data() {
 			return {
 				classify: 0,					//tab切换
-				codeContent: '获取验证码',		//获取验证码内容
+				codeContent: '获取验证码',			//获取验证码内容
 				wait: 59, 						//获取验证码倒计时
 				getCodeStatus: true, 			//获取验证码状态
 				clearStatus: false,				//清除手机号码X显隐
@@ -107,13 +107,11 @@
 						type:'POST',
 						url: baseURL + '/api/noauth/send_verify_code?mobile=' + that.phoneNum,
 						success:function(res){
-							console.log(res)
 							if( res.success == true ){
 								that.codeContent = that.wait + "s后重试";
 								that.wait--;
 								let timer = setInterval(function() {
 									if(that.wait == 0) {
-										console.log('重新获取验证码')
 										that.codeContent = '获取验证码'
 										that.wait = 59;
 										that.getCodeStatus = true;
@@ -139,7 +137,6 @@
 				if((that.phoneNum && that.code && that.classify == 0)|| (that.phoneNum && that.psd && that.classify == 1)){
 					that.huanchongStatus = true;
 					if(that.classify == 0){
-						console.log('验证码登录')
 						mui.ajax(baseURL + '/api/noauth/login_by_code?mobile='+ that.phoneNum +'&code=' + that.code,{
 							dataType:'json',//服务器返回json格式数据
 							type:'post',//HTTP请求类型
@@ -147,7 +144,6 @@
 							//headers:{'Content-Type':'application/json'},	              
 							success:function(res,text,xhr){
 								//服务器返回响应，根据响应结果，分析是否登录成功；
-								console.log(xhr.getResponseHeader('x-auth-token'))
 								that.huanchongStatus = false;
 								if( res.success == true ){
 									/*sessionStorage.setItem('tokenZylc',xhr.getResponseHeader('x-auth-token'));
@@ -174,20 +170,17 @@
 							},
 							error:function(xhr,type,errorThrown){
 								//异常处理；
-								console.log(type);
 							}
 							
 						});
 					}
 					if(that.classify == 1){
-						console.log('密码登录')
 						mui.ajax(baseURL + '/api/noauth/login_by_password?mobile='+ that.phoneNum +'&password=' + that.psd,{
 							dataType:'json',//服务器返回json格式数据
 							type:'post',//HTTP请求类型
 							//timeout:10000,//超时时间设置为10秒；
 							headers:{'Content-Type':'application/json'},	              
 							success:function(res,text,xhr){
-								console.log(xhr.getResponseHeader('x-auth-token'))
 								/*sessionStorage.setItem('tokenZylc',xhr.getResponseHeader('x-auth-token'));
 								sessionStorage.setItem('realVerify',JSON.stringify(res.data));
 								sessionStorage.setItem('phoneNum',that.phoneNum);*/
@@ -212,7 +205,6 @@
 							},
 							error:function(xhr,type,errorThrown){
 								//异常处理；
-								console.log(type);
 							}
 							
 						});
@@ -231,12 +223,11 @@
 			if(/*sessionStorage.getItem('tokenZylc')*/this.getCookie('tokenZylc')){
 				this.$router.push({path: '/personal'});
 			}
-			console.log(this.$route.params.unregularId)
 		},
 		beforeRouteLeave(to, from, next) {		//路由离开前
 			document.body.style.background = '#F6F6F6';
-			this.phoneNum = null;
-			this.psd = null;
+			/*this.phoneNum = null;
+			this.psd = null;*/
 			next();
 		}
 	}

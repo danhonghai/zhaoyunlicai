@@ -1,6 +1,6 @@
 <template>
-  <div class="homepage" v-title data-title="首页">
-  	<div class="download" v-if="downCloseStatus==1">
+  <div class="homepage" v-title data-title="赵云理财">
+  	<!--<div class="download" v-if="downCloseStatus==1">
   		<div class="close" @click="downClose">
   			<img src="../assets/close.png"/>
   		</div>
@@ -11,7 +11,7 @@
 			<div class="down" @click="download">
   			下载APP
   		</div>
-  	</div>
+  	</div>-->
   	<div class="mui-slider">
 		  <div class="mui-slider-group mui-slider-loop">
 		    <!--支持循环，需要重复图片节点-->
@@ -85,7 +85,7 @@
 	   				<p>剩余可投<span>{{investList[0].surplusMoney | moneyshow(100000)}}{{investList[0].surplusMoney<100000?'元':'万'}}</span></p>
    				</div>
    			</div>
-   			<div class="buy">立即购买</div>
+   			<div class="buy">立即出借</div>
    			<div class="newUser" v-if="investList[0].isNovice==1"><img src="../assets/xin@2x.png"/></div>
    		</div>
    		<ul>
@@ -97,7 +97,7 @@
    				</dl>
    				<dl>
    					<dt>散标投资</dt>
-   					<dd style="margin-top: .09rem;">超高收益</dd>
+   					<dd style="margin-top: .09rem;">本息一次性回款</dd>
    				</dl>
    			</li>
    		</ul>
@@ -133,19 +133,13 @@ export default {
       	timeLimit: null,			//投资期限
       	account: null,				//项目总额
       	surplusMoney: null		//剩余可投
-      }],			//首页标列表
-      downCloseStatus: 1					//关闭下载广告
+      }]/*,			//首页标列表
+      downCloseStatus: 1					//关闭下载广告*/
     }
   },
   methods: {
   	dianji(index){
-  		/*var u = navigator.userAgent, app = navigator.appVersion;
-			var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端或者uc浏览器
-			var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-			alert('是否是Android：'+isAndroid);
-			alert('是否是iOS：'+isiOS);*/
   		this.isLight = index;
-  		console.log(this.isLight)
   		if(this.isLight == 1){
   			this.$router.push({path: '/'})
   		}else if(this.isLight == 2){
@@ -157,10 +151,10 @@ export default {
   	unregular(borrowNo){		//跳转到散标详情
   		this.$router.push({path: '/unregular/' + borrowNo})
   	},
-  	downClose(){
+  	/*downClose(){
   		this.downCloseStatus = false;
   		sessionStorage.setItem('downCloseStatus',2);
-  	},
+  	},*/
   	download(){
   		var u = navigator.userAgent, app = navigator.appVersion;
 			var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端或者uc浏览器
@@ -168,18 +162,16 @@ export default {
 			if(isiOS){
 				alert("iOS版本即将上线，敬请期待！");
 			}else{
-				window.location = "http://www.zhaoyunlicai.com/app/ZhaoYun_huawei_1.0.0.apk";
+				window.location = "http://m.zhaoyunlicai.com/app/ZhaoYun_huawei_1.0.0.apk";
 			}
   	}
   },
   mounted() {
   	let that = this;
-  	if(sessionStorage.getItem('downCloseStatus')){
+  	/*if(sessionStorage.getItem('downCloseStatus')){
   		that.downCloseStatus = sessionStorage.getItem('downCloseStatus');
-  		console.log('that.downCloseStatus='+that.downCloseStatus)
-  	}
-  	console.log('down='+sessionStorage.getItem('downCloseStatus'))
-		//请求首页数据
+  	}*/
+  	//请求首页数据
 		mui.ajax(baseURL + '/api/noauth/index?type=1&count1=2&count2=2',{
 			dataType:'json',//服务器返回json格式数据
 			type:'post',//HTTP请求类型
@@ -189,7 +181,6 @@ export default {
 				/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 			},
 			success:function(res){
-				console.log(res);
 				if(res.success){
 					that.banner = res.data.banners;
 					that.articles = res.data.articles;
@@ -205,18 +196,9 @@ export default {
 			},
 			error:function(xhr,type,errorThrown){
 				//异常处理；
-				console.log(type);
 			}
 		});
-  }/*,
-  beforeRouteEnter(to, from, next){
-    next(function (vm) {
-    	if(sessionStorage.getItem('downCloseStatus')){
-    		console.log('345')
-		  	vm.downCloseStatus = sessionStorage.getItem('downCloseStatus');
-    	}
-		});
-	}*/
+  }
 }
 </script>
 
@@ -482,7 +464,6 @@ export default {
 						line-height: .25rem;
 						margin-top: .07rem;
 						color: #FC9800;
-						font-weight: 700;
 					}
 					.shibor{
 						font-size: .25rem;

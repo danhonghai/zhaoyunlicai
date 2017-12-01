@@ -53,7 +53,6 @@ export default {
 				that.wait--;
 				let timer = setInterval(function() {
 					if(that.wait == 0) {
-						console.log('重新获取验证码')
 						that.codeContent = '获取验证码'
 						that.wait = 60;
 						that.getCodeStatus = true;

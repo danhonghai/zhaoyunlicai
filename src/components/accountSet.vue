@@ -85,7 +85,6 @@ export default {
 				},
 				success:function(res){
 					//服务器返回响应，根据响应结果，分析是否登录成功；
-					console.log(res);
 					that.huanchongStatus = false;
 					if( res.success == true ){
 						that.tipsstatus = true;
@@ -109,7 +108,6 @@ export default {
 				},
 				error:function(xhr,type,errorThrown){
 					//异常处理；
-					console.log(type);
 				}
 			});
   	}
@@ -134,14 +132,12 @@ export default {
 					/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 				},
 				success:function(res){
-					console.log(res);
 					that.name = res.data.userInfo.userName;
 					that.IDnum = res.data.userInfo.idCard;
 					that.telNum = res.data.userInfo.mobile;
 				},
 				error:function(xhr,type,errorThrown){
 					//异常处理；
-					console.log(type);
 					if(xhr.status == 401){
 						that.tips = '请重新登录';
 						that.tipsstatus = true;

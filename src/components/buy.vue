@@ -90,7 +90,6 @@
 			investMoney: function(){			//判断余额是否充足，动态改变预计收益
 			   	this.investMoney = this.moneyType(this.investMoney);
 				if(this.investMoney > this.balance) {
-					console.log(this.investMoney)
 					this.payWord = '余额不足,请充值';
 				} else {
 					this.payWord = '购买';
@@ -127,7 +126,6 @@
 			    document.body.removeChild(tempform);  
 			},  
 			pay() {	//点击购买or余额不足按钮
-				console.log(this.investMoney);
 				if(!this.investMoney) {
 					this.tipsstatus = true;
 					this.tips = '请输入金额';
@@ -168,7 +166,6 @@
 							/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 						},
 						success:function(res){
-							console.log(res);
 							if(res.success){
 								that.postcall( res.data.postUrl ,{
 									merchantID: res.data.merchantID,
@@ -186,7 +183,6 @@
 						},
 						error:function(xhr,type,errorThrown){
 							//异常处理；
-							console.log(type);
 						}
 					});
 				}
@@ -214,9 +210,7 @@
 					'Content-Type':'application/json'
 				},
 				success:function(res){
-					console.log(res);
 					if(res.success){
-						console.log('散标详情成功');
 						that.surplusMoney = res.data.borrowDetail.surplusMoney;
 						that.apr = res.data.borrowDetail.apr;
 						that.numberOfDays = res.data.borrowDetail.numberOfDays;
@@ -231,7 +225,6 @@
 				},
 				error:function(xhr,type,errorThrown){
 					//异常处理；
-					console.log(type);
 				}
 			});
 			//用户信息
@@ -252,15 +245,14 @@
 					realVerify.cardBindingStatus = res.data.userInfo.cardBindingStatus;
 					that.setCookie('realVerify',JSON.stringify(realVerify),15);
 					/*sessionStorage.setItem('realVerify',JSON.stringify(realVerify));*/
-					console.log(res);
 					that.balance = res.data.moneyUsable;
 				},
 				error:function(xhr,type,errorThrown){
 					//异常处理；
-					console.log(xhr.status);
+					/*console.log(xhr.status);
 					console.log(type);
 					console.log(errorThrown);
-					console.log('失败')
+					console.log('失败')*/
 					if(xhr.status == 401){
 						that.tips = '请重新登录';
 						that.tipsstatus = true;

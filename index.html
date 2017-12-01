@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 		<meta name="Description" Content="赵云理财 您的理财好帮手">
 		<meta name="keywords" Content="高利率 低风险 安心理财 省心理财 放心理财 安全理财">
-		<!--<base href="http://192.168.1.142:8080" />-->
 		<base href="/" />
 		<link rel="stylesheet" type="text/css" href="static/mui/mui.css" />
 		<link rel="stylesheet" href="static/Font/fontType.css" />
@@ -14,6 +12,7 @@
 		<!--<link href="static/mui/mui.picker.css" rel="stylesheet" />
 		<link href="static/mui/mui.poppicker.css" rel="stylesheet" />-->
 		<link rel="stylesheet" href="static/mescroll/mescroll.min.css" />
+		<link rel="stylesheet" href="static/animate/animate.min.css" />
 		<script src='static/mui/mui.min.js'></script>
 		<script type="text/javascript" src="static/mescroll/mescroll.min.js" ></script>
 		<title>赵云理财-您的理财好帮手</title>
@@ -24,7 +23,7 @@
 			//var baseURL =  'http://192.168.1.101';
 			//var baseURL =  'http://192.168.1.128';
 			//var baseURL =  'http://47.96.167.22/';				//正式环境
-			var baseURL =  'http://api.zhaoyunlicai.com/';				//正式环境
+			var baseURL =  'https://api.zhaoyunlicai.com';			//正式环境
 			//自适应
 			function init() {
 				var screenW = document.documentElement.offsetWidth || document.body.offsetWidth;
@@ -89,14 +88,19 @@
 				font-size: 100px;
 				background: #F6F6F6;
 			}
-			[v-cloak] {  
-			  	display: none;  
+			body > iframe{
+				opacity:0 !important;
+				display:none !important;
+			}
+			div#app ~ div {
+				display: none; 
+				opacity:0;
 			}
 		</style>
 	</head>
 
 	<body>
-		<div id="app" v-cloak></div>
+		<div id="app"></div>
 		<!-- built files will be auto injected -->
 	</body>
 

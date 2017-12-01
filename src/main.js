@@ -13,7 +13,9 @@ Vue.use(common);
 
 Vue.directive('title', {
   inserted: function (el, binding) {
-    document.title = el.dataset.title
+  	if(el.dataset.title != "赵云理财"){
+    	document.title = el.dataset.title+"_赵云理财"
+  	}
   }
 })
 
@@ -31,6 +33,11 @@ Vue.filter('getdate',function(score){//时间戳转为时间
 	m = now.getMonth() + 1,
 	d = now.getDate();
   return y + "-" + m + "-" + d + " " + now.toTimeString().substr(0, 8);
+})
+Vue.filter('mphone', function(value) {    //手机号过滤器，隐藏中间4位
+		if(!value) return '';
+		var mphone = value.substr(0, 3) + '****' + value.substr(7);
+		return mphone;
 })
 
 new Vue({

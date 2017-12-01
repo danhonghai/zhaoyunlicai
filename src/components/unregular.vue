@@ -8,7 +8,7 @@
 			<div class="goodInfo">
 				<dl>
 					<dt class="cssd0566bb63175d2">{{investDetail.apr | number(1)}}<span> %</span> </dt>
-					<dd>利率</dd>
+					<dd>预计年化利率</dd>
 				</dl>
 				<dl>
 					<dt class="cssd0566bb63175d2">{{investDetail.numberOfDays}}<span> 天</span> </dt>
@@ -155,7 +155,7 @@ export default {
 			buyStatusList: {
 				0: '待初审',
 				1: '待复审',
-				2: '立即投资',
+				2: '立即出借',
 				3: '满标待审',
 				4: '终审通过',
 				5: '还款中',
@@ -207,9 +207,7 @@ export default {
 					/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 				},
 				success:function(res){
-					console.log(res);
 					if(res.success){
-						console.log('散标详情成功');
 						that.title = res.data.borrowDetail.borrowName;
 	    				document.title = that.title;
 	    				that.investDetail = res.data.borrowDetail;
@@ -226,11 +224,9 @@ export default {
 				},
 				error:function(xhr,type,errorThrown){
 					//异常处理；
-					console.log(type);
 				}
 			});
   		},200)
-  		console.log('123')
   		let that = this;
   		let investId = that.$route.params.id;
   		//标的详情
@@ -243,9 +239,7 @@ export default {
 				/*'x-auth-token':sessionStorage.getItem("tokenZylc")*/
 			},
 			success:function(res){
-				console.log(res);
 				if(res.success){
-					console.log('散标详情成功');
 					that.title = res.data.borrowDetail.borrowName;
     				document.title = that.title;
     				that.investDetail = res.data.borrowDetail;
@@ -262,7 +256,6 @@ export default {
 			},
 			error:function(xhr,type,errorThrown){
 				//异常处理；
-				console.log(type);
 			}
 		});
 		//标的投资排行
@@ -273,9 +266,7 @@ export default {
 				'Content-Type':'application/json'
 			},
 			success:function(res){
-				console.log(res);
 				if(res.success){
-					console.log('散标投资排行成功')
 					that.ranklist = res.data.content;
 				}else{
 					that.tips = res.errMsg;
@@ -287,7 +278,6 @@ export default {
 			},
 			error:function(xhr,type,errorThrown){
 				//异常处理；
-				console.log(type);
 			}
 		});
   	}
@@ -311,6 +301,7 @@ export default {
 	width: 100%;
 	height: 100%;
 	position: relative;
+	padding-bottom: .9rem;
 	.header{
 		position: fixed;
 		top: 0;
@@ -318,6 +309,7 @@ export default {
 		height: 0.5rem;
 		background: #F9F9F9;
 		z-index: 2;
+		box-shadow: inset 0 -1px 1px -1px #E0E0E0;	
 		img{
 			width: 0.1rem;
 			height: 0.16rem;
@@ -513,7 +505,7 @@ export default {
 					color: #4A77A6;
 					line-height: .12rem;
 					font-weight: normal;
-					margin: .18rem 3% .11rem 34%;
+					margin: .11rem 3% .11rem 34%;
 				}
 			}
 			.emptyData{
@@ -527,26 +519,30 @@ export default {
 		}
 	}
 	.buy{
+		position: fixed;
+		bottom: 0;
+		width: 100%;
 		background: #FFFFFF;
+		border-top: 1px solid #EEEEEE;
 		overflow: hidden;
 		p{
 			font-size: .11rem;
 			color: #535353;
-			margin-top: .1rem;
+			margin-top: .03rem;
+			margin-bottom: .03rem;
 			span{
 				color: #FC4D54;
 			}
 		}
 		button{
-			width: 94%;
-			height: .45rem;
+			width: 100%;
+			height: .5rem;
 			background: #FFC266;
 			border: 0;
 			color: #FFFAF2;
 			font-size: .18rem;
 			padding: 0;
-			line-height: .45rem;
-			margin-bottom: .15rem;
+			line-height: .5rem;
 		}
 		.disable{
 			background: #E0E0E0;
